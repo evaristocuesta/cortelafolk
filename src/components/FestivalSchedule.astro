@@ -1,0 +1,40 @@
+---
+import { festivalDays } from '../data/site';
+import { scheduleItems } from '../data/schedule';
+import { stages } from '../data/stages';
+import SectionHeading from './SectionHeading.astro';
+---
+<section id="schedule" class="section schedule-section">
+	<div class="container">
+		<SectionHeading eyebrow="TRES DÍAS. MUCHAS GANAS." title="TU PRÓXIMO GRAN PLAN." text="De la primera canción al último baile. Encuentra tu momento y déjate llevar." />
+		<p class="schedule-note">Programación orientativa. Los horarios y espacios definitivos se publicarán antes del festival.</p>
+		<div class="schedule-filters" role="group" aria-label="Filtrar programación por día" hidden>
+			<button type="button" class="is-active" data-day="all" aria-pressed="true">Los tres días</button>
+			{festivalDays.map((day) => <button type="button" data-day={day.id} aria-pressed="false">{day.label} {day.date}</button>)}
+		</div>
+		<p class="sr-only" data-schedule-status aria-live="polite" aria-atomic="true"></p>
+		<div class="schedule-grid">
+			{festivalDays.map((day) => <section class="schedule-day" data-schedule-day={day.id} aria-labelledby={`day-${day.id}`}><div class="schedule-day-heading"><h3 id={`day-${day.id}`}>{day.label}</h3><span>{day.date}<small>ABRIL</small></span></div><ol>{scheduleItems.filter((item) => item.day === day.id).map((item) => <li><time datetime={`${day.fullDate}T${item.startTime}:00+02:00`}>{item.startTime}</time><div><span class="schedule-category">{item.category}</span><h4>{item.title}</h4><p>{stages.find((stage) => stage.id === item.stage)?.name}</p></div></li>)}</ol></section>)}
+		</div>
+		<div class="stage-strip"><p class="eyebrow">EL PUEBLO ES EL ESCENARIO</p><div>{stages.map((stage, index) => <article><span>0{index + 1}</span><h3>{stage.name}</h3><p>{stage.description}</p></article>)}</div></div>
+	</div>
+</section>
+<script>
+	const filters = document.querySelector<HTMLElement>('.schedule-filters');
+	if (filters) {
+		filters.hidden = false;
+		const buttons = filters.querySelectorAll<HTMLButtonElement>('button');
+		const panels = document.querySelectorAll<HTMLElement>('[data-schedule-day]');
+		buttons.forEach((button) => button.addEventListener('click', () => {
+			const selectedDay = button.dataset.day;
+			buttons.forEach((item) => {
+				const isActive = item === button;
+				item.setAttribute('aria-pressed', String(isActive));
+				item.classList.toggle('is-active', isActive);
+			});
+			panels.forEach((panel) => { panel.hidden = selectedDay !== 'all' && panel.dataset.scheduleDay !== selectedDay; });
+			const status = document.querySelector('[data-schedule-status]');
+			if (status) status.textContent = selectedDay === 'all' ? 'Se muestra la programación de los tres días.' : `Se muestra la programación del ${button.textContent?.trim()}.`;
+		}));
+	}
+</script>

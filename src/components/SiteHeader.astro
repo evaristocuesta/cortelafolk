@@ -1,0 +1,37 @@
+---
+import { navigationItems } from '../data/site';
+import Icon from './Icon.astro';
+---
+<header class="site-header">
+	<div class="container header-inner">
+		<a href="#home" class="wordmark" aria-label="Cortelafolk, volver al inicio">cortela<span>folk</span><span class="brand-dot" aria-hidden="true">✳</span></a>
+		<button class="menu-toggle" aria-expanded="false" aria-controls="main-navigation" hidden><span data-menu-label>Abrir menú</span><span class="menu-lines" aria-hidden="true"></span></button>
+		<nav id="main-navigation" aria-label="Navegación principal">
+			{navigationItems.map((item) => <a href={item.href}>{item.label}</a>)}
+			<a class="header-access" href="#free-access">Entrada gratuita <Icon name="arrow" /></a>
+		</nav>
+	</div>
+</header>
+<script>
+	const menuButton = document.querySelector<HTMLButtonElement>('.menu-toggle');
+	const navigation = document.querySelector<HTMLElement>('#main-navigation');
+	if (menuButton && navigation) {
+		menuButton.hidden = false;
+		const setMenuOpen = (isOpen: boolean) => {
+			menuButton.setAttribute('aria-expanded', String(isOpen));
+			navigation.classList.toggle('is-open', isOpen);
+			const label = menuButton.querySelector('[data-menu-label]');
+			if (label) label.textContent = isOpen ? 'Cerrar menú' : 'Abrir menú';
+		};
+		menuButton.addEventListener('click', () => setMenuOpen(menuButton.getAttribute('aria-expanded') !== 'true'));
+		navigation.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenuOpen(false)));
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') {
+				setMenuOpen(false);
+				menuButton.focus();
+			}
+		});
+		const desktopQuery = window.matchMedia('(min-width: 960px)');
+		desktopQuery.addEventListener('change', () => setMenuOpen(false));
+	}
+</script>

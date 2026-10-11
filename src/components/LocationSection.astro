@@ -1,0 +1,10 @@
+---
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+---
+<section id="location" class="section location-section">
+	<div class="container location-grid">
+		<div class="location-copy"><p class="eyebrow">EL CAMINO TAMBIÉN ES PARTE DEL PLAN</p><h2>NOS VEMOS<br />EN <span class="serif-word">Cortelazor.</span></h2><p class="lead">Un pequeño pueblo.<br />Un escenario inmenso.</p><p>En plena Sierra de Aracena y Picos de Aroche, al norte de Huelva. Un lugar de calles blancas, naturaleza y gente que te hace sentir en casa.</p><div class="location-address"><Icon name="pin" /><div><strong>Cortelazor, Huelva</strong><span>Andalucía, España · 23–25 abril 2027</span></div></div><a class="button button-dark" href={site.mapUrl} target="_blank" rel="noopener noreferrer">ABRIR RUTA EN EL MAPA <Icon name="arrow" /><span class="sr-only"> (se abre en otra pestaña)</span></a><p class="travel-note">Comparte coche si puedes. Ven sin prisa y deja la sierra tal como la encontraste.</p></div>
+		<div class="location-map"><img src="/images/location-map.svg" alt="Mapa ilustrado de la Sierra de Aracena con Cortelazor destacado al norte de Aracena; no es un mapa de navegación" width="720" height="740" loading="lazy" /><span class="map-caption">37°56′ N · 6°37′ O <span>EL NORTE DEL SUR</span></span></div>
+	</div>
+</section>

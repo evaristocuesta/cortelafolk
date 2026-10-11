@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <path fill="#173d2d" d="M0 0h1200v630H0z"/>
+  <path d="M0 485c147-129 271-74 411-25s220-85 387-77 255 116 402 26v221H0Z" fill="#28553e"/>
+  <path d="M0 555c154-77 288-63 416-12s235-11 395-62 253 78 389 38v111H0Z" fill="#52704c"/>
+  <path d="M0 610c180-71 309 26 478-4s315-71 444-37 192 38 278 0v61H0Z" fill="#93a379"/>
+  <g fill="#f3f0e5" font-family="Barlow Condensed, Impact, sans-serif" font-weight="800">
+    <text x="58" y="236" font-size="215" letter-spacing="-5">CORTELA</text>
+    <text x="58" y="413" font-size="215" letter-spacing="-5">FOLK</text>
+    <text x="774" y="426" font-size="64">23 · 24 · 25</text>
+  </g>
+  <g fill="#f3f0e5" font-family="DM Sans, sans-serif" font-weight="600">
+    <text x="63" y="53" font-size="14" letter-spacing="3">MÚSICA CON RAÍCES. ESPÍRITU LIBRE.</text>
+    <text x="1037" y="53" font-size="14">4.ª EDICIÓN</text>
+    <text x="785" y="462" font-size="25" letter-spacing="3">ABRIL 2027</text>
+    <text x="785" y="491" font-size="14" letter-spacing="1">CORTELAZOR · HUELVA</text>
+  </g>
+  <g transform="translate(541 328)" stroke="#f58443" stroke-width="5"><path d="M0-58V58M-58 0H58M-41-41l82 82M-41 41l82-82"/></g>
+  <g transform="translate(988 247) rotate(10)"><circle r="85" fill="none" stroke="#f3f0e5" stroke-opacity=".7"/><text x="0" y="-14" text-anchor="middle" fill="#f3f0e5" font-family="DM Sans, sans-serif" font-size="12" letter-spacing="2">PARA TODO</text><text x="0" y="17" text-anchor="middle" fill="#f3f0e5" font-family="Barlow Condensed, Impact, sans-serif" font-weight="800" font-size="32">EL MUNDO</text><text x="0" y="40" text-anchor="middle" fill="#f3f0e5" font-family="DM Sans, sans-serif" font-size="10" letter-spacing="1">ACCESO LIBRE</text></g>
+  <path fill="#f58443" d="M60 455h440v55H60z"/><text x="80" y="490" fill="#173d2d" font-family="DM Sans, sans-serif" font-weight="800" font-size="17" letter-spacing="2">ENTRADA GRATUITA · SIN RESERVAS</text>
+</svg>

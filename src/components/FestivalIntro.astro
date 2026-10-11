@@ -1,0 +1,15 @@
+---
+import { festivalDays } from '../data/site';
+import Icon from './Icon.astro';
+---
+<section id="festival" class="section intro-section">
+	<div class="container">
+		<div class="intro-grid">
+			<div><p class="eyebrow">UN PUEBLO. MIL FORMAS DE SENTIR.</p><h2>LA SIERRA<br />TIENE SU <span class="serif-word">ritmo.</span></h2></div>
+			<div class="intro-copy"><Icon name="flower" class="intro-flower" /><p class="lead">Hay lugares que se escuchan.<br />Cortelazor es uno de ellos.</p><p>Entre encinas, calles blancas y montañas, nos volvemos a encontrar. Cortelafolk celebra su cuarta edición con tres días de música, cultura y ese buen ambiente que no se puede explicar: hay que vivirlo.</p><p>Un festival con los pies en la tierra y las puertas abiertas. Para los de aquí, para los que vienen y para los que siempre vuelven.</p></div>
+		</div>
+		<div class="date-grid">
+			{festivalDays.map((day) => <div class="date-item"><time datetime={day.fullDate}><span>{day.label}</span><strong>{day.date}</strong><span>ABRIL</span></time><p>{day.subtitle}</p><Icon name="arrow" /></div>)}
+		</div>
+	</div>
+</section>

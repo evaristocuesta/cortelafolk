@@ -1,0 +1,7 @@
+---
+import { practicalQuestions } from '../data/site';
+import Icon from './Icon.astro';
+---
+<section id="information" class="section information-section">
+	<div class="container information-grid"><div><p class="eyebrow">ANTES DE HACER LA MOCHILA</p><h2>BUENO<br />SABERLO.</h2><p>Menos dudas.<br />Más ganas de venir.</p><Icon name="sun" class="information-sun" /></div><div class="faq-list">{practicalQuestions.map((item) => <details><summary>{item.question}<Icon name="plus" /></summary><p>{item.answer}</p></details>)}</div></div>
+</section>

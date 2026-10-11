@@ -1,16 +1,82 @@
 ---
+import '../styles/global.css';
+import { site } from '../data/site';
+import SiteHeader from '../components/SiteHeader.astro';
+import HeroSection from '../components/HeroSection.astro';
+import FestivalIntro from '../components/FestivalIntro.astro';
+import ArtistGrid from '../components/ArtistGrid.astro';
+import FreeAccessSection from '../components/FreeAccessSection.astro';
+import FestivalSchedule from '../components/FestivalSchedule.astro';
+import ActivitiesSection from '../components/ActivitiesSection.astro';
+import LocationSection from '../components/LocationSection.astro';
+import PracticalInformation from '../components/PracticalInformation.astro';
+import SocialSection from '../components/SocialSection.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const productionOrigin = import.meta.env.PUBLIC_SITE_URL;
+const canonicalUrl = productionOrigin ? new URL('/', productionOrigin).href : undefined;
+const socialImageUrl = canonicalUrl ? new URL('/images/social-preview.png', canonicalUrl).href : undefined;
+const eventData = canonicalUrl ? {
+	'@context': 'https://schema.org',
+	'@type': 'MusicEvent',
+	name: 'Cortelafolk 2027 · 4.ª edición',
+	description: site.description,
+	startDate: '2027-04-23',
+	endDate: '2027-04-25',
+	eventStatus: 'https://schema.org/EventScheduled',
+	eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+	isAccessibleForFree: true,
+	url: canonicalUrl,
+	image: socialImageUrl,
+	location: {
+		'@type': 'Place',
+		name: 'Cortelazor',
+		address: {
+			'@type': 'PostalAddress',
+			addressLocality: 'Cortelazor',
+			addressRegion: 'Huelva, Andalucía',
+			addressCountry: 'ES',
+		},
+	},
+} : undefined;
 ---
 
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<meta name="theme-color" content="#173d2d" />
+		<meta name="description" content={site.description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="es_ES" />
+		<meta property="og:title" content="Cortelafolk 2027 · Música con raíces. Espíritu libre." />
+		<meta property="og:description" content={site.description} />
+		<meta property="og:site_name" content={site.name} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Cortelafolk 2027 · Entrada gratuita" />
+		<meta name="twitter:description" content={site.description} />
+		{canonicalUrl && <><link rel="canonical" href={canonicalUrl} /><meta property="og:url" content={canonicalUrl} /></>}
+		{socialImageUrl && <><meta property="og:image" content={socialImageUrl} /><meta property="og:image:type" content="image/png" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta property="og:image:alt" content="Cortelafolk 2027: música con raíces en Cortelazor, del 23 al 25 de abril. Entrada gratuita." /><meta name="twitter:image" content={socialImageUrl} /><meta name="twitter:image:alt" content="Cortelafolk 2027, del 23 al 25 de abril en Cortelazor. Entrada gratuita." /></>}
+		{eventData && <script type="application/ld+json" is:inline set:html={JSON.stringify(eventData).replace(/</g, '\\u003c')} />}
+		<link rel="preload" href="/fonts/barlow-condensed-latin-800.woff2" as="font" type="font/woff2" crossorigin />
+		<title>Cortelafolk 2027 · 23, 24 y 25 de abril · Entrada gratuita</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<a class="skip-link" href="#main-content">Saltar al contenido</a>
+		<SiteHeader />
+		<main id="main-content">
+			<HeroSection />
+			<FestivalIntro />
+			<ArtistGrid />
+			<FreeAccessSection />
+			<FestivalSchedule />
+			<ActivitiesSection />
+			<LocationSection />
+			<PracticalInformation />
+			<SocialSection />
+		</main>
+		<SiteFooter />
 	</body>
 </html>

@@ -1,0 +1,12 @@
+---
+import type { Artist } from '../types/festival';
+import { festivalDays } from '../data/site';
+import Icon from './Icon.astro';
+interface Props { artist: Artist; }
+const { artist } = Astro.props;
+const day = festivalDays.find((item) => item.id === artist.day);
+---
+<article class:list={['artist-card', `tone-${artist.tone}`]}>
+	<div class="artist-image"><img src={artist.image} alt={artist.imageAlt} width="640" height="720" loading="lazy" decoding="async" /><span class="artist-day">{day?.label} {day?.date}</span><span class="artist-decoration" aria-hidden="true">✳</span></div>
+	<div class="artist-info"><p>{artist.genre}</p><h3>{artist.name}</h3><a href="#schedule" aria-label={`Ver la programación orientativa de ${artist.name}`}><Icon name="arrow" /></a></div>
+</article>

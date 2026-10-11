@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="740" viewBox="0 0 720 740">
+  <defs><pattern id="map-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0v40" fill="none" stroke="#173d2d" stroke-opacity=".06"/></pattern></defs>
+  <path fill="#e0e4d5" d="M0 0h720v740H0z"/><path fill="url(#map-grid)" d="M0 0h720v740H0z"/>
+  <g fill="none" stroke="#a8b695" stroke-width="1.3" opacity=".7">
+    <path d="M-30 150C79 76 174 19 261 70s63 124 205 107 179-89 281-56M-32 176C74 106 171 54 251 93s84 123 213 109 186-78 281-52M-33 202C73 132 164 85 242 117s100 122 222 111 186-62 279-51M-33 228C58 161 166 112 240 143s98 119 216 111 189-59 287-52"/>
+    <path d="M-30 593C66 635 189 594 192 518s-54-142 51-162 164 65 264 27 141-66 241-6M-30 620C87 661 214 609 220 520s-35-117 38-138 157 68 254 33 147-63 236-15M-30 648C111 684 243 622 247 524s-15-101 25-115 147 70 244 38 144-63 232-23M-30 676C144 708 268 633 274 529s-1-75 13-90 137 70 233 37 145-53 228-27"/>
+    <path d="M308 752c-2-62 65-123 146-106s79 71 156 48 72-66 143-51M327 752c11-45 60-95 122-82s88 65 163 48 77-60 141-48"/>
+  </g>
+  <path d="M-30 330c140-41 164 26 264-28s128-2 158 104 159 123 343 79" stroke="#f3f0e5" stroke-width="18" fill="none"/>
+  <path d="M-30 330c140-41 164 26 264-28s128-2 158 104 159 123 343 79" stroke="#a6ac96" stroke-width="1.4" fill="none"/>
+  <path d="M401 740c-31-81-70-111-50-179s79-121 39-155-82-94-36-147" stroke="#f3f0e5" stroke-width="9" fill="none"/>
+  <path d="M401 740c-31-81-70-111-50-179s79-121 39-155-82-94-36-147" stroke="#8c9c81" stroke-width="1.5" stroke-dasharray="5 5" fill="none"/>
+  <path d="M391 408c-47 4-156 49-201 54" stroke="#f3f0e5" stroke-width="7" fill="none"/>
+  <g fill="#173d2d" font-family="sans-serif" font-size="13" letter-spacing="1.5">
+    <text x="422" y="421">ARACENA</text><text x="103" y="491">ALÁJAR</text><text x="105" y="283">FUENTEHERIDOS</text><text x="417" y="648">HACIA HUELVA Y SEVILLA</text>
+  </g>
+  <g fill="#173d2d"><circle cx="391" cy="407" r="5"/><circle cx="189" cy="460" r="4"/><circle cx="204" cy="309" r="4"/></g>
+  <g transform="translate(354 259)"><circle r="44" fill="#f58443" fill-opacity=".2"/><circle r="29" fill="#f58443"/><path d="M0 17S-13 6-13-3a13 13 0 1 1 26 0C13 6 0 17 0 17Z" fill="#173d2d"/><circle cy="-3" r="4" fill="#f58443"/></g>
+  <g transform="translate(386 191) rotate(-6)"><path fill="#173d2d" d="M0 0h224v57H0z"/><text x="15" y="37" fill="#f3f0e5" font-family="sans-serif" font-size="25" font-weight="800" letter-spacing="1">CORTELAZOR</text><path d="m10 57-20 24 36-24Z" fill="#173d2d"/></g>
+  <g fill="none" stroke="#173d2d" stroke-width="2" opacity=".65"><path d="m76 94 10-17 10 17H76Zm10 0v9M559 333l10-17 10 17h-20Zm10 0v9M614 581l10-17 10 17h-20Zm10 0v9M76 549l10-17 10 17H76Zm10 0v9M272 617l10-17 10 17h-20Zm10 0v9"/></g>
+  <g transform="translate(638 68)" fill="none" stroke="#173d2d" stroke-width="1.5"><path d="M0-22v43M-10-8 0-22 10-8"/><text x="-5" y="-32" fill="#173d2d" stroke="none" font-family="sans-serif" font-size="11">N</text></g>
+  <g transform="translate(39 673)" fill="#173d2d" font-family="sans-serif"><text font-size="10" letter-spacing="2">SIERRA DE ARACENA</text><text y="20" font-size="10" letter-spacing="2">Y PICOS DE AROCHE</text><text y="43" font-size="8" opacity=".65">Mapa ilustrado · no válido para navegación</text></g>
+</svg>

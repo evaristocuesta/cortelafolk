@@ -1,0 +1,16 @@
+---
+interface Props {
+	name: 'arrow' | 'pin' | 'sun' | 'flower' | 'leaf' | 'plus' | 'share';
+	class?: string;
+}
+const { name, class: className } = Astro.props;
+---
+<svg class={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+	{name === 'arrow' && <path d="M4 12h16m-6-6 6 6-6 6" />}
+	{name === 'pin' && <><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" /><circle cx="12" cy="10" r="2.5" /></>}
+	{name === 'sun' && <><circle cx="12" cy="12" r="4" /><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" /></>}
+	{name === 'flower' && <><path d="M12 8c-7-9-12 1-5 4-9 7 1 12 5 5 7 9 12-1 5-5 9-7-1-12-5-4Z" /><circle cx="12" cy="12" r="2.5" /></>}
+	{name === 'leaf' && <><path d="M20 3C9 1 1 12 7 18c6 6 16-3 13-15Z" /><path d="m3 22 12-13m-6 7v-5m3 2h5" /></>}
+	{name === 'plus' && <path d="M5 12h14M12 5v14" />}
+	{name === 'share' && <><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="m9 10 6-3m-6 7 6 3" /></>}
+</svg>

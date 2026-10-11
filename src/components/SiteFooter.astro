@@ -1,0 +1,11 @@
+---
+import { site, navigationItems } from '../data/site';
+import Icon from './Icon.astro';
+---
+<footer class="site-footer">
+	<div class="container">
+		<div class="community-note"><Icon name="flower" /><p>UN FESTIVAL CON RAÍCES.<br /><strong>HECHO POSIBLE POR UN PUEBLO ENTERO.</strong></p><span>Cultura, comunidad y territorio.</span></div>
+		<div class="footer-main"><a class="wordmark" href="#home" aria-label="Cortelafolk, volver al inicio">cortela<span>folk</span><span class="brand-dot" aria-hidden="true">✳</span></a><p>23 · 24 · 25 ABRIL 2027<br />CORTELAZOR, HUELVA<br /><strong>ENTRADA GRATUITA</strong></p><nav aria-label="Navegación del pie de página">{navigationItems.map((item) => <a href={item.href}>{item.label}</a>)}<a href="#information">Información práctica</a></nav></div>
+		<div class="footer-bottom"><span>© {site.year} Cortelafolk · {site.edition}</span><span>Nos vemos donde suena la sierra.</span><a href="#home">VOLVER ARRIBA ↑</a></div>
+	</div>
+</footer>

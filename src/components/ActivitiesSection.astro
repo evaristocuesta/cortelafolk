@@ -1,0 +1,11 @@
+---
+import { activities } from '../data/activities';
+import Icon from './Icon.astro';
+import SectionHeading from './SectionHeading.astro';
+---
+<section id="activities" class="section activities-section">
+	<div class="container">
+		<SectionHeading eyebrow="MUCHO MÁS QUE CONCIERTOS" title="VEN POR LA MÚSICA. QUÉDATE POR TODO." text="La mejor parte de un festival también sucede entre canciones." />
+		<div class="activity-grid">{activities.map((activity) => <article class="activity-card"><div class="activity-top"><span>{activity.number} /</span><Icon name={activity.icon} /></div><span class="activity-label">{activity.label}</span><h3>{activity.title}</h3><p>{activity.description}</p></article>)}</div>
+	</div>
+</section>
