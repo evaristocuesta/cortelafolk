@@ -85,7 +85,7 @@ test('Accessible, progressive interactions are included', () => {
 	assert.match(html, /class="skip-link"/);
 	assert.match(html, /aria-controls="main-navigation"/);
 	assert.match(html, /aria-label="Filtrar programación por día"/);
-	assert.equal((html.match(/<details>/g) ?? []).length, 5);
+	assert.equal((html.match(/<details\b/g) ?? []).length, 5);
 	for (const tag of html.match(/<a\b[^>]*target="_blank"[^>]*>/g) ?? []) {
 		assert.match(getAttribute(tag, 'rel') ?? '', /noopener/);
 	}
@@ -106,4 +106,17 @@ test('Runtime assets stay lightweight', () => {
 	for (const file of readdirSync(join(outputDirectory, 'images')).filter((name) => name.endsWith('.webp'))) {
 		assert.ok(statSync(join(outputDirectory, 'images', file)).size < 200_000, `Unoptimised photograph: ${file}`);
 	}
+});
+
+test('Tailwind generates responsive grids and accessible state variants', () => {
+	const css = readdirSync(join(outputDirectory, '_astro'))
+		.filter((file) => file.endsWith('.css'))
+		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
+		.join('');
+	for (const utility of ['.grid-cols-2', '.tablet\\:grid-cols-4', '.wide\\:px-16', '.aria-pressed\\:bg-forest', '.group-open\\:rotate-45']) {
+		assert.ok(css.includes(utility), `Missing generated Tailwind utility: ${utility}`);
+	}
+	assert.doesNotMatch(css, /@apply|@theme/);
+	assert.match(html, /aria-pressed:bg-forest/);
+	assert.doesNotMatch(html, /class="is-active"/);
 });

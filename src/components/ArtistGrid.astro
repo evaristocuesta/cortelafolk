@@ -2,12 +2,13 @@
 import { artists } from '../data/artists';
 import ArtistCard from './ArtistCard.astro';
 import SectionHeading from './SectionHeading.astro';
+import PageContainer from './PageContainer.astro';
 ---
-<section id="artists" class="section artists-section">
-	<div class="container">
+<section id="artists" class="artists-section pb-15 sm:pb-[75px] tablet:pb-26">
+	<PageContainer>
 		<SectionHeading eyebrow="SONIDOS QUE NOS UNEN" title="RAÍCES Y NUEVOS AIRES." text="Folk, tradición y músicas que no entienden de fronteras. Así suena el espíritu de Cortelafolk." />
-		<div class="programme-note"><span class="status-dot" aria-hidden="true"></span><p><strong>Cartel en preparación.</strong> Esta selección es orientativa; los artistas definitivos se anunciarán aquí.</p></div>
-		<div class="artist-grid">{artists.map((artist) => <ArtistCard artist={artist} />)}</div>
+		<div class="flex items-start gap-3 pb-5 text-[10px] leading-[1.6] sm:pb-[25px] sm:text-[11px]"><span class="mt-[5px] size-[7px] shrink-0 rounded-full bg-rust" aria-hidden="true"></span><p><strong>Cartel en preparación.</strong> Esta selección es orientativa; los artistas definitivos se anunciarán aquí.</p></div>
+		<div class="artist-grid grid grid-cols-2 gap-x-3.5 gap-y-[22px] sm:gap-7 tablet:grid-cols-4 tablet:gap-4 wide:gap-5">{artists.map((artist) => <ArtistCard artist={artist} />)}</div>
 		<p class="artist-footnote">Diferentes sonidos. Un mismo lugar de encuentro.</p>
-	</div>
+	</PageContainer>
 </section>

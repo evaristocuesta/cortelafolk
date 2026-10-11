@@ -30,10 +30,18 @@ Run `pnpm build` before `pnpm test`; tests deliberately inspect production outpu
 - `src/data/stages.ts`: proposed spaces and descriptions.
 - `src/data/activities.ts`: editorial activity proposals.
 - `src/types/festival.ts`: shared content interfaces and English technical identifiers.
-- `src/styles/global.css`: Tailwind import, design tokens, shared styles and responsive layouts.
+- `src/styles/global.css`: Tailwind import, design tokens, shared editorial typography and original graphic treatments.
 - `public/images/` and `public/fonts/`: local, optimised assets.
 
 All visitor-facing text, alternative text and interaction states must remain in Spanish. All technical identifiers and technical documentation must remain in English. Section anchors intentionally use English identifiers.
+
+## Styling conventions
+
+Use Tailwind utilities directly in Astro templates for layout, spacing, section colours, borders and responsive grids. `PageContainer.astro` centralises page widths and gutters; do not recreate a global `.container` selector, which would conflict with Tailwind's built-in utility. The `tablet` (960px) and `wide` (1101px) breakpoints preserve the festival layout's existing transitions, alongside Tailwind's standard breakpoints. Define custom breakpoints and arbitrary minimum-width variants in rem, matching Tailwind's defaults, so responsive rules sort consistently.
+
+Keep original poster composition, illustrations, decorative pseudo-elements and shared editorial typography in `src/styles/global.css`. This is intentionally a hybrid approach, not a requirement to express every graphic detail as an arbitrary utility. Colours and fonts are defined in `@theme`; CSS aliases reference the same colour tokens. Avoid duplicating a layout rule in both component utilities and global CSS.
+
+Schedule buttons use Tailwind's `aria-pressed:` variants, with the accessible attribute as the only active-state source. FAQs use `group-open:` on native `details` elements. Preserve the global `[hidden]` rule and reduced-motion overrides when adding new utility-based interactions.
 
 ## Provisional content — important
 

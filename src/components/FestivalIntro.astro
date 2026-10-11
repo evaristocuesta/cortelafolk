@@ -1,15 +1,16 @@
 ---
 import { festivalDays } from '../data/site';
 import Icon from './Icon.astro';
+import PageContainer from './PageContainer.astro';
 ---
-<section id="festival" class="section intro-section">
-	<div class="container">
-		<div class="intro-grid">
+<section id="festival" class="py-15 sm:py-[75px] tablet:py-26">
+	<PageContainer>
+		<div class="intro-grid grid grid-cols-1 gap-[35px] sm:grid-cols-2 sm:gap-[50px] tablet:gap-[65px] wide:gap-[110px]">
 			<div><p class="eyebrow">UN PUEBLO. MIL FORMAS DE SENTIR.</p><h2>LA SIERRA<br />TIENE SU <span class="serif-word">ritmo.</span></h2></div>
 			<div class="intro-copy"><Icon name="flower" class="intro-flower" /><p class="lead">Hay lugares que se escuchan.<br />Cortelazor es uno de ellos.</p><p>Entre encinas, calles blancas y montañas, nos volvemos a encontrar. Cortelafolk celebra su cuarta edición con tres días de música, cultura y ese buen ambiente que no se puede explicar: hay que vivirlo.</p><p>Un festival con los pies en la tierra y las puertas abiertas. Para los de aquí, para los que vienen y para los que siempre vuelven.</p></div>
 		</div>
-		<div class="date-grid">
-			{festivalDays.map((day) => <div class="date-item"><time datetime={day.fullDate}><span>{day.label}</span><strong>{day.date}</strong><span>ABRIL</span></time><p>{day.subtitle}</p><Icon name="arrow" /></div>)}
+		<div class="date-grid mt-[35px] grid grid-cols-3 border-y border-forest/19 sm:mt-[50px] tablet:mt-[70px]">
+			{festivalDays.map((day) => <div class="date-item relative flex flex-col items-center gap-[13px] border-r border-forest/19 px-2 py-5 last:border-r-0 sm:flex-row sm:gap-3.5 sm:px-[15px] sm:py-7 tablet:gap-[25px] tablet:px-6 tablet:first:pl-0"><time datetime={day.fullDate}><span>{day.label}</span><strong>{day.date}</strong><span>ABRIL</span></time><p>{day.subtitle}</p><Icon name="arrow" /></div>)}
 		</div>
-	</div>
+	</PageContainer>
 </section>

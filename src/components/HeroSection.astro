@@ -1,21 +1,22 @@
 ---
 import Icon from './Icon.astro';
+import PageContainer from './PageContainer.astro';
 ---
-<section id="home" class="hero" aria-labelledby="hero-title">
-	<div class="container hero-inner">
-		<div class="hero-meta"><span><span class="small-star" aria-hidden="true">✳</span> MÚSICA CON RAÍCES. ESPÍRITU LIBRE.</span><span>4.ª EDICIÓN <span aria-hidden="true">↗</span></span></div>
+<section id="home" class="hero relative isolate overflow-hidden bg-forest text-paper" aria-labelledby="hero-title">
+	<PageContainer class="relative z-[2] pt-[23px] pb-[175px] sm:pt-8 sm:pb-[165px] tablet:pb-[178px] min-[90rem]:pb-[190px]">
+		<div class="hero-meta flex items-center justify-between gap-2 text-[7px] font-semibold tracking-[.065em] sm:gap-4 sm:text-[10px] sm:tracking-[.12em]"><span class="inline-flex items-center gap-[7px] sm:gap-3"><span class="small-star" aria-hidden="true">✳</span> MÚSICA CON RAÍCES. ESPÍRITU LIBRE.</span><span class="inline-flex items-center gap-[7px] sm:gap-3">4.ª EDICIÓN <span aria-hidden="true">↗</span></span></div>
 		<div class="hero-title-wrap">
 			<h1 id="hero-title">CORTELA<span>FOLK<span class="title-star" aria-hidden="true">✳</span></span></h1>
 			<div class="hero-stamp"><span>PARA TODO</span><strong>EL MUNDO</strong><span>ENTRADA GRATUITA</span><Icon name="sun" /></div>
 		</div>
-		<div class="hero-bottom">
-			<div class="hero-copy"><p>Tres días para sentir la música.<br />Un pueblo para encontrarnos.</p><p class="hero-access-line">ENTRADA GRATUITA · SIN RESERVAS</p><a class="button button-orange" href="#schedule">EXPLORA EL FESTIVAL <Icon name="arrow" /></a></div>
-			<div class="hero-date"><strong>23 · 24 · 25</strong><span>ABRIL 2027</span><p><Icon name="pin" /> CORTELAZOR · HUELVA</p></div>
+		<div class="mt-[45px] flex flex-col items-start justify-between gap-[30px] sm:mt-[39px] sm:flex-row sm:items-end sm:gap-8">
+			<div class="hero-copy"><p>Tres días para sentir la música.<br />Un pueblo para encontrarnos.</p><p class="hero-access-line">ENTRADA GRATUITA · SIN RESERVAS</p><a class="button button-orange inline-flex items-center justify-between gap-8" href="#schedule">EXPLORA EL FESTIVAL <Icon name="arrow" /></a></div>
+			<div class="hero-date"><strong>23 · 24 · 25</strong><span>ABRIL 2027</span><p class="flex items-center justify-start gap-2 sm:justify-end"><Icon name="pin" /> CORTELAZOR · HUELVA</p></div>
 		</div>
-	</div>
+	</PageContainer>
 	<img class="hero-landscape" src="/images/hero-landscape.svg" alt="" width="1600" height="430" fetchpriority="high" />
 	<a class="hero-scroll" href="#festival" aria-label="Descubre el festival"><span aria-hidden="true">↓</span></a>
 </section>
-<div class="festival-ribbon" aria-label="Música, sierra, cultura y entrada gratuita">
-	<div><span>ENTRADA GRATUITA</span><span aria-hidden="true">✳</span><span>MÚSICA CON RAÍCES</span><span aria-hidden="true">✳</span><span>EN PLENA SIERRA</span><span aria-hidden="true">✳</span><span>23 · 24 · 25 ABRIL</span><span aria-hidden="true">✳</span><span>CORTELAZOR, HUELVA</span><span aria-hidden="true">✳</span></div>
+<div class="festival-ribbon overflow-hidden border-y border-forest bg-tangerine" aria-label="Música, sierra, cultura y entrada gratuita">
+	<div class="flex items-center justify-center"><span>ENTRADA GRATUITA</span><span aria-hidden="true">✳</span><span>MÚSICA CON RAÍCES</span><span aria-hidden="true">✳</span><span>EN PLENA SIERRA</span><span aria-hidden="true">✳</span><span>23 · 24 · 25 ABRIL</span><span aria-hidden="true">✳</span><span>CORTELAZOR, HUELVA</span><span aria-hidden="true">✳</span></div>
 </div>

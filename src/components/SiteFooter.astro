@@ -1,11 +1,12 @@
 ---
 import { site, navigationItems } from '../data/site';
 import Icon from './Icon.astro';
+import PageContainer from './PageContainer.astro';
 ---
-<footer class="site-footer">
-	<div class="container">
-		<div class="community-note"><Icon name="flower" /><p>UN FESTIVAL CON RAÍCES.<br /><strong>HECHO POSIBLE POR UN PUEBLO ENTERO.</strong></p><span>Cultura, comunidad y territorio.</span></div>
-		<div class="footer-main"><a class="wordmark" href="#home" aria-label="Cortelafolk, volver al inicio">cortela<span>folk</span><span class="brand-dot" aria-hidden="true">✳</span></a><p>23 · 24 · 25 ABRIL 2027<br />CORTELAZOR, HUELVA<br /><strong>ENTRADA GRATUITA</strong></p><nav aria-label="Navegación del pie de página">{navigationItems.map((item) => <a href={item.href}>{item.label}</a>)}<a href="#information">Información práctica</a></nav></div>
-		<div class="footer-bottom"><span>© {site.year} Cortelafolk · {site.edition}</span><span>Nos vemos donde suena la sierra.</span><a href="#home">VOLVER ARRIBA ↑</a></div>
-	</div>
+<footer class="pt-[45px]">
+	<PageContainer>
+		<div class="community-note flex items-start gap-3.5 border-b border-forest/19 pb-[35px] sm:items-center sm:gap-5"><Icon name="flower" /><p>UN FESTIVAL CON RAÍCES.<br /><strong>HECHO POSIBLE POR UN PUEBLO ENTERO.</strong></p><span>Cultura, comunidad y territorio.</span></div>
+		<div class="footer-main flex flex-col flex-wrap items-start justify-between gap-6 py-[30px] sm:flex-row sm:gap-[30px] sm:py-10 tablet:flex-nowrap tablet:gap-10"><a class="wordmark inline-flex items-center" href="#home" aria-label="Cortelafolk, volver al inicio">cortela<span>folk</span><span class="brand-dot" aria-hidden="true">✳</span></a><p>23 · 24 · 25 ABRIL 2027<br />CORTELAZOR, HUELVA<br /><strong>ENTRADA GRATUITA</strong></p><nav class="grid w-full grid-cols-2 gap-x-[25px] gap-y-4 text-[10px] sm:w-auto sm:gap-x-[30px] sm:gap-y-3" aria-label="Navegación del pie de página">{navigationItems.map((item) => <a href={item.href}>{item.label}</a>)}<a href="#information">Información práctica</a></nav></div>
+		<div class="footer-bottom flex flex-wrap items-center justify-between gap-4 border-t border-forest/19 py-5 text-[8px] sm:flex-nowrap sm:gap-5 sm:py-[22px]"><span>© {site.year} Cortelafolk · {site.edition}</span><span class="hidden sm:inline">Nos vemos donde suena la sierra.</span><a href="#home">VOLVER ARRIBA ↑</a></div>
+	</PageContainer>
 </footer>

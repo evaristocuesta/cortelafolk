@@ -2,10 +2,11 @@
 import { activities } from '../data/activities';
 import Icon from './Icon.astro';
 import SectionHeading from './SectionHeading.astro';
+import PageContainer from './PageContainer.astro';
 ---
-<section id="activities" class="section activities-section">
-	<div class="container">
-		<SectionHeading eyebrow="MUCHO MÁS QUE CONCIERTOS" title="VEN POR LA MÚSICA. QUÉDATE POR TODO." text="La mejor parte de un festival también sucede entre canciones." />
-		<div class="activity-grid">{activities.map((activity) => <article class="activity-card"><div class="activity-top"><span>{activity.number} /</span><Icon name={activity.icon} /></div><span class="activity-label">{activity.label}</span><h3>{activity.title}</h3><p>{activity.description}</p></article>)}</div>
-	</div>
+<section id="activities" class="activities-section bg-forest py-15 text-paper sm:py-[75px] tablet:py-26">
+	<PageContainer>
+		<SectionHeading eyebrow="MUCHO MÁS QUE CONCIERTOS" title="VEN POR LA MÚSICA. QUÉDATE POR TODO." titleClass="max-w-[630px]" text="La mejor parte de un festival también sucede entre canciones." />
+		<div class="mt-[35px] grid grid-cols-1 gap-[35px] sm:mt-[50px] sm:grid-cols-3 sm:gap-[25px] tablet:gap-[30px]">{activities.map((activity) => <article class="activity-card"><div class="activity-top mb-2.5 flex items-start justify-between sm:mb-[38px]"><span>{activity.number} /</span><Icon name={activity.icon} /></div><span class="activity-label">{activity.label}</span><h3>{activity.title}</h3><p>{activity.description}</p></article>)}</div>
+	</PageContainer>
 </section>

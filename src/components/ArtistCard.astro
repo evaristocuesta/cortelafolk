@@ -6,7 +6,11 @@ interface Props { artist: Artist; }
 const { artist } = Astro.props;
 const day = festivalDays.find((item) => item.id === artist.day);
 ---
-<article class:list={['artist-card', `tone-${artist.tone}`]}>
-	<div class="artist-image"><img src={artist.image} alt={artist.imageAlt} width="640" height="720" loading="lazy" decoding="async" /><span class="artist-day">{day?.label} {day?.date}</span><span class="artist-decoration" aria-hidden="true">✳</span></div>
-	<div class="artist-info"><p>{artist.genre}</p><h3>{artist.name}</h3><a href="#schedule" aria-label={`Ver la programación orientativa de ${artist.name}`}><Icon name="arrow" /></a></div>
+<article class:list={['artist-card group min-w-0', `tone-${artist.tone}`]}>
+	<div class="artist-image relative aspect-[.8] overflow-hidden bg-[var(--card-color)] sm:aspect-[1.05] tablet:aspect-[.85]">
+		<img class="h-full w-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.04]" src={artist.image} alt={artist.imageAlt} width="640" height="720" loading="lazy" decoding="async" />
+		<span class="absolute top-2 left-2 z-[1] bg-paper px-[7px] py-1.5 text-[7px] font-bold tracking-[.07em] text-forest uppercase sm:top-3 sm:left-3 sm:px-[11px] sm:py-[7px] sm:text-[9px]">{day?.label} {day?.date}</span>
+		<span class="artist-decoration" aria-hidden="true">✳</span>
+	</div>
+	<div class="artist-info relative border-b border-forest/19 pt-3.5 pr-5 pb-4 sm:py-5 sm:pr-7"><p>{artist.genre}</p><h3>{artist.name}</h3><a class="absolute right-[-5px] bottom-3 grid h-8 w-[27px] place-items-center hover:bg-tangerine sm:right-[-4px] sm:bottom-[17px] sm:w-8" href="#schedule" aria-label={`Ver la programación orientativa de ${artist.name}`}><Icon name="arrow" class="max-sm:w-[18px]" /></a></div>
 </article>

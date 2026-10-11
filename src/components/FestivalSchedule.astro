@@ -3,21 +3,38 @@ import { festivalDays } from '../data/site';
 import { scheduleItems } from '../data/schedule';
 import { stages } from '../data/stages';
 import SectionHeading from './SectionHeading.astro';
+import PageContainer from './PageContainer.astro';
+
+const filterClasses = 'min-h-11 border border-forest/19 bg-transparent px-[13px] py-2.5 text-[10px] font-bold hover:border-forest aria-pressed:border-forest aria-pressed:bg-forest aria-pressed:text-paper sm:px-[18px] sm:py-[11px] sm:text-[11px]';
 ---
-<section id="schedule" class="section schedule-section">
-	<div class="container">
+<section id="schedule" class="py-15 sm:py-[75px] tablet:py-26">
+	<PageContainer>
 		<SectionHeading eyebrow="TRES DÍAS. MUCHAS GANAS." title="TU PRÓXIMO GRAN PLAN." text="De la primera canción al último baile. Encuentra tu momento y déjate llevar." />
 		<p class="schedule-note">Programación orientativa. Los horarios y espacios definitivos se publicarán antes del festival.</p>
-		<div class="schedule-filters" role="group" aria-label="Filtrar programación por día" hidden>
-			<button type="button" class="is-active" data-day="all" aria-pressed="true">Los tres días</button>
-			{festivalDays.map((day) => <button type="button" data-day={day.id} aria-pressed="false">{day.label} {day.date}</button>)}
+		<div class="schedule-filters mb-8 flex flex-wrap gap-[7px] sm:gap-2" role="group" aria-label="Filtrar programación por día" hidden>
+			<button type="button" class={filterClasses} data-day="all" aria-pressed="true">Los tres días</button>
+			{festivalDays.map((day) => <button type="button" class={filterClasses} data-day={day.id} aria-pressed="false">{day.label} {day.date}</button>)}
 		</div>
 		<p class="sr-only" data-schedule-status aria-live="polite" aria-atomic="true"></p>
-		<div class="schedule-grid">
-			{festivalDays.map((day) => <section class="schedule-day" data-schedule-day={day.id} aria-labelledby={`day-${day.id}`}><div class="schedule-day-heading"><h3 id={`day-${day.id}`}>{day.label}</h3><span>{day.date}<small>ABRIL</small></span></div><ol>{scheduleItems.filter((item) => item.day === day.id).map((item) => <li><time datetime={`${day.fullDate}T${item.startTime}:00+02:00`}>{item.startTime}</time><div><span class="schedule-category">{item.category}</span><h4>{item.title}</h4><p>{stages.find((stage) => stage.id === item.stage)?.name}</p></div></li>)}</ol></section>)}
+		<div class="schedule-grid grid grid-cols-1 gap-[34px] sm:grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] sm:gap-7">
+			{festivalDays.map((day) => (
+				<section class="schedule-day" data-schedule-day={day.id} aria-labelledby={`day-${day.id}`}>
+					<div class="schedule-day-heading flex items-center justify-between border-y border-forest py-[15px] sm:py-5">
+						<h3 id={`day-${day.id}`}>{day.label}</h3><span>{day.date}<small>ABRIL</small></span>
+					</div>
+					<ol class="m-0 list-none p-0">
+						{scheduleItems.filter((item) => item.day === day.id).map((item) => (
+							<li class="flex gap-[30px] border-b border-forest/19 py-5 sm:gap-[18px] sm:py-[23px]">
+								<time datetime={`${day.fullDate}T${item.startTime}:00+02:00`}>{item.startTime}</time>
+								<div><span class="schedule-category">{item.category}</span><h4>{item.title}</h4><p>{stages.find((stage) => stage.id === item.stage)?.name}</p></div>
+							</li>
+						))}
+					</ol>
+				</section>
+			))}
 		</div>
-		<div class="stage-strip"><p class="eyebrow">EL PUEBLO ES EL ESCENARIO</p><div>{stages.map((stage, index) => <article><span>0{index + 1}</span><h3>{stage.name}</h3><p>{stage.description}</p></article>)}</div></div>
-	</div>
+		<div class="stage-strip mt-[35px] bg-[#e7e7d9] p-6 sm:mt-[45px] sm:p-7"><p class="eyebrow">EL PUEBLO ES EL ESCENARIO</p><div class="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-5 tablet:gap-8">{stages.map((stage, index) => <article><span>0{index + 1}</span><h3>{stage.name}</h3><p>{stage.description}</p></article>)}</div></div>
+	</PageContainer>
 </section>
 <script>
 	const filters = document.querySelector<HTMLElement>('.schedule-filters');
@@ -30,7 +47,6 @@ import SectionHeading from './SectionHeading.astro';
 			buttons.forEach((item) => {
 				const isActive = item === button;
 				item.setAttribute('aria-pressed', String(isActive));
-				item.classList.toggle('is-active', isActive);
 			});
 			panels.forEach((panel) => { panel.hidden = selectedDay !== 'all' && panel.dataset.scheduleDay !== selectedDay; });
 			const status = document.querySelector('[data-schedule-status]');

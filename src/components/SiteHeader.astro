@@ -1,16 +1,17 @@
 ---
 import { navigationItems } from '../data/site';
 import Icon from './Icon.astro';
+import PageContainer from './PageContainer.astro';
 ---
-<header class="site-header">
-	<div class="container header-inner">
-		<a href="#home" class="wordmark" aria-label="Cortelafolk, volver al inicio">cortela<span>folk</span><span class="brand-dot" aria-hidden="true">✳</span></a>
+<header class="site-header sticky top-0 z-30 border-b border-forest/19 bg-paper">
+	<PageContainer class="flex min-h-[68px] flex-wrap items-center justify-between gap-0 sm:min-h-[72px] tablet:min-h-[82px] tablet:flex-nowrap tablet:gap-8">
+		<a href="#home" class="wordmark inline-flex items-center" aria-label="Cortelafolk, volver al inicio">cortela<span>folk</span><span class="brand-dot" aria-hidden="true">✳</span></a>
 		<button class="menu-toggle" aria-expanded="false" aria-controls="main-navigation" hidden><span data-menu-label>Abrir menú</span><span class="menu-lines" aria-hidden="true"></span></button>
-		<nav id="main-navigation" aria-label="Navegación principal">
+		<nav id="main-navigation" class="flex w-full flex-wrap items-center gap-[18px] pb-5 tablet:w-auto tablet:flex-nowrap tablet:gap-5 tablet:pb-0 wide:gap-[30px]" aria-label="Navegación principal">
 			{navigationItems.map((item) => <a href={item.href}>{item.label}</a>)}
-			<a class="header-access" href="#free-access">Entrada gratuita <Icon name="arrow" /></a>
+			<a class="header-access flex items-center gap-4" href="#free-access">Entrada gratuita <Icon name="arrow" /></a>
 		</nav>
-	</div>
+	</PageContainer>
 </header>
 <script>
 	const menuButton = document.querySelector<HTMLButtonElement>('.menu-toggle');
