@@ -55,6 +55,10 @@ No sponsor logos, organiser endorsements, contact addresses or social profiles a
 
 The menu, schedule filters and sharing use small, bundled scripts. FAQs use native `details` elements. Without JavaScript, navigation and all three schedule days remain visible. Sharing cancellation is handled quietly and failures have Spanish feedback. Reduced-motion preferences disable smooth scrolling and transitions.
 
+`src/scripts/scroll-reveal.ts` uses a single IntersectionObserver to reveal each main section and the footer every time they re-enter the viewport, with a 1100ms fade and 60px upward movement. The reveal waits until at least half the section is visible, capped at half the viewport height for sections taller than the screen. Visibility is sampled at 1% intersection-ratio increments; the animation never starts before the required visible height. Leaving the viewport cancels the current animation and prepares the next entrance, in either scroll direction. Only content animates; section backgrounds remain stationary.
+
+Content is visually transparent while waiting, but only after JavaScript confirms animation support. Pending content cannot receive pointer clicks; keyboard focus reveals it immediately. It is never removed from the HTML, layout or accessibility tree. Without JavaScript, with reduced motion, or when printing, all content remains visible. Keyboard focus bypasses the entrance; internal links restart the target section's animation once enough of it is visible, including repeated clicks on the current anchor. No animation library or scroll event handler is required.
+
 The location illustration is explicitly not a navigation map. Directions open a real Google Maps route only after clicking; no external requests are made during page rendering.
 
 ## Deployment
