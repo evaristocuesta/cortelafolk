@@ -4,7 +4,7 @@ export const site = {
 	year: 2027,
 	dateLabel: '23, 24 y 25 de abril de 2027',
 	location: 'Cortelazor, Huelva',
-	description: 'Cortelafolk 2027: tres días de música, cultura y naturaleza en Cortelazor, Huelva. 23, 24 y 25 de abril. Entrada gratuita para todo el mundo.',
+	description: 'Cortelafolk 2027: tres días de música, cultura y naturaleza en Cortelazor, Huelva. 23, 24 y 25 de abril. Entrada libre para todo el mundo.',
 	mapUrl: 'https://www.google.com/maps/dir/?api=1&destination=Cortelazor%2C+Huelva%2C+Espa%C3%B1a',
 };
 

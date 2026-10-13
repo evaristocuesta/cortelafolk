@@ -55,13 +55,13 @@ const eventData = canonicalUrl ? {
 		<meta property="og:description" content={site.description} />
 		<meta property="og:site_name" content={site.name} />
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="Cortelafolk 2027 · Entrada gratuita" />
+		<meta name="twitter:title" content="Cortelafolk 2027 · Entrada libre" />
 		<meta name="twitter:description" content={site.description} />
 		{canonicalUrl && <><link rel="canonical" href={canonicalUrl} /><meta property="og:url" content={canonicalUrl} /></>}
-		{socialImageUrl && <><meta property="og:image" content={socialImageUrl} /><meta property="og:image:type" content="image/png" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta property="og:image:alt" content="Cortelafolk 2027: música con raíces en Cortelazor, del 23 al 25 de abril. Entrada gratuita." /><meta name="twitter:image" content={socialImageUrl} /><meta name="twitter:image:alt" content="Cortelafolk 2027, del 23 al 25 de abril en Cortelazor. Entrada gratuita." /></>}
+		{socialImageUrl && <><meta property="og:image" content={socialImageUrl} /><meta property="og:image:type" content="image/png" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta property="og:image:alt" content="Cortelafolk 2027: música con raíces en Cortelazor, del 23 al 25 de abril. Entrada libre." /><meta name="twitter:image" content={socialImageUrl} /><meta name="twitter:image:alt" content="Cortelafolk 2027, del 23 al 25 de abril en Cortelazor. Entrada libre." /></>}
 		{eventData && <script type="application/ld+json" is:inline set:html={JSON.stringify(eventData).replace(/</g, '\\u003c')} />}
 		<link rel="preload" href="/fonts/barlow-condensed-latin-800.woff2" as="font" type="font/woff2" crossorigin />
-		<title>Cortelafolk 2027 · 23, 24 y 25 de abril · Entrada gratuita</title>
+		<title>Cortelafolk 2027 · 23, 24 y 25 de abril · Entrada libre</title>
 	</head>
 	<body class="bg-paper text-forest font-sans antialiased">
 		<a class="skip-link" href="#main-content">Saltar al contenido</a>

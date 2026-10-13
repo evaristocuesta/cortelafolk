@@ -5,11 +5,11 @@ import PageContainer from './PageContainer.astro';
 ---
 <header class="site-header sticky top-0 z-30 bg-paper">
 	<PageContainer class="flex min-h-[68px] flex-wrap items-center justify-between gap-0 sm:min-h-[72px] tablet:min-h-[82px] tablet:flex-nowrap tablet:gap-8">
-		<a href="#home" class="wordmark inline-flex items-center" aria-label="Cortelafolk, volver al inicio"><img src="/images/logo.webp" alt="Cortelafolk" width="70" /></a>
+		<a href="#home" class="wordmark inline-flex items-center" aria-label="Cortelafolk, volver al inicio"><img src="/images/logo.webp" alt="Cortelafolk" width="100" height="56" /></a>
 		<button class="menu-toggle" aria-expanded="false" aria-controls="main-navigation" hidden><span data-menu-label>Abrir menú</span><span class="menu-lines" aria-hidden="true"></span></button>
 		<nav id="main-navigation" class="flex w-full flex-wrap items-center gap-[18px] pb-5 tablet:w-auto tablet:flex-nowrap tablet:gap-5 tablet:pb-0 wide:gap-[30px]" aria-label="Navegación principal">
 			{navigationItems.map((item) => <a href={item.href}>{item.label}</a>)}
-			<a class="header-access flex items-center gap-4" href="#free-access">Entrada gratuita <Icon name="arrow" /></a>
+			<a class="header-access flex items-center gap-4" href="#free-access">Entrada libre <Icon name="arrow" /></a>
 		</nav>
 	</PageContainer>
 	<svg class="site-header-wave" aria-hidden="true" focusable="false">
