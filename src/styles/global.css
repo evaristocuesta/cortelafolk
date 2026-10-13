@@ -37,7 +37,8 @@
 
 @layer base {
 	:root { color-scheme: light; --ink: var(--color-forest); --paper: var(--color-paper); --orange: var(--color-tangerine); --line: #173d2d30; }
-	html { scroll-behavior: smooth; scroll-padding-top: 120px; }
+	/* Align section starts with the solid header, not its wave's transparent gaps. */
+	html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 	::selection { background: var(--orange); color: var(--ink); }
 	h1, h2, h3, h4, p { margin: 0; }
 	h1, h2 { font-family: var(--font-display); font-weight: 800; }
@@ -190,7 +191,7 @@
 	.free-badge { width: 260px; height: 260px; }
 }
 @media (max-width: 959px) {
-	html { scroll-padding-top: 110px; }
+	html { scroll-padding-top: 72px; }
 	.site-header .wordmark { margin-block: 19px; }
 	.menu-toggle:not([hidden]) { display: flex; align-items: center; gap: 12px; margin-left: auto; font-size: 10px; font-weight: 700; min-height: 44px; background: transparent; border: 0; }
 	.menu-lines { width: 23px; height: 12px; border-block: 1px solid var(--ink); position: relative; }
@@ -222,6 +223,7 @@
 	.footer-main .wordmark { font-size: 29px; }
 }
 @media (max-width: 639px) {
+	html { scroll-padding-top: 68px; }
 	h2 { font-size: 50px; }
 	.eyebrow { font-size: 9px; letter-spacing: .11em; margin-bottom: 16px; }
 	.site-header .wordmark { font-size: 25px; margin-block: 16px; }

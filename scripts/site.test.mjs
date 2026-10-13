@@ -112,6 +112,16 @@ test('Header wave pattern has vertical clearance beyond the visible SVG', () => 
 	assert.ok(Number(getAttribute(pattern, 'height')) > 34, 'The next vertical tile must stay outside the 34px viewport.');
 });
 
+test('Anchor offsets match the solid header height at each breakpoint', () => {
+	const css = readdirSync(join(outputDirectory, '_astro'))
+		.filter((file) => file.endsWith('.css'))
+		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
+		.join('');
+	assert.match(css, /html\{[^}]*scroll-padding-top:82px/);
+	assert.match(css, /@media\s*\(max-width:\s*959px\)\{html\{scroll-padding-top:72px/);
+	assert.match(css, /@media\s*\(max-width:\s*639px\)\{html\{scroll-padding-top:68px/);
+});
+
 test('Runtime assets stay lightweight', () => {
 	const assets = readdirSync(join(outputDirectory, '_astro'));
 	const scriptBytes = assets.filter((file) => file.endsWith('.js')).reduce((total, file) => total + statSync(join(outputDirectory, '_astro', file)).size, 0);
