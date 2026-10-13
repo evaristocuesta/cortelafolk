@@ -2,10 +2,12 @@
 import { site } from '../data/site';
 import Icon from './Icon.astro';
 import PageContainer from './PageContainer.astro';
+import WaveDivider from './WaveDivider.astro';
 ---
 <section id="location" class="py-15 sm:py-[75px] tablet:py-26">
 	<PageContainer class="grid grid-cols-1 items-start gap-[35px] sm:grid-cols-2 sm:gap-[30px] tablet:items-center tablet:gap-10 wide:gap-[75px]">
 		<div class="location-copy"><p class="eyebrow">EL CAMINO TAMBIÉN ES PARTE DEL PLAN</p><h2>NOS VEMOS<br />EN <span class="serif-word">Cortelazor.</span></h2><p class="lead">Un pequeño pueblo.<br />Un escenario inmenso.</p><p>En plena Sierra de Aracena y Picos de Aroche, al norte de Huelva. Un lugar de calles blancas, naturaleza y gente que te hace sentir en casa.</p><div class="location-address my-7 flex items-center gap-3"><Icon name="pin" /><div><strong>Cortelazor, Huelva</strong><span>Andalucía, España · 23–25 abril 2027</span></div></div><a class="button button-dark inline-flex items-center justify-between gap-8" href={site.mapUrl} target="_blank" rel="noopener noreferrer">ABRIR RUTA EN EL MAPA <Icon name="arrow" /><span class="sr-only"> (se abre en otra pestaña)</span></a><p class="travel-note">Comparte coche si puedes. Ven sin prisa y deja la sierra tal como la encontraste.</p></div>
 		<div class="relative mt-0 border border-forest/19 bg-[#e0e4d5] sm:mt-[30px] tablet:mt-0"><img class="h-auto w-full" src="/images/location-map.svg" alt="Mapa ilustrado de la Sierra de Aracena con Cortelazor destacado al norte de Aracena; no es un mapa de navegación" width="720" height="740" loading="lazy" /><span class="flex justify-between gap-2 border-t border-forest/19 px-[18px] py-3.5 text-[8px] font-semibold tracking-[.08em]">37°56′ N · 6°37′ O <span>EL NORTE DEL SUR</span></span></div>
 	</PageContainer>
+	<WaveDivider />
 </section>

@@ -2,6 +2,7 @@
 import { festivalDays } from '../data/site';
 import Icon from './Icon.astro';
 import PageContainer from './PageContainer.astro';
+import WaveDivider from './WaveDivider.astro';
 ---
 <section id="festival" class="py-15 sm:py-[75px] tablet:py-26">
 	<PageContainer>
@@ -13,4 +14,5 @@ import PageContainer from './PageContainer.astro';
 			{festivalDays.map((day) => <div class="date-item relative flex flex-col items-center gap-[13px] border-r border-forest/19 px-2 py-5 last:border-r-0 sm:flex-row sm:gap-3.5 sm:px-[15px] sm:py-7 tablet:gap-[25px] tablet:px-6 tablet:first:pl-0"><time datetime={day.fullDate}><span>{day.label}</span><strong>{day.date}</strong><span>ABRIL</span></time><p>{day.subtitle}</p><Icon name="arrow" /></div>)}
 		</div>
 	</PageContainer>
+	<WaveDivider />
 </section>

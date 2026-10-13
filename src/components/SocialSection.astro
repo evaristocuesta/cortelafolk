@@ -1,12 +1,14 @@
 ---
 import Icon from './Icon.astro';
 import PageContainer from './PageContainer.astro';
+import WaveDivider from './WaveDivider.astro';
 ---
 <section class="bg-moss py-[45px] sm:py-[58px]" aria-labelledby="social-title">
 	<PageContainer class="social-inner flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center sm:gap-10">
 		<div><p class="eyebrow">LOS BUENOS PLANES SE COMPARTEN</p><h2 id="social-title">¿A QUIÉN TE TRAES?</h2><p>Pásale el plan a esa persona con la que siempre acabas bailando.</p></div>
 		<div class="share-actions max-w-80"><button class="button button-cream inline-flex items-center justify-between gap-8" type="button" data-share hidden>COMPARTE EL FESTIVAL <Icon name="share" /></button><p data-share-status role="status" aria-live="polite"></p></div>
 	</PageContainer>
+	<WaveDivider />
 </section>
 <script>
 	const shareButton = document.querySelector<HTMLButtonElement>('[data-share]');

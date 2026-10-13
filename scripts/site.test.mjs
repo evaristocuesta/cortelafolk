@@ -96,6 +96,22 @@ test('Accessible, progressive interactions are included', () => {
 	assert.match(css, /font-face/);
 });
 
+test('Main sections and the ribbon have accessible decorative wave dividers', () => {
+	const waves = html.match(/<svg\b[^>]*class="section-wave"[^>]*>/g) ?? [];
+	assert.equal(waves.length, 10, 'Expected a divider for each of the nine main sections and the ribbon.');
+	for (const wave of waves) {
+		assert.equal(getAttribute(wave, 'aria-hidden'), 'true');
+		assert.equal(getAttribute(wave, 'focusable'), 'false');
+		assert.equal(getAttribute(wave, 'preserveAspectRatio'), 'none');
+	}
+});
+
+test('Header wave pattern has vertical clearance beyond the visible SVG', () => {
+	const pattern = html.match(/<pattern\b[^>]*id="site-header-wave"[^>]*>/)?.[0];
+	assert.ok(pattern, 'The header wave pattern must exist.');
+	assert.ok(Number(getAttribute(pattern, 'height')) > 34, 'The next vertical tile must stay outside the 34px viewport.');
+});
+
 test('Runtime assets stay lightweight', () => {
 	const assets = readdirSync(join(outputDirectory, '_astro'));
 	const scriptBytes = assets.filter((file) => file.endsWith('.js')).reduce((total, file) => total + statSync(join(outputDirectory, '_astro', file)).size, 0);

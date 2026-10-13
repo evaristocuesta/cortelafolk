@@ -37,7 +37,7 @@
 
 @layer base {
 	:root { color-scheme: light; --ink: var(--color-forest); --paper: var(--color-paper); --orange: var(--color-tangerine); --line: #173d2d30; }
-	html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+	html { scroll-behavior: smooth; scroll-padding-top: 120px; }
 	::selection { background: var(--orange); color: var(--ink); }
 	h1, h2, h3, h4, p { margin: 0; }
 	h1, h2 { font-family: var(--font-display); font-weight: 800; }
@@ -68,6 +68,12 @@
 	.wordmark { font-size: 26px; font-weight: 800; letter-spacing: -.075em; white-space: nowrap; }
 	.wordmark > span:first-child { font-weight: 400; }
 	.brand-dot { color: #c55222; font-size: 30px; padding-left: 5px; letter-spacing: 0; }
+	.site-header-wave { position: absolute; left: 0; top: calc(100% - 1px); display: block; width: 100%; height: 34px; color: var(--ink); pointer-events: none; }
+	.site-header-wave-fill { fill: var(--paper); }
+	.site-header-wave-line { fill: none; stroke: currentColor; stroke-opacity: .19; }
+	main > section, .festival-ribbon { position: relative; }
+	.section-wave { position: absolute; bottom: -1px; left: 0; z-index: 4; display: block; width: 100%; height: 34px; pointer-events: none; }
+	.festival-ribbon { padding-bottom: 34px; }
 	.site-header nav > a { font-size: 11px; font-weight: 600; white-space: nowrap; }
 	.site-header nav > a:not(.header-access):hover { text-decoration: underline; text-underline-offset: 6px; }
 	.site-header nav > .header-access { border: 1px solid var(--ink); padding: 12px 16px; font-weight: 800; }
@@ -184,7 +190,7 @@
 	.free-badge { width: 260px; height: 260px; }
 }
 @media (max-width: 959px) {
-	html { scroll-padding-top: 90px; }
+	html { scroll-padding-top: 110px; }
 	.site-header .wordmark { margin-block: 19px; }
 	.menu-toggle:not([hidden]) { display: flex; align-items: center; gap: 12px; margin-left: auto; font-size: 10px; font-weight: 700; min-height: 44px; background: transparent; border: 0; }
 	.menu-lines { width: 23px; height: 12px; border-block: 1px solid var(--ink); position: relative; }
@@ -238,7 +244,7 @@
 	.hero-date > span { font-size: 16px; margin-top: 7px; }
 	.hero-date > p { margin-top: 10px; margin-left: 0; padding-left: 0; font-size: 9px; }
 	.hero-landscape { height: 270px; object-position: 61% bottom; }
-	.hero-scroll { bottom: 20px; width: 31px; height: 39px; }
+	.hero-scroll { bottom: 40px; width: 31px; height: 39px; }
 	.festival-ribbon > div { gap: 20px; min-height: 46px; font-size: 20px; }
 	.intro-grid h2 { font-size: 65px; }
 	.intro-copy { padding-top: 0; }

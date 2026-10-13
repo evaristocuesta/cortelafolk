@@ -1,0 +1,12 @@
+---
+interface Props {
+	nextColor?: 'paper' | 'tangerine' | 'forest' | 'moss';
+}
+
+const { nextColor = 'paper' } = Astro.props;
+const wave = 'M0 17C46.67 13 76.67 1.83 130 4C183.33 6.17 241.67 29.83 320 30C398.33 30.17 518.33 5.33 600 5C681.67 4.67 750 26 810 28C870 30 913.33 21 960 17';
+---
+<svg class="section-wave" viewBox="0 0 960 34" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+	<path d={`${wave}V34H0Z`} fill={`var(--color-${nextColor})`} />
+	<path d={wave} fill="none" stroke="var(--ink)" stroke-opacity=".19" vector-effect="non-scaling-stroke" />
+</svg>

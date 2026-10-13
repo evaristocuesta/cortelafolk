@@ -3,7 +3,7 @@ import { navigationItems } from '../data/site';
 import Icon from './Icon.astro';
 import PageContainer from './PageContainer.astro';
 ---
-<header class="site-header sticky top-0 z-30 border-b border-forest/19 bg-paper">
+<header class="site-header sticky top-0 z-30 bg-paper">
 	<PageContainer class="flex min-h-[68px] flex-wrap items-center justify-between gap-0 sm:min-h-[72px] tablet:min-h-[82px] tablet:flex-nowrap tablet:gap-8">
 		<a href="#home" class="wordmark inline-flex items-center" aria-label="Cortelafolk, volver al inicio">cortela<span>folk</span><span class="brand-dot" aria-hidden="true">✳</span></a>
 		<button class="menu-toggle" aria-expanded="false" aria-controls="main-navigation" hidden><span data-menu-label>Abrir menú</span><span class="menu-lines" aria-hidden="true"></span></button>
@@ -12,6 +12,16 @@ import PageContainer from './PageContainer.astro';
 			<a class="header-access flex items-center gap-4" href="#free-access">Entrada gratuita <Icon name="arrow" /></a>
 		</nav>
 	</PageContainer>
+	<svg class="site-header-wave" aria-hidden="true" focusable="false">
+		<defs>
+			<!-- Taller than the SVG viewport to keep the next vertical tile outside its antialiased edge. -->
+			<pattern id="site-header-wave" width="960" height="40" patternUnits="userSpaceOnUse">
+				<path class="site-header-wave-fill" d="M0 17C46.67 13 76.67 1.83 130 4C183.33 6.17 241.67 29.83 320 30C398.33 30.17 518.33 5.33 600 5C681.67 4.67 750 26 810 28C870 30 913.33 21 960 17V0H0Z" />
+				<path class="site-header-wave-line" d="M0 17C46.67 13 76.67 1.83 130 4C183.33 6.17 241.67 29.83 320 30C398.33 30.17 518.33 5.33 600 5C681.67 4.67 750 26 810 28C870 30 913.33 21 960 17" />
+			</pattern>
+		</defs>
+		<rect width="100%" height="100%" fill="url(#site-header-wave)" />
+	</svg>
 </header>
 <script>
 	const menuButton = document.querySelector<HTMLButtonElement>('.menu-toggle');

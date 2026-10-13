@@ -2,14 +2,16 @@
 import { practicalQuestions } from '../data/site';
 import Icon from './Icon.astro';
 import PageContainer from './PageContainer.astro';
+import WaveDivider from './WaveDivider.astro';
 ---
-<section id="information" class="border-t border-forest/19 py-15 sm:py-[75px] tablet:pb-26">
+<section id="information" class="py-15 sm:py-[75px] tablet:pb-26">
 	<PageContainer class="information-grid grid grid-cols-1 gap-8 sm:grid-cols-[.8fr_1.2fr] sm:gap-[50px] tablet:gap-[90px]">
 		<div class="max-sm:relative"><p class="eyebrow">ANTES DE HACER LA MOCHILA</p><h2>BUENO<br />SABERLO.</h2><p>Menos dudas.<br />Más ganas de venir.</p><Icon name="sun" class="information-sun" /></div>
 		<div class="faq-list">
 			{practicalQuestions.map((item) => <details class="group border-t border-forest/19 last:border-b"><summary class="flex cursor-pointer list-none items-center justify-between gap-5 py-5 text-xs leading-normal font-bold sm:py-[22px] sm:text-[13px]">{item.question}<Icon name="plus" class="size-[19px] shrink-0 transition-transform duration-200 group-open:rotate-45" /></summary><p class="pr-8 pb-6 text-xs leading-[1.85]">{item.answer}</p></details>)}
 		</div>
 	</PageContainer>
+	<WaveDivider nextColor="moss" />
 </section>
 
 <style>

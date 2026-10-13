@@ -4,6 +4,7 @@ import { scheduleItems } from '../data/schedule';
 import { stages } from '../data/stages';
 import SectionHeading from './SectionHeading.astro';
 import PageContainer from './PageContainer.astro';
+import WaveDivider from './WaveDivider.astro';
 
 const filterClasses = 'min-h-11 border border-forest/19 bg-transparent px-[13px] py-2.5 text-[10px] font-bold hover:border-forest aria-pressed:border-forest aria-pressed:bg-forest aria-pressed:text-paper sm:px-[18px] sm:py-[11px] sm:text-[11px]';
 ---
@@ -35,6 +36,7 @@ const filterClasses = 'min-h-11 border border-forest/19 bg-transparent px-[13px]
 		</div>
 		<div class="stage-strip mt-[35px] bg-[#e7e7d9] p-6 sm:mt-[45px] sm:p-7"><p class="eyebrow">EL PUEBLO ES EL ESCENARIO</p><div class="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-5 tablet:gap-8">{stages.map((stage, index) => <article><span>0{index + 1}</span><h3>{stage.name}</h3><p>{stage.description}</p></article>)}</div></div>
 	</PageContainer>
+	<WaveDivider nextColor="forest" />
 </section>
 <script>
 	const filters = document.querySelector<HTMLElement>('.schedule-filters');
