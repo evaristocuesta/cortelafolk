@@ -17,7 +17,7 @@ const filterClasses = 'min-h-11 border border-forest/19 bg-transparent px-[13px]
 			{festivalDays.map((day) => <button type="button" class={filterClasses} data-day={day.id} aria-pressed="false">{day.label} {day.date}</button>)}
 		</div>
 		<p class="sr-only" data-schedule-status aria-live="polite" aria-atomic="true"></p>
-		<div class="schedule-grid grid grid-cols-1 gap-[34px] sm:grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] sm:gap-7">
+		<div class="schedule-grid grid grid-cols-1 gap-[34px] lg:grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] sm:gap-7">
 			{festivalDays.map((day) => (
 				<section class="schedule-day" data-schedule-day={day.id} aria-labelledby={`day-${day.id}`}>
 					<div class="schedule-day-heading flex items-center justify-between border-y border-forest py-[15px] sm:py-5">
