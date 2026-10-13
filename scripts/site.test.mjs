@@ -11,7 +11,7 @@ const getAttribute = (tag, name) => tag.match(new RegExp(`\\b${name}="([^"]*)"`)
 test('Spanish page language and festival SEO metadata', () => {
 	assert.match(html, /<html lang="es">/);
 	assert.match(html, /<title>Cortelafolk 2027/);
-	assert.match(html, /name="description" content="[^"]*Entrada gratuita/);
+	assert.match(html, /name="description" content="[^"]*Entrada libre/);
 	assert.match(html, /property="og:locale" content="es_ES"/);
 	assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
 });
@@ -66,8 +66,8 @@ test('All local images, fonts, styles and scripts exist in the build', () => {
 });
 
 test('Free access is explicit and there is no ticketing or registration', () => {
-	assert.match(html, /ENTRADA GRATUITA · SIN RESERVAS/);
-	assert.match(html, /La entrada es gratuita para todo el mundo/);
+	assert.match(html, /ENTRADA LIBRE/);
+	assert.match(html, /La entrada es libre para todo el mundo/);
 	assert.match(html, /href="#location"[^>]*>CÓMO LLEGAR/);
 	assert.doesNotMatch(html, /<(?:form|input|select|textarea)\b/);
 	assert.doesNotMatch(html, /(?:Consigue tu entrada|Entradas próximamente|Comprar entradas|eventbrite|ticketmaster|entradium|checkout)/i);
@@ -118,8 +118,8 @@ test('Anchor offsets match the solid header height at each breakpoint', () => {
 		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
 		.join('');
 	assert.match(css, /html\{[^}]*scroll-padding-top:82px/);
-	assert.match(css, /@media\s*\(max-width:\s*959px\)\{html\{scroll-padding-top:72px/);
-	assert.match(css, /@media\s*\(max-width:\s*639px\)\{html\{scroll-padding-top:68px/);
+	assert.match(css, /@media\s*\((?:max-width:\s*|width\s*<=\s*)959px\)\s*\{\s*html\s*\{[^}]*scroll-padding-top:\s*72px/);
+	assert.match(css, /@media\s*\((?:max-width:\s*|width\s*<=\s*)639px\)\s*\{\s*html\s*\{[^}]*scroll-padding-top:\s*68px/);
 });
 
 test('Runtime assets stay lightweight', () => {
