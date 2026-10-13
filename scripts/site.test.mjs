@@ -81,6 +81,20 @@ test('Provisional content is not presented as confirmed', () => {
 	assert.equal((html.match(/data-schedule-day=/g) ?? []).length, 3);
 });
 
+test('Location includes an accessible lazy-loaded Google Maps embed', () => {
+	const map = html.match(/<iframe\b[^>]*>/)?.[0];
+	assert.ok(map, 'The location map must be embedded.');
+	const url = new URL(getAttribute(map, 'src'));
+	assert.equal(url.origin, 'https://www.google.com');
+	assert.equal(url.pathname, '/maps');
+	assert.equal(url.searchParams.get('q'), 'Cortelazor, Huelva, España');
+	assert.equal(url.searchParams.get('output'), 'embed');
+	assert.equal(getAttribute(map, 'title'), 'Mapa de Cortelazor, Huelva');
+	assert.equal(getAttribute(map, 'loading'), 'lazy');
+	assert.ok(getAttribute(map, 'width') && getAttribute(map, 'height'));
+	assert.doesNotMatch(html, /src="\/images\/location-map\.svg"/);
+});
+
 test('Accessible, progressive interactions are included', () => {
 	assert.match(html, /class="skip-link"/);
 	assert.match(html, /aria-controls="main-navigation"/);
