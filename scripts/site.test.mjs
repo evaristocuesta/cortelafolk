@@ -4,9 +4,38 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 
 const outputDirectory = resolve('dist');
-assert.ok(existsSync(join(outputDirectory, 'index.html')), 'Run pnpm build before pnpm test.');
-const html = readFileSync(join(outputDirectory, 'index.html'), 'utf8');
+const landingPath = join(outputDirectory, 'index.html');
+const festivalPath = join(outputDirectory, '2027', 'index.html');
+assert.ok(existsSync(landingPath) && existsSync(festivalPath), 'Run pnpm build before pnpm test.');
+// `html` is the full 2027 festival page; `landingHtml` is the simple root teaser.
+const html = readFileSync(festivalPath, 'utf8');
+const landingHtml = readFileSync(landingPath, 'utf8');
 const getAttribute = (tag, name) => tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
+
+test('Root landing page shows the logo and 2027 dates', () => {
+	assert.match(landingHtml, /<html lang="es">/);
+	assert.match(landingHtml, /<title>Cortelafolk 2027/);
+	const logo = landingHtml.match(/<img\b[^>]*src="\/images\/logo\.webp"[^>]*>/)?.[0];
+	assert.ok(logo, 'The landing page must show the Cortelafolk logo.');
+	assert.equal(getAttribute(logo, 'alt'), 'Cortelafolk');
+	assert.ok(getAttribute(logo, 'width') && getAttribute(logo, 'height'), 'The logo needs explicit dimensions.');
+	assert.match(landingHtml, /23 · 24 · 25/);
+	assert.match(landingHtml, /ABRIL 2027/);
+	assert.match(landingHtml, /Cortelazor, Huelva/);
+	assert.match(landingHtml, /ENTRADA LIBRE/);
+	assert.doesNotMatch(landingHtml, /<(?:form|input|select|textarea)\b/);
+	for (const match of landingHtml.matchAll(/\b(?:src|href)="(\/[^"#]*)"/g)) {
+		assert.ok(existsSync(join(outputDirectory, match[1])), `Missing asset: ${match[1]}`);
+	}
+	const landingCanonical = landingHtml.match(/<link\b[^>]*rel="canonical"[^>]*>/)?.[0];
+	if (landingCanonical) {
+		const canonicalUrl = new URL(getAttribute(landingCanonical, 'href'));
+		assert.notEqual(canonicalUrl.hostname, 'localhost');
+		assert.notEqual(canonicalUrl.hostname, '127.0.0.1');
+	} else {
+		assert.doesNotMatch(landingHtml, /property="og:url"/);
+	}
+});
 
 test('Spanish page language and festival SEO metadata', () => {
 	assert.match(html, /<html lang="es">/);

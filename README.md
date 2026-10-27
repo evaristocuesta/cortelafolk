@@ -2,6 +2,8 @@
 
 Static, Spanish-language festival website built on the existing Astro 7, Tailwind CSS 4 and strict TypeScript configuration. No client framework, ticketing, registration, analytics or third-party embeds are used.
 
+The site has two pages: a minimal root teaser at `/` (logo, dates) and the full single-page festival site under construction at `/2027/`.
+
 ## Development
 
 Requires Node.js >=22.12 and pnpm.
@@ -22,7 +24,8 @@ Run `pnpm build` before `pnpm test`; tests deliberately inspect production outpu
 
 ## Structure and content editing
 
-- `src/pages/index.astro`: the single-page entry point and SEO metadata.
+- `src/pages/index.astro`: minimal root teaser with the logo and the festival dates.
+- `src/pages/2027/index.astro`: the festival single-page entry point and its SEO metadata, served at `/2027/`.
 - `src/components/`: reusable Astro sections and presentation components.
 - `src/data/site.ts`: approved festival facts, navigation, dates and practical information.
 - `src/data/artists.ts`: artist records, images, day assignments and colour treatments.

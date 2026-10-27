@@ -25,6 +25,7 @@
 
 @theme {
 	--color-forest: #173d2d;
+	--color-forest-light: #93a379;
 	--color-paper: #f3f0e5;
 	--color-tangerine: #f58443;
 	--color-moss: #bbca9c;
@@ -91,7 +92,7 @@
 	.hero-stamp strong { font-family: var(--font-display); font-size: 28px; line-height: 1.1; }
 	.hero-stamp svg { margin-top: 4px; width: 25px; color: var(--orange); }
 	.hero-copy > p { font-size: 16px; line-height: 1.6; margin-bottom: 22px; }
-	.hero-copy > .hero-access-line { color: var(--orange); font-size: 11px; font-weight: 800; letter-spacing: .06em; margin-bottom: 14px; }
+	.hero-copy > .hero-access-line { color: var(--color-forest); font-size: 11px; font-weight: 800; letter-spacing: .06em; margin-bottom: 14px; }
 	.hero-date { text-align: right; padding-bottom: 3px; }
 	.hero-date > strong { display: block; font-family: var(--font-display); font-size: 67px; line-height: .9; letter-spacing: -.03em; }
 	.hero-date > span { display: block; font-size: 22px; letter-spacing: .09em; font-weight: 700; margin-top: 8px; }
@@ -182,6 +183,22 @@
 	.footer-main > p > strong { color: #a6441b; }
 	.footer-main nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
 	.footer-bottom > a { font-weight: 800; letter-spacing: .08em; }
+	.landing-logo { width: clamp(220px, 42vw, 460px); }
+	.landing-dates { font-family: var(--font-display); font-weight: 800; font-size: clamp(72px, 15vw, 170px); line-height: .88; letter-spacing: -.02em; }
+	.landing-dates > span { display: block; font-family: var(--font-sans); font-size: clamp(14px, 2.4vw, 24px); font-weight: 700; letter-spacing: .14em; margin-top: 12px; }
+	.landing-free { color: var(--orange); }
+	.landing-landscape {
+		position: absolute;
+		z-index: 1;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		max-width: none;
+		object-fit: contain;
+		object-position: bottom center;
+		opacity: .55;
+		pointer-events: none;
+	}
 }
 
 @media (min-width: 1440px) {
