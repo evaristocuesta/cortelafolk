@@ -27,7 +27,7 @@ Run `pnpm build` before `pnpm test`; tests deliberately inspect production outpu
 - `src/pages/index.astro`: minimal root teaser with the logo and the festival dates.
 - `src/pages/2027/index.astro`: the festival single-page entry point and its SEO metadata, served at `/2027/`.
 - `src/components/`: reusable Astro sections and presentation components.
-- `src/data/site.ts`: approved festival facts, navigation, dates and practical information.
+- `src/data/site.ts`: approved festival facts, navigation, dates, practical information and the official social profiles.
 - `src/data/artists.ts`: artist records, images, day assignments and colour treatments.
 - `src/data/schedule.ts`: performances, times, categories and stage references.
 - `src/data/stages.ts`: proposed spaces and descriptions.
@@ -52,7 +52,7 @@ Schedule buttons use Tailwind's `aria-pressed:` variants, with the accessible at
 
 Before final publication, replace these records with organiser-approved content. Keep the public qualification until the programme is approved. The approved festival facts are: fourth edition, 23–25 April 2027, Cortelazor (Huelva), free access for everyone, without tickets or registration.
 
-No sponsor logos, organiser endorsements, contact addresses or social profiles are invented. The community footer can later be extended with verified partner assets; the social section uses native sharing or clipboard copying instead of unverified profiles.
+No sponsor logos, organiser endorsements or contact addresses are invented. The only social profiles linked from the footer and the provisional landing page are the official Instagram and Facebook accounts declared in `src/data/site.ts`; the in-page social section keeps using native sharing or clipboard copying instead of further profiles. The community footer can later be extended with verified partner assets.
 
 ## Interaction and accessibility
 
@@ -83,4 +83,4 @@ The landscape, map and favicon are original vector illustrations. Photographs ar
 | `live-stage.webp` | `https://images.unsplash.com/photo-1501386761578-eac5c94b800a` |
 | `live-night.webp` | `https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f` |
 
-Barlow Condensed and DM Sans are locally hosted Google Fonts under the SIL Open Font License. License copies are included in `public/fonts/`. The original social preview source is `public/images/social-preview.svg`; `social-preview.png` is the raster version used by social networks.
+Barlow Condensed and DM Sans are locally hosted Google Fonts under the SIL Open Font License. License copies are included in `public/fonts/`. The original social preview source is `public/images/social-preview.svg`; `social-preview.png` is the raster version used by social networks. Interface icons, including the Instagram and Facebook marks in the footer, follow the Lucide icon set (ISC license).

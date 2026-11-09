@@ -15,6 +15,11 @@ export const navigationItems = [
 	{ label: 'Cómo llegar', href: '#location' },
 ];
 
+export const socialLinks = [
+	{ name: 'Instagram', href: 'https://www.instagram.com/cortelafolk/', icon: 'instagram' },
+	{ name: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61557574401350', icon: 'facebook' },
+] as const;
+
 export const festivalDays = [
 	{ id: 'friday', label: 'Viernes', date: '23', fullDate: '2027-04-23', subtitle: 'El primer encuentro' },
 	{ id: 'saturday', label: 'Sábado', date: '24', fullDate: '2027-04-24', subtitle: 'Un día para vivirlo todo' },

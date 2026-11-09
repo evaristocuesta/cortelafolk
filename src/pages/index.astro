@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
-import { site } from '../data/site';
+import Icon from '../components/Icon.astro';
+import { site, socialLinks } from '../data/site';
 
 const productionOrigin = import.meta.env.PUBLIC_SITE_URL;
 const canonicalUrl = productionOrigin ? new URL('/', productionOrigin).href : undefined;
@@ -29,6 +30,9 @@ const socialImageUrl = canonicalUrl ? new URL('/images/social-preview.png', cano
 		<title>Cortelafolk 2027 · 23, 24 y 25 de abril</title>
 	</head>
 	<body class="landing-page relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-forest-light px-6 py-12 text-center text-paper antialiased">
+		<ul class="absolute right-6 top-12 z-[2] flex items-center gap-3" aria-label="Redes sociales de Cortelafolk">
+			{socialLinks.map((link) => <li><a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`Cortelafolk en ${link.name}`} class="grid h-9 w-9 place-items-center rounded-full border border-paper/50 transition-colors hover:bg-paper hover:text-forest"><Icon name={link.icon} class="h-4 w-4" /></a></li>)}
+		</ul>
 		<div class="relative z-[2] flex flex-col items-center gap-10 sm:gap-12 tablet:gap-14">
 			<img class="landing-logo" src="/images/logo.webp" alt="Cortelafolk" width="716" height="401" fetchpriority="high" />
 			<div class="landing-content flex flex-col items-center gap-2 text-[14px] font-semibold tracking-[.22em] sm:flex-row sm:gap-4">

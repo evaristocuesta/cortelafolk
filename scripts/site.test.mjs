@@ -102,6 +102,28 @@ test('Free access is explicit and there is no ticketing or registration', () => 
 	assert.doesNotMatch(html, /(?:Consigue tu entrada|Entradas próximamente|Comprar entradas|eventbrite|ticketmaster|entradium|checkout)/i);
 });
 
+const socialProfiles = [
+	{ name: 'Instagram', pattern: /<a\b[^>]*href="https:\/\/www\.instagram\.com\/cortelafolk\/"[^>]*>/ },
+	{ name: 'Facebook', pattern: /<a\b[^>]*href="https:\/\/www\.facebook\.com\/profile\.php\?id=61557574401350"[^>]*>/ },
+];
+
+const assertSocialProfiles = (source, regionPattern, context) => {
+	const region = source.match(regionPattern)?.[0];
+	assert.ok(region, `Missing region: ${context}.`);
+	for (const { name, pattern } of socialProfiles) {
+		const tag = region.match(pattern)?.[0];
+		assert.ok(tag, `Missing ${name} link in ${context}.`);
+		assert.equal(getAttribute(tag, 'aria-label'), `Cortelafolk en ${name}`);
+		assert.equal(getAttribute(tag, 'target'), '_blank');
+		assert.match(getAttribute(tag, 'rel') ?? '', /noopener/);
+	}
+};
+
+test('Official social profiles are linked from the footer and the landing page', () => {
+	assertSocialProfiles(html, /<footer\b[\s\S]*?<\/footer>/, 'the festival footer');
+	assertSocialProfiles(landingHtml, /<body\b[\s\S]*?<\/body>/, 'the landing page');
+});
+
 test('Provisional content is not presented as confirmed', () => {
 	assert.match(html, /Cartel en preparación/);
 	assert.match(html, /Esta selección es orientativa/);
@@ -126,6 +148,10 @@ test('Location includes an accessible lazy-loaded Google Maps embed', () => {
 
 test('Accessible, progressive interactions are included', () => {
 	assert.match(html, /class="skip-link"/);
+	const backToTop = html.match(/<a\b[^>]*href="#home"[^>]*aria-label="Volver arriba"[^>]*>[\s\S]*?<\/a>/)?.[0];
+	assert.ok(backToTop, 'The footer needs an accessible back-to-top link.');
+	assert.match(backToTop, /<svg\b/, 'The back-to-top link must be an icon.');
+	assert.match(backToTop, /h-9 w-9/, 'The back-to-top icon must match the social icon size.');
 	assert.match(html, /aria-controls="main-navigation"/);
 	assert.match(html, /aria-label="Filtrar programación por día"/);
 	assert.equal((html.match(/<details\b/g) ?? []).length, 5);
