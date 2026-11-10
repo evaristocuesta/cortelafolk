@@ -82,7 +82,7 @@
 	.header-access svg { width: 18px; height: 18px; }
 	.header-access:hover { background: var(--ink); color: var(--paper); }
 	.menu-toggle { display: none; }
-	.small-star { font-size: 21px; color: var(--orange); line-height: 1; }
+	.small-star { font-size: 21px; color: #c55222; line-height: 1; }
 	.hero-title-wrap { position: relative; margin-top: 37px; }
 	.hero h1 { font-size: clamp(130px, 20.3vw, 267px); letter-spacing: -.026em; line-height: .77; }
 	.hero h1 > span { display: flex; align-items: center; margin-top: 14px; }
@@ -90,7 +90,7 @@
 	.hero-stamp { position: absolute; right: 4px; bottom: 20px; width: 174px; height: 174px; border: 1px solid #f3f0e58c; border-radius: 50%; transform: rotate(11deg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
 	.hero-stamp > span { font-size: 9px; font-weight: 600; letter-spacing: .12em; }
 	.hero-stamp strong { font-family: var(--font-display); font-size: 28px; line-height: 1.1; }
-	.hero-stamp svg { margin-top: 4px; width: 25px; color: var(--orange); }
+	.hero-stamp svg { margin-top: 4px; width: 25px; color: #c55222; }
 	.hero-copy > p { font-size: 16px; line-height: 1.6; margin-bottom: 22px; }
 	.hero-copy > .hero-access-line { color: var(--color-forest); font-size: 11px; font-weight: 800; letter-spacing: .06em; margin-bottom: 14px; }
 	.hero-date { text-align: right; padding-bottom: 3px; }
@@ -98,7 +98,9 @@
 	.hero-date > span { display: block; font-size: 22px; letter-spacing: .09em; font-weight: 700; margin-top: 8px; }
 	.hero-date > p { font-size: 10px; letter-spacing: .09em; margin-top: 13px; margin-left: auto; width: fit-content; padding: 7px 10px; background: var(--ink); }
 	.hero-date svg { width: 16px; height: 16px; }
-	.hero-landscape { position: absolute; z-index: 1; bottom: 0; width: 100%; max-width: none; height: 330px; object-fit: cover; object-position: bottom center; pointer-events: none; }
+	/* height:auto keeps the 1600:430 ratio so the hill tops are never cropped;
+	   min-height preserves the fixed landscape band on narrower viewports. */
+	.hero-landscape { position: absolute; z-index: 1; bottom: 0; width: 100%; max-width: none; height: auto; min-height: 330px; object-fit: cover; object-position: bottom center; pointer-events: none; }
 	.hero-scroll { position: absolute; z-index: 3; bottom: 34px; left: calc(50% - 18px); border: 1px solid #f3f0e57a; width: 36px; height: 46px; border-radius: 30px; display: grid; place-items: center; font-size: 23px; }
 	.hero-scroll:hover { background: var(--paper); color: var(--ink); }
 	/* No padding on the track: the -50% loop must equal exactly one group plus one gap. */
@@ -289,7 +291,7 @@
 	.hero-date > strong { font-size: 48px; }
 	.hero-date > span { font-size: 16px; margin-top: 7px; }
 	.hero-date > p { margin-top: 10px; margin-left: 0; padding-left: 0; font-size: 9px; }
-	.hero-landscape { height: 270px; object-position: 61% bottom; }
+	.hero-landscape { height: 270px; min-height: 270px; object-position: 61% bottom; }
 	.hero-scroll { bottom: 40px; width: 31px; height: 39px; }
 	.ribbon-track, .ribbon-group { gap: 20px; min-height: 46px; font-size: 20px; }
 	.intro-grid h2 { font-size: 65px; }
