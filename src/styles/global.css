@@ -101,7 +101,9 @@
 	.hero-landscape { position: absolute; z-index: 1; bottom: 0; width: 100%; max-width: none; height: 330px; object-fit: cover; object-position: bottom center; pointer-events: none; }
 	.hero-scroll { position: absolute; z-index: 3; bottom: 34px; left: calc(50% - 18px); border: 1px solid #f3f0e57a; width: 36px; height: 46px; border-radius: 30px; display: grid; place-items: center; font-size: 23px; }
 	.hero-scroll:hover { background: var(--paper); color: var(--ink); }
-	.festival-ribbon > div { gap: 30px; width: max-content; min-width: 100%; min-height: 55px; padding-inline: 25px; font-family: var(--font-display); font-size: 23px; letter-spacing: .015em; }
+	/* No padding on the track: the -50% loop must equal exactly one group plus one gap. */
+	.ribbon-track { display: flex; align-items: center; width: max-content; min-height: 55px; gap: 30px; font-family: var(--font-display); font-size: 23px; letter-spacing: .015em; animation: ribbon-scroll 40s linear infinite; }
+	.ribbon-group { display: flex; align-items: center; flex-shrink: 0; gap: 30px; }
 	.festival-ribbon span:nth-child(even) { font-family: Georgia, serif; font-size: 31px; }
 	.intro-grid h2 { font-size: clamp(55px, 7vw, 93px); }
 	.intro-copy { position: relative; padding-top: 32px; }
@@ -213,6 +215,10 @@
 	from { opacity: 0; transform: translateY(32px); }
 	to { opacity: 1; transform: translateY(0); }
 }
+@keyframes ribbon-scroll {
+	from { transform: translateX(0); }
+	to { transform: translateX(-50%); }
+}
 
 @media (prefers-reduced-motion: no-preference) {
 	body.landing-page { animation: landing-fade-in .7s ease both; }
@@ -285,7 +291,7 @@
 	.hero-date > p { margin-top: 10px; margin-left: 0; padding-left: 0; font-size: 9px; }
 	.hero-landscape { height: 270px; object-position: 61% bottom; }
 	.hero-scroll { bottom: 40px; width: 31px; height: 39px; }
-	.festival-ribbon > div { gap: 20px; min-height: 46px; font-size: 20px; }
+	.ribbon-track, .ribbon-group { gap: 20px; min-height: 46px; font-size: 20px; }
 	.intro-grid h2 { font-size: 65px; }
 	.intro-copy { padding-top: 0; }
 	.intro-flower { top: -25px; right: 5px; width: 48px; height: 48px; }
@@ -333,4 +339,7 @@
 @media (prefers-reduced-motion: reduce) {
 	html { scroll-behavior: auto; }
 	*, *::before, *::after { animation: none !important; transition: none !important; }
+	/* Static fallback: a single centered copy that bleeds off both edges. */
+	.ribbon-track { width: 100%; justify-content: center; }
+	.ribbon-group[aria-hidden='true'] { display: none; }
 }
