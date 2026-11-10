@@ -132,6 +132,32 @@ test('Provisional content is not presented as confirmed', () => {
 	assert.equal((html.match(/data-schedule-day=/g) ?? []).length, 3);
 });
 
+test('Artists are grouped into one column per day with an accessible modal profile', () => {
+	assert.equal((html.match(/data-artist-day=/g) ?? []).length, 3, 'Expected one artist column per festival day.');
+	for (const id of ['artist-day-friday', 'artist-day-saturday', 'artist-day-sunday']) {
+		assert.match(html, new RegExp(`id="${id}"`), `Missing artist column heading: ${id}.`);
+	}
+	const triggers = html.match(/<button\b[^>]*data-artist-open[^>]*>/g) ?? [];
+	assert.equal(triggers.length, 4, 'Every artist card needs a profile trigger.');
+	for (const tag of triggers) {
+		assert.equal(getAttribute(tag, 'aria-haspopup'), 'dialog');
+		assert.ok(getAttribute(tag, 'aria-label'), 'Artist triggers need an accessible name.');
+		assert.ok(getAttribute(tag, 'data-description'), 'Artist triggers carry the modal description.');
+		assert.ok(getAttribute(tag, 'data-image-alt'), 'Artist triggers carry the modal image description.');
+	}
+	const dialog = html.match(/<dialog\b[^>]*data-artist-dialog[^>]*>/)?.[0];
+	assert.ok(dialog, 'The artist modal must exist.');
+	assert.equal(getAttribute(dialog, 'aria-labelledby'), 'artist-dialog-title');
+	assert.match(html, /id="artist-dialog-title"/);
+	assert.match(html, /<a\b[^>]*href="#schedule"[^>]*aria-label="Ver la programación orientativa de [^"]+"/);
+	const css = readdirSync(join(outputDirectory, '_astro'))
+		.filter((file) => file.endsWith('.css'))
+		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
+		.join('');
+	assert.match(css, /\.artist-wave/, 'Each artist card needs its wave edge.');
+	assert.match(css, /artist-wave-undulate/, 'Hovering an artist card needs its wave motion.');
+});
+
 test('Location includes an accessible lazy-loaded Google Maps embed', () => {
 	const map = html.match(/<iframe\b[^>]*>/)?.[0];
 	assert.ok(map, 'The location map must be embedded.');
@@ -208,7 +234,7 @@ test('Tailwind generates responsive grids and accessible state variants', () => 
 		.filter((file) => file.endsWith('.css'))
 		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
 		.join('');
-	for (const utility of ['.grid-cols-2', '.tablet\\:grid-cols-4', '.wide\\:px-16', '.aria-pressed\\:bg-forest', '.group-open\\:rotate-45']) {
+	for (const utility of ['.grid-cols-2', '.lg\\:grid-cols-\\[repeat\\(auto-fit\\,minmax\\(min\\(100\\%\\,280px\\)\\,1fr\\)\\)\\]', '.wide\\:px-16', '.aria-pressed\\:bg-forest', '.group-open\\:rotate-45']) {
 		assert.ok(css.includes(utility), `Missing generated Tailwind utility: ${utility}`);
 	}
 	assert.doesNotMatch(css, /@apply|@theme/);

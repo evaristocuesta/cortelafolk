@@ -5,12 +5,23 @@ import Icon from './Icon.astro';
 interface Props { artist: Artist; }
 const { artist } = Astro.props;
 const day = festivalDays.find((item) => item.id === artist.day);
+// Same path as WaveDivider so each card repeats the section wave language.
+const wave = 'M0 17C46.67 13 76.67 1.83 130 4C183.33 6.17 241.67 29.83 320 30C398.33 30.17 518.33 5.33 600 5C681.67 4.67 750 26 810 28C870 30 913.33 21 960 17';
 ---
-<article class:list={['artist-card group min-w-0', `tone-${artist.tone}`]}>
-	<div class="artist-image relative aspect-[.8] overflow-hidden bg-[var(--card-color)] sm:aspect-[1.05] tablet:aspect-[.85]">
-		<img class="h-full w-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.04]" src={artist.image} alt={artist.imageAlt} width="640" height="720" loading="lazy" decoding="async" />
-		<span class="absolute top-2 left-2 z-[1] bg-paper px-[7px] py-1.5 text-[7px] font-bold tracking-[.07em] text-forest uppercase sm:top-3 sm:left-3 sm:px-[11px] sm:py-[7px] sm:text-[9px]">{day?.label} {day?.date}</span>
+<article class:list={['artist-card group relative min-w-0', `tone-${artist.tone}`]}>
+	<button type="button" class="artist-open" data-artist-open data-name={artist.name} data-genre={artist.genre} data-description={artist.description} data-image={artist.image} data-image-alt={artist.imageAlt} data-day={day ? `${day.label} ${day.date} de abril` : ''} data-tone={artist.tone} aria-haspopup="dialog" aria-label={`Ver la ficha de ${artist.name}`}></button>
+	<div class="artist-image relative aspect-[.8] max-h-[560px] overflow-hidden bg-[var(--card-color)] sm:aspect-[1.05] tablet:aspect-[.85]">
+		<img class="h-full w-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.07]" src={artist.image} alt={artist.imageAlt} width="640" height="720" loading="lazy" decoding="async" />
+		<svg class="artist-wave" viewBox="0 0 960 34" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+			<path d={`${wave}V34H0Z`} fill="var(--paper)" />
+			<path d={wave} fill="none" stroke="var(--ink)" stroke-opacity=".19" vector-effect="non-scaling-stroke" />
+		</svg>
 		<span class="artist-decoration" aria-hidden="true">✳</span>
 	</div>
-	<div class="artist-info relative border-b border-forest/19 pt-3.5 pr-5 pb-4 sm:py-5 sm:pr-7"><p>{artist.genre}</p><h3>{artist.name}</h3><a class="absolute right-[-5px] bottom-3 grid h-8 w-[27px] place-items-center hover:bg-tangerine sm:right-[-4px] sm:bottom-[17px] sm:w-8" href="#schedule" aria-label={`Ver la programación orientativa de ${artist.name}`}><Icon name="arrow" class="max-sm:w-[18px]" /></a></div>
+	<div class="artist-info relative border-b border-forest/19 pt-3.5 pr-5 pb-4 sm:py-5 sm:pr-7">
+		<p>{artist.genre}</p>
+		<h4>{artist.name}</h4>
+		<svg class="artist-title-wave" viewBox="0 0 960 34" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d={wave} pathLength="100" /></svg>
+		<a class="absolute right-[-5px] bottom-3 z-[3] grid h-8 w-[27px] place-items-center hover:bg-tangerine sm:right-[-4px] sm:bottom-[17px] sm:w-8" href="#schedule" aria-label={`Ver la programación orientativa de ${artist.name}`}><Icon name="arrow" class="max-sm:w-[18px]" /></a>
+	</div>
 </article>

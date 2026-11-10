@@ -4,6 +4,7 @@ export interface Artist {
 	id: string;
 	name: string;
 	genre: string;
+	description: string;
 	image: string;
 	imageAlt: string;
 	day: FestivalDay;

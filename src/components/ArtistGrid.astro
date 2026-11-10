@@ -1,16 +1,70 @@
 ---
 import { artists } from '../data/artists';
+import { festivalDays } from '../data/site';
 import ArtistCard from './ArtistCard.astro';
 import SectionHeading from './SectionHeading.astro';
 import PageContainer from './PageContainer.astro';
 import WaveDivider from './WaveDivider.astro';
+import Icon from './Icon.astro';
+
+// Seed values keep the dialog markup complete before JavaScript enhances it.
+const sampleArtist = artists[0];
+const sampleDay = festivalDays.find((day) => day.id === sampleArtist.day);
 ---
 <section id="artists" class="artists-section py-15 sm:pb-[75px] tablet:pb-26">
 	<PageContainer>
 		<SectionHeading eyebrow="SONIDOS QUE NOS UNEN" title="RAÍCES Y NUEVOS AIRES." text="Folk, tradición y músicas que no entienden de fronteras. Así suena el espíritu de Cortelafolk." />
 		<div class="flex items-start gap-3 pb-5 text-[10px] leading-[1.6] sm:pb-[25px] sm:text-[11px]"><span class="mt-[5px] size-[7px] shrink-0 rounded-full bg-rust" aria-hidden="true"></span><p><strong>Cartel en preparación.</strong> Esta selección es orientativa; los artistas definitivos se anunciarán aquí.</p></div>
-		<div class="artist-grid grid grid-cols-2 gap-x-3.5 gap-y-[22px] sm:gap-7 tablet:grid-cols-4 tablet:gap-4 wide:gap-5">{artists.map((artist) => <ArtistCard artist={artist} />)}</div>
+		<div class="artist-grid grid grid-cols-1 gap-[34px] sm:gap-7 lg:grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))]">
+			{festivalDays.map((day) => (
+				<section class="artist-day" data-artist-day={day.id} aria-labelledby={`artist-day-${day.id}`}>
+					<div class="artist-day-heading flex items-center justify-between border-y border-forest py-[15px] sm:py-5">
+						<h3 id={`artist-day-${day.id}`}>{day.label}</h3><span>{day.date}<small>ABRIL</small></span>
+					</div>
+					<div class="flex flex-col gap-6 pt-6 sm:gap-7 sm:pt-7">
+						{artists.filter((artist) => artist.day === day.id).map((artist) => <ArtistCard artist={artist} />)}
+					</div>
+				</section>
+			))}
+		</div>
 		<p class="artist-footnote">Diferentes sonidos. Un mismo lugar de encuentro.</p>
+		<dialog class="artist-dialog" data-artist-dialog aria-labelledby="artist-dialog-title">
+			<button type="button" class="artist-dialog-close group" data-dialog-close aria-label="Cerrar la ficha del artista"><Icon name="plus" class="h-5 w-5 rotate-45 transition-transform duration-300 group-hover:rotate-90" /></button>
+			<div class="artist-dialog-inner">
+				<div class="artist-dialog-media"><img data-dialog-image src={sampleArtist.image} alt={sampleArtist.imageAlt} width="640" height="720" /></div>
+				<div class="artist-dialog-body">
+					<p class="artist-dialog-day" data-dialog-day>{sampleDay ? `${sampleDay.label} ${sampleDay.date} de abril` : ''}</p>
+					<h3 id="artist-dialog-title" data-dialog-name>{sampleArtist.name}</h3>
+					<p class="artist-dialog-genre" data-dialog-genre>{sampleArtist.genre}</p>
+					<p class="artist-dialog-text" data-dialog-text>{sampleArtist.description}</p>
+					<p class="artist-dialog-note"><strong>Cartel en preparación.</strong> Ficha orientativa; la información definitiva se publicará antes del festival.</p>
+				</div>
+			</div>
+		</dialog>
 	</PageContainer>
 	<WaveDivider nextColor="tangerine" />
 </section>
+<script>
+	const dialog = document.querySelector<HTMLDialogElement>('[data-artist-dialog]');
+	if (dialog && typeof dialog.showModal === 'function') {
+		const image = dialog.querySelector<HTMLImageElement>('[data-dialog-image]');
+		const day = dialog.querySelector<HTMLElement>('[data-dialog-day]');
+		const name = dialog.querySelector<HTMLElement>('[data-dialog-name]');
+		const genre = dialog.querySelector<HTMLElement>('[data-dialog-genre]');
+		const text = dialog.querySelector<HTMLElement>('[data-dialog-text]');
+		dialog.querySelector<HTMLButtonElement>('[data-dialog-close]')?.addEventListener('click', () => dialog.close());
+		dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+		document.querySelectorAll<HTMLButtonElement>('[data-artist-open]').forEach((trigger) => {
+			trigger.addEventListener('click', () => {
+				const { image: src, imageAlt, name: title, genre: category, description, day: label, tone } = trigger.dataset;
+				if (image && src && imageAlt) { image.src = src; image.alt = imageAlt; }
+				if (day && label) day.textContent = label;
+				if (name && title) name.textContent = title;
+				if (genre && category) genre.textContent = category;
+				if (text && description) text.textContent = description;
+				for (const value of ['orange', 'green', 'yellow']) dialog.classList.toggle(`tone-${value}`, value === tone);
+				dialog.showModal();
+			});
+		});
+	}
+</script>
