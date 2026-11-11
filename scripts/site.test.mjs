@@ -76,9 +76,12 @@ test('Canonical and structured data use only the configured production origin', 
 test('Every internal anchor resolves to a unique section', () => {
 	const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
 	assert.equal(new Set(ids).size, ids.length, 'Duplicate HTML identifiers found.');
-	for (const id of ['home', 'festival', 'artistas', 'free-access', 'programacion', 'activities', 'como-llegar', 'information']) {
+	for (const id of ['home', 'festival', 'artistas', 'free-access', 'programacion', 'actividades', 'como-llegar', 'informacion']) {
 		assert.ok(ids.includes(id), `Missing festival section: ${id}`);
 	}
+	// Anchors are Spanish; the old English ids must not resurface in links.
+	assert.doesNotMatch(html, /href="#(?:activities|information)"/);
+	assert.doesNotMatch(html, /\bid="(?:activities|information)"/);
 });
 
 test('Every link in the build resolves to an asset, a page or a section', () => {
@@ -204,6 +207,60 @@ test('Artists are grouped into one column per day with an accessible modal profi
 	assert.match(css, /artist-wave-undulate/, 'Hovering an artist card needs its wave motion.');
 });
 
+test('Activities mirror the artists layout: one column per day with a modal profile', () => {
+	assert.equal((html.match(/data-activity-day=/g) ?? []).length, 3, 'Expected one activity column per festival day.');
+	for (const id of ['activity-day-friday', 'activity-day-saturday', 'activity-day-sunday']) {
+		assert.match(html, new RegExp(`id="${id}"`), `Missing activity column heading: ${id}.`);
+	}
+	const triggers = html.match(/<button\b[^>]*data-activity-open[^>]*>/g) ?? [];
+	assert.equal(triggers.length, 6, 'Every activity card needs a modal trigger.');
+	for (const tag of triggers) {
+		assert.equal(getAttribute(tag, 'aria-haspopup'), 'dialog');
+		assert.ok(getAttribute(tag, 'aria-label'), 'Activity triggers need an accessible name.');
+		assert.ok(getAttribute(tag, 'data-description'), 'Activity triggers carry the modal description.');
+		assert.ok(getAttribute(tag, 'data-image-alt'), 'Activity triggers carry the modal image description.');
+	}
+	const dialog = html.match(/<dialog\b[^>]*data-activity-dialog[^>]*>/)?.[0];
+	assert.ok(dialog, 'The activity modal must exist.');
+	assert.equal(getAttribute(dialog, 'aria-labelledby'), 'activity-dialog-title');
+	assert.match(html, /id="activity-dialog-title"/);
+	// The section sits right after the artists so the menu order matches the
+	// scroll order, and it keeps the provisional-content qualification.
+	const sectionOrder = ['id="artistas"', 'id="actividades"', 'id="free-access"'].map((needle) => html.indexOf(needle));
+	assert.ok(sectionOrder.every((position, index) => position >= 0 && (index === 0 || position > sectionOrder[index - 1])), 'The activities section must sit between the artists and the free-access sections.');
+	assert.match(html, /Actividades en preparación/);
+});
+
+test('Activities read differently from the artists: colour photos, solid day bars and a stamp', () => {
+	const css = readdirSync(join(outputDirectory, '_astro'))
+		.filter((file) => file.endsWith('.css'))
+		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
+		.join('');
+	// The artists keep the poster duotone; activity photos stay in colour.
+	assert.match(css, /\.activities-section \.artist-image img[^{}]*\{[^}]*filter:none/, 'Activity card photos must not be desaturated.');
+	assert.match(css, /\.activities-section \.artist-dialog-media img[^{}]*\{[^}]*filter:none/, 'The activity modal photo must not be desaturated.');
+	// Day headings are solid forest bars with a legible tangerine date (4.96:1).
+	const activitiesSection = html.slice(html.indexOf('id="actividades"'), html.indexOf('id="free-access"'));
+	assert.match(activitiesSection, /class="artist-day-heading[^"]*bg-forest[^"]*text-paper/, 'Activity day headings must be solid forest bars.');
+	assert.doesNotMatch(activitiesSection, /class="artist-day-heading[^"]*border-y/, 'Activity day headings must not fall back to the thin-line style.');
+	assert.match(css, /\.activities-section \.artist-day-heading\s*>\s*span\{[^}]*color:var\(--color-tangerine\)/, 'The date on the dark bar needs the tangerine override.');
+	// The category renders as a stamped label on every activity card.
+	assert.equal((html.match(/class="activity-stamp"/g) ?? []).length, 6, 'Every activity card carries a stamped category.');
+	assert.match(css, /\.artist-info\s*>\s*\.activity-stamp\{[^}]*border:1px solid var\(--ink\)/, 'The stamp needs its ink border.');
+	// A tangerine wave tape marks the boundary with the artists section above.
+	const artistsPosition = html.indexOf('<section id="artistas"');
+	let boundaryWave = '';
+	for (const match of html.matchAll(/<svg\b[^>]*class="[^"]*\bsection-wave\b[^"]*"[\s\S]*?<\/svg>/g)) {
+		if (match.index > artistsPosition) { boundaryWave = match[0]; break; }
+	}
+	assert.ok(boundaryWave, 'The wave divider after the artists section must exist.');
+	assert.match(boundaryWave, /var\(--color-tangerine\)/, 'The artists/activities boundary wave must be tangerine.');
+	assert.match(boundaryWave, /class="section-wave section-wave--thick"/, 'The artists/activities wave must use the thicker style.');
+	assert.match(boundaryWave, /viewBox="0 0 960 54"/, 'The thicker wave needs the expanded viewBox.');
+	const wavePaths = [...boundaryWave.matchAll(/<path\b[^>]*d="([^"]+)"/g)].map((match) => match[1]);
+	assert.ok(wavePaths.some((path) => path.startsWith('M960 37')), 'The divider needs a curved lower edge, not a straight baseline.');
+});
+
 test('Location includes an accessible lazy-loaded Google Maps embed', () => {
 	const map = html.match(/<iframe\b[^>]*>/)?.[0];
 	assert.ok(map, 'The location map must be embedded.');
@@ -264,22 +321,25 @@ test('Hamburger menu only takes over below 640px and stacks its links', () => {
 	// only reach 2.64:1 on this backdrop.
 	assert.match(hamburgerBlock, /nav\.is-open\{[^}]*background:var\(--color-rust\)/, 'The panel uses the rust backdrop.');
 	assert.match(hamburgerBlock, /nav\.is-open\s*>\s*a\{[^}]*color:var\(--paper\)/, 'Menu links are paper-coloured against the rust backdrop.');
-	assert.match(hamburgerBlock, /nav\.is-open\s*>\s*\.header-access\{[^}]*border-color:var\(--paper\)/, 'The access button border matches the links.');
 	assert.doesNotMatch(hamburgerBlock, /nav\s*>\s*a\{[^}]*border-top/, 'The stacked links carry no separator lines.');
 	const tabletBlock = upperBoundBlock(css, 960);
 	assert.ok(tabletBlock, 'The below-960px media block must exist (complement of tablet:960px).');
 	assert.doesNotMatch(tabletBlock, /menu-toggle/, 'The hamburger must not appear above 640px.');
 	assert.match(css, new RegExp(upperBound(1101)), 'The 1101px block must mirror wide:1101px the same way.');
 	// The nav's width must not switch at 640px either: w-full forced it onto a
-	// second header row in the gap between the two ranges.
-	const nav = html.match(/<nav\b[^>]*id="main-navigation"[^>]*>/)?.[0];
+	// second header row in the gap between the two ranges. The menu itself
+	// mirrors the page order and no longer carries the "Entrada libre" button.
+	const nav = html.match(/<nav\b[^>]*id="main-navigation"[^>]*>[\s\S]*?<\/nav>/)?.[0];
 	assert.ok(nav, 'The main navigation must exist.');
 	assert.doesNotMatch(nav, /\bw-full\b/, 'The inline nav must not stretch to full width.');
+	assert.doesNotMatch(nav, /header-access/, 'The access button no longer lives in the menu.');
+	const menuHrefs = [...nav.matchAll(/href="(#[^"]+)"/g)].map((match) => match[1]);
+	assert.deepEqual(menuHrefs, ['#festival', '#artistas', '#actividades', '#programacion', '#como-llegar'], 'The menu must follow the page order.');
 	assert.match(html, /matchMedia\(`\(min-width: 640px\)`\)/, 'The menu must close itself once the inline nav returns.');
 });
 
 test('Main sections and the ribbon have accessible decorative wave dividers', () => {
-	const waves = html.match(/<svg\b[^>]*class="section-wave"[^>]*>/g) ?? [];
+	const waves = html.match(/<svg\b[^>]*class="[^"]*\bsection-wave\b[^"]*"[^>]*>/g) ?? [];
 	assert.equal(waves.length, 10, 'Expected a divider for each of the nine main sections and the ribbon.');
 	for (const wave of waves) {
 		assert.equal(getAttribute(wave, 'aria-hidden'), 'true');

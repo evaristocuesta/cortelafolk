@@ -1,6 +1,5 @@
 ---
 import { navigationItems } from '../data/site';
-import Icon from './Icon.astro';
 import PageContainer from './PageContainer.astro';
 ---
 <header class="site-header sticky top-0 z-30 bg-paper">
@@ -9,7 +8,6 @@ import PageContainer from './PageContainer.astro';
 		<button class="menu-toggle" aria-expanded="false" aria-controls="main-navigation" hidden><span data-menu-label>Abrir menú</span><span class="menu-lines" aria-hidden="true"></span></button>
 		<nav id="main-navigation" class="flex flex-wrap items-center gap-[18px] pb-5 sm:gap-3 sm:pb-0 tablet:flex-nowrap tablet:gap-5 wide:gap-[30px]" aria-label="Navegación principal">
 			{navigationItems.map((item) => <a href={item.href}>{item.label}</a>)}
-			<a class="header-access flex items-center gap-4" href="#free-access">Entrada libre <Icon name="arrow" /></a>
 		</nav>
 	</PageContainer>
 	<svg class="site-header-wave" aria-hidden="true" focusable="false">

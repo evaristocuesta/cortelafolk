@@ -29,9 +29,11 @@ export interface Performance {
 
 export interface Activity {
 	id: string;
-	number: string;
-	title: string;
+	name: string;
+	category: string;
 	description: string;
-	label: string;
-	icon: 'sun' | 'flower' | 'leaf';
+	image: string;
+	imageAlt: string;
+	day: FestivalDay;
+	tone: 'orange' | 'green' | 'yellow';
 }

@@ -11,6 +11,7 @@ export const site = {
 export const navigationItems = [
 	{ label: 'El festival', href: '#festival' },
 	{ label: 'Artistas', href: '#artistas' },
+	{ label: 'Actividades', href: '#actividades' },
 	{ label: 'Programación', href: '#programacion' },
 	{ label: 'Cómo llegar', href: '#como-llegar' },
 ];

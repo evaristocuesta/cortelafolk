@@ -75,12 +75,10 @@
 	.site-header-wave-line { fill: none; stroke: currentColor; stroke-opacity: .19; }
 	main > section, .festival-ribbon { position: relative; }
 	.section-wave { position: absolute; bottom: -1px; left: 0; z-index: 4; display: block; width: 100%; height: 34px; pointer-events: none; }
+	.section-wave--thick { height: 54px; }
 	.festival-ribbon { padding-bottom: 34px; }
 	.site-header nav > a { font-size: 11px; font-weight: 600; white-space: nowrap; }
-	.site-header nav > a:not(.header-access):hover { text-decoration: underline; text-underline-offset: 6px; }
-	.site-header nav > .header-access { border: 1px solid var(--ink); padding: 12px 16px; font-weight: 800; }
-	.header-access svg { width: 18px; height: 18px; }
-	.header-access:hover { background: var(--ink); color: var(--paper); }
+	.site-header nav > a:hover { text-decoration: underline; text-underline-offset: 6px; }
 	.menu-toggle { display: none; }
 	.small-star { font-size: 21px; color: #c55222; line-height: 1; }
 	.hero-title-wrap { position: relative; margin-top: 37px; }
@@ -185,14 +183,13 @@
 	.stage-strip article p { font-size: 11px; line-height: 1.7; }
 	.activities-section .eyebrow { color: var(--orange); }
 	.activities-section h2 { font-size: clamp(48px, 5.5vw, 72px); }
-	.activity-card { border-top: 1px solid #f3f0e557; padding-top: 25px; }
-	.activity-top > span { font-size: 10px; color: #bbca9c; }
-	.activity-top svg { width: 65px; height: 65px; color: var(--orange); transform: rotate(-12deg); }
-	.activity-card:nth-child(2) svg { color: #e0c66e; }
-	.activity-card:nth-child(3) svg { color: #bbca9c; }
-	.activity-label { font-size: 9px; letter-spacing: .06em; text-transform: uppercase; }
-	.activity-card h3 { font-family: var(--font-display); font-size: 34px; margin-block: 11px 14px; text-transform: uppercase; line-height: 1.05; }
-	.activity-card > p { font-size: 12px; line-height: 1.85; max-width: 290px; color: #e0e3d6; }
+	/* The artists keep the poster duotone; the activities show colour photos. */
+	.activities-section .artist-image img { filter: none; }
+	.activities-section .artist-dialog-media img { filter: none; }
+	/* The date on the solid forest day bar: #a6441b would sink to 1.7:1 there. */
+	.activities-section .artist-day-heading > span { color: var(--color-tangerine); }
+	/* Category as a stamped label so the cards read differently at a glance. */
+	.artist-info > .activity-stamp { display: inline-block; margin-bottom: 10px; border: 1px solid var(--ink); padding: 4px 9px 3px; font-weight: 800; letter-spacing: .1em; transform: rotate(-2deg); }
 	.location-copy h2 { font-size: clamp(50px, 5.7vw, 75px); }
 	.location-copy .lead { margin-block: 28px 20px; }
 	.location-copy > p:not(.eyebrow, .lead, .travel-note) { font-size: 13px; line-height: 1.85; max-width: 390px; }
@@ -291,7 +288,6 @@
 	.free-badge > span { font-size: 8px; }
 	.free-badge > span:last-child { font-size: 6px; }
 	.free-copy > p:not(.eyebrow) { font-size: 12px; }
-	.activity-card h3 { font-size: 30px; }
 	.location-copy h2 { font-size: 52px; }
 	.location-copy .button { font-size: 9px; padding-inline: 15px; gap: 18px; }
 	.information-grid h2 { font-size: 65px; }
@@ -331,11 +327,8 @@
 	}
 	/* Cream links on the rust panel: paper over rust measures 4.00:1, past
 	   the 3:1 bar for large text, while the body's inherited ink would only
-	   reach 2.64:1 here. The access button follows with a paper border so it
-	   reads as part of the menu. */
+	   reach 2.64:1 here. */
 	.site-header nav.is-open > a { color: var(--paper); font-size: 32px; font-weight: 700; letter-spacing: -.02em; padding: 10px 0; }
-	.site-header nav.is-open > .header-access { justify-content: space-between; margin-top: 32px; padding: 20px; font-size: 16px; border-color: var(--paper); }
-	.site-header nav.is-open > .header-access:hover { background: var(--paper); color: var(--ink); }
 	.small-star { font-size: 16px; }
 	.hero-title-wrap { margin-top: 35px; }
 	.hero h1 { font-size: 23.2vw; line-height: .85; }
@@ -377,9 +370,6 @@
 	.schedule-note { font-size: 10px; }
 	.schedule-day h4 { font-size: 15px; }
 	.activities-section h2 { font-size: 50px; }
-	.activity-top svg { width: 55px; height: 55px; }
-	.activity-card h3 { font-size: 36px; }
-	.activity-card > p { font-size: 13px; max-width: 100%; }
 	.location-copy h2 { font-size: clamp(49px, 12.3vw, 75px); }
 	.location-copy .lead { font-size: 23px; }
 	.location-copy .button { font-size: 10px; padding-inline: 20px; }
@@ -407,4 +397,3 @@
 	.ribbon-track { width: 100%; justify-content: center; }
 	.ribbon-group[aria-hidden='true'] { display: none; }
 }
-

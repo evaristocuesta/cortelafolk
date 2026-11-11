@@ -1,14 +1,50 @@
 ---
 import { activities } from '../data/activities';
-import Icon from './Icon.astro';
+import { festivalDays } from '../data/site';
+import ActivityCard from './ActivityCard.astro';
 import SectionHeading from './SectionHeading.astro';
 import PageContainer from './PageContainer.astro';
 import WaveDivider from './WaveDivider.astro';
+import Icon from './Icon.astro';
+
+// Seed values keep the dialog markup complete before JavaScript enhances it.
+const sampleActivity = activities[0];
+const sampleDay = festivalDays.find((day) => day.id === sampleActivity.day);
 ---
-<section id="activities" class="activities-section bg-forest py-15 text-paper sm:py-[75px] tablet:py-26">
+<section id="actividades" class="activities-section py-15 sm:pb-[75px] tablet:pb-26">
 	<PageContainer>
 		<SectionHeading eyebrow="MUCHO MÁS QUE CONCIERTOS" title="VEN POR LA MÚSICA. QUÉDATE POR TODO." titleClass="max-w-[630px]" text="La mejor parte de un festival también sucede entre canciones." />
-		<div class="mt-[35px] grid grid-cols-1 gap-[35px] sm:mt-[50px] sm:grid-cols-3 sm:gap-[25px] tablet:gap-[30px]">{activities.map((activity) => <article class="activity-card"><div class="activity-top mb-2.5 flex items-start justify-between sm:mb-[38px]"><span>{activity.number} /</span><Icon name={activity.icon} /></div><span class="activity-label">{activity.label}</span><h3>{activity.title}</h3><p>{activity.description}</p></article>)}</div>
+		<div class="flex items-start gap-3 pb-5 text-[10px] leading-[1.6] sm:pb-[25px] sm:text-[11px]"><span class="mt-[5px] size-[7px] shrink-0 rounded-full bg-rust" aria-hidden="true"></span><p><strong>Actividades en preparación.</strong> Esta selección es orientativa; las actividades definitivas se anunciarán aquí.</p></div>
+		<div class="grid grid-cols-1 gap-[34px] sm:gap-7 lg:grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))]">
+			{festivalDays.map((day) => (
+				<section class="activity-day" data-activity-day={day.id} aria-labelledby={`activity-day-${day.id}`}>
+					<div class="artist-day-heading flex items-center justify-between bg-forest px-3.5 py-[15px] text-paper sm:py-5">
+						<h3 id={`activity-day-${day.id}`}>{day.label}</h3><span>{day.date}<small>ABRIL</small></span>
+					</div>
+					<div class="flex flex-col gap-6 pt-6 sm:gap-7 sm:pt-7">
+						{activities.filter((activity) => activity.day === day.id).map((activity) => <ActivityCard activity={activity} />)}
+					</div>
+				</section>
+			))}
+		</div>
+		<p class="artist-footnote">Distintas formas de vivir el mismo festival.</p>
+		<dialog class="artist-dialog" data-activity-dialog aria-labelledby="activity-dialog-title">
+			<button type="button" class="artist-dialog-close group" data-dialog-close aria-label="Cerrar la ficha de la actividad"><Icon name="plus" class="h-5 w-5 rotate-45 transition-transform duration-300 group-hover:rotate-90" /></button>
+			<div class="artist-dialog-inner">
+				<div class="artist-dialog-media"><img data-dialog-image src={sampleActivity.image} alt={sampleActivity.imageAlt} width="640" height="720" /></div>
+				<div class="artist-dialog-body">
+					<p class="artist-dialog-day" data-dialog-day>{sampleDay ? `${sampleDay.label} ${sampleDay.date} de abril` : ''}</p>
+					<h3 id="activity-dialog-title" data-dialog-name>{sampleActivity.name}</h3>
+					<p class="artist-dialog-genre" data-dialog-genre>{sampleActivity.category}</p>
+					<p class="artist-dialog-text" data-dialog-text>{sampleActivity.description}</p>
+					<p class="artist-dialog-note"><strong>Actividades en preparación.</strong> Ficha orientativa; el programa definitivo se publicará antes del festival.</p>
+				</div>
+			</div>
+		</dialog>
 	</PageContainer>
-	<WaveDivider />
+	<WaveDivider nextColor="tangerine" />
 </section>
+<script>
+	import { bindProfileDialog } from '../scripts/profile-dialog';
+	bindProfileDialog('[data-activity-dialog]', '[data-activity-open]');
+</script>

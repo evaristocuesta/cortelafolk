@@ -1,8 +1,11 @@
 import type { Activity } from '../types/festival';
 
-// Editorial activity proposals pending organiser approval.
+// Fictional development programme. Replace with approved activities before publishing.
 export const activities: Activity[] = [
-	{ id: 'family-workshops', number: '01', title: 'Manos a la música', description: 'Crear, experimentar y descubrir. Talleres para que los más pequeños también encuentren su ritmo.', label: 'En familia', icon: 'flower' },
-	{ id: 'local-culture', number: '02', title: 'Un pueblo por descubrir', description: 'Calles con historia, conversaciones sin prisa y cultura que se comparte. Cortelazor también forma parte del cartel.', label: 'Cultura local', icon: 'sun' },
-	{ id: 'mountain-nature', number: '03', title: 'Respira la sierra', description: 'Entre concierto y concierto, mira alrededor. La Sierra de Aracena pone el paisaje; tú eliges el paseo.', label: 'Naturaleza', icon: 'leaf' },
+	{ id: 'handmade-music', name: 'Manos a la música', category: 'Taller familiar', description: 'Caja, pandero y guitarra para todas las edades: una hora de taller para salir del festival tocando la primera copla.', image: '/images/live-guitar.webp', imageAlt: 'Manos tocando una guitarra acústica', day: 'friday', tone: 'orange' },
+	{ id: 'open-soundcheck', name: 'Ensayo abierto', category: 'Detrás del escenario', description: 'Entra en el escenario cuando todavía no hay público y descubre cómo se prepara el sonido antes del primer concierto.', image: '/images/live-crowd.webp', imageAlt: 'Mesa de mezclas iluminada durante una sesión musical', day: 'friday', tone: 'green' },
+	{ id: 'plaza-dancing', name: 'Baile en la plaza', category: 'Rueda de baile', description: 'Los músicos abren la rueda en la plaza del pueblo. Sin pareja y sin nivel: solo hay que seguir el compás.', image: '/images/live-stage.webp', imageAlt: 'Público disfrutando de la música en un concierto', day: 'saturday', tone: 'yellow' },
+	{ id: 'night-session', name: 'Noche de fuego', category: 'Sesión nocturna', description: 'Cuando termina el último concierto el pueblo no se duerme: cantos y baile para quien quiera quedarse hasta el final.', image: '/images/live-night.webp', imageAlt: 'Una actuación musical entre luces y humo de escenario', day: 'saturday', tone: 'orange' },
+	{ id: 'sound-workshop', name: 'Taller de sonido', category: 'Charla técnica', description: 'Microfonía, mezcla y amplificadores explicados por el equipo técnico para quien quiera saber cómo suena un concierto por dentro.', image: '/images/live-crowd.webp', imageAlt: 'Mesa de mezclas iluminada durante una sesión musical', day: 'sunday', tone: 'green' },
+	{ id: 'closing-circle', name: 'Cierre con todos', category: 'Encuentro final', description: 'Todos los músicos del fin de semana comparten un único escenario para despedir el festival cantando entre todos.', image: '/images/live-stage.webp', imageAlt: 'Público disfrutando de la música en un concierto', day: 'sunday', tone: 'yellow' },
 ];

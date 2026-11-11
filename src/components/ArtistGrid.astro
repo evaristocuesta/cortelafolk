@@ -42,29 +42,10 @@ const sampleDay = festivalDays.find((day) => day.id === sampleArtist.day);
 			</div>
 		</dialog>
 	</PageContainer>
-	<WaveDivider nextColor="tangerine" />
+	{/* Tangerine tape marks the boundary with the activities section below. */}
+	<WaveDivider nextColor="moss" variant="thick" />
 </section>
 <script>
-	const dialog = document.querySelector<HTMLDialogElement>('[data-artist-dialog]');
-	if (dialog && typeof dialog.showModal === 'function') {
-		const image = dialog.querySelector<HTMLImageElement>('[data-dialog-image]');
-		const day = dialog.querySelector<HTMLElement>('[data-dialog-day]');
-		const name = dialog.querySelector<HTMLElement>('[data-dialog-name]');
-		const genre = dialog.querySelector<HTMLElement>('[data-dialog-genre]');
-		const text = dialog.querySelector<HTMLElement>('[data-dialog-text]');
-		dialog.querySelector<HTMLButtonElement>('[data-dialog-close]')?.addEventListener('click', () => dialog.close());
-		dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
-		document.querySelectorAll<HTMLButtonElement>('[data-artist-open]').forEach((trigger) => {
-			trigger.addEventListener('click', () => {
-				const { image: src, imageAlt, name: title, genre: category, description, day: label, tone } = trigger.dataset;
-				if (image && src && imageAlt) { image.src = src; image.alt = imageAlt; }
-				if (day && label) day.textContent = label;
-				if (name && title) name.textContent = title;
-				if (genre && category) genre.textContent = category;
-				if (text && description) text.textContent = description;
-				for (const value of ['orange', 'green', 'yellow']) dialog.classList.toggle(`tone-${value}`, value === tone);
-				dialog.showModal();
-			});
-		});
-	}
+	import { bindProfileDialog } from '../scripts/profile-dialog';
+	bindProfileDialog('[data-artist-dialog]', '[data-artist-open]');
 </script>
