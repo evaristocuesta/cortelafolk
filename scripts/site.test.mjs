@@ -188,7 +188,9 @@ test('Artists are grouped into one column per day with an accessible modal profi
 	assert.ok(dialog, 'The artist modal must exist.');
 	assert.equal(getAttribute(dialog, 'aria-labelledby'), 'artist-dialog-title');
 	assert.match(html, /id="artist-dialog-title"/);
-	assert.match(html, /<a\b[^>]*href="#programacion"[^>]*aria-label="Ver la programación orientativa de [^"]+"/);
+	// Without an explicit width, aspect-ratio + max-height transfer the height cap
+	// to the photo's inline size and the card's hover shadow detaches on the right.
+	assert.match(html, /class="artist-image[^"]*\bw-full\b/, 'The photo box must fill the card width.');
 	const css = readdirSync(join(outputDirectory, '_astro'))
 		.filter((file) => file.endsWith('.css'))
 		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))

@@ -19,7 +19,8 @@ Verify a change with `pnpm check && pnpm build && pnpm test`.
 `scripts/site.test.mjs` is a contract test against the **built** HTML/CSS, not unit tests. Most assertions target the full festival contract at `/2027/`; a smaller set covers the root landing page. It asserts:
 
 - root landing page (`dist/index.html`): the Cortelafolk logo, the 2027 dates and location, an `ENTRADA LIBRE` mention.
-- festival page (`dist/2027/index.html`): exact Spanish copy, exact section IDs (`home`, `festival`, `artists`, `free-access`, `schedule`, `activities`, `location`, `information`), a single `<h1>`, exactly 10 `.section-wave` dividers, 5 `<details>`, 3 `data-schedule-day` blocks.
+- festival page (`dist/2027/index.html`): exact Spanish copy, exact section IDs (`home`, `festival`, `artistas`, `free-access`, `programacion`, `activities`, `como-llegar`, `information`), a single `<h1>`, exactly 10 `.section-wave` dividers, 5 `<details>`, 3 `data-schedule-day` blocks.
+- every `href` on both built pages resolves: anchors to an existing `id`, local paths to a file in `dist/`, external links to `https://` (no local origins).
 - asset budgets: total client JS (bundled + inline) < 12 KB, each `.webp` photo < 200 KB, `social-preview.png` exactly 1200×630, every `src`/`href` root-absolute path present in `dist/`.
 - generated Tailwind selectors (`.tablet\:grid-cols-4`, `.wide\:px-16`, `.aria-pressed\:bg-forest`, `.group-open\:rotate-45`) and `scroll-padding-top` 82 / 72 / 68 px at the three breakpoints.
 - no `<form>` or ticketing wording, no `class="is-active"`, no localhost canonical/`og:url` when `PUBLIC_SITE_URL` is unset.

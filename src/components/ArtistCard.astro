@@ -1,7 +1,6 @@
 ---
 import type { Artist } from '../types/festival';
 import { festivalDays } from '../data/site';
-import Icon from './Icon.astro';
 interface Props { artist: Artist; }
 const { artist } = Astro.props;
 const day = festivalDays.find((item) => item.id === artist.day);
@@ -10,7 +9,7 @@ const wave = 'M0 17C46.67 13 76.67 1.83 130 4C183.33 6.17 241.67 29.83 320 30C39
 ---
 <article class:list={['artist-card group relative min-w-0', `tone-${artist.tone}`]}>
 	<button type="button" class="artist-open" data-artist-open data-name={artist.name} data-genre={artist.genre} data-description={artist.description} data-image={artist.image} data-image-alt={artist.imageAlt} data-day={day ? `${day.label} ${day.date} de abril` : ''} data-tone={artist.tone} aria-haspopup="dialog" aria-label={`Ver la ficha de ${artist.name}`}></button>
-	<div class="artist-image relative aspect-[.8] max-h-[560px] overflow-hidden bg-[var(--card-color)] sm:aspect-[1.05] tablet:aspect-[.85]">
+	<div class="artist-image relative aspect-[.8] w-full max-h-[560px] overflow-hidden bg-[var(--card-color)] sm:aspect-[1.05] tablet:aspect-[.85]">
 		<img class="h-full w-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.07]" src={artist.image} alt={artist.imageAlt} width="640" height="720" loading="lazy" decoding="async" />
 		<svg class="artist-wave" viewBox="0 0 960 34" preserveAspectRatio="none" aria-hidden="true" focusable="false">
 			<path d={`${wave}V34H0Z`} fill="var(--paper)" />
