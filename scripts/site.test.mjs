@@ -11,6 +11,11 @@ assert.ok(existsSync(landingPath) && existsSync(festivalPath), 'Run pnpm build b
 const html = readFileSync(festivalPath, 'utf8');
 const landingHtml = readFileSync(landingPath, 'utf8');
 const getAttribute = (tag, name) => tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
+// global.css mirrors Tailwind's min-width breakpoints with a strict "<" so a
+// fractional viewport (639.09px) can never fall outside both ranges. Lightning
+// CSS emits that as its negated form, so both spellings are accepted.
+const upperBound = (px) => `@media\\s*(?:\\(\\s*width\\s*<\\s*${px}px\\s*\\)|not all and \\(width>=${px}px\\))`;
+const upperBoundBlock = (css, px) => css.match(new RegExp(`${upperBound(px)}[^{]*\\{(?:[^{}]|\\{[^{}]*\\})*\\}`))?.[0];
 
 test('Root landing page shows the logo and 2027 dates', () => {
 	assert.match(landingHtml, /<html lang="es">/);
@@ -232,6 +237,34 @@ test('Accessible, progressive interactions are included', () => {
 	assert.match(css, /font-face/);
 });
 
+test('Hamburger menu only takes over below 640px and stacks its links', () => {
+	const css = readdirSync(join(outputDirectory, '_astro'))
+		.filter((file) => file.endsWith('.css'))
+		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
+		.join('');
+	// The upper bound must be the exact complement of Tailwind's sm (min-width:
+	// 640px). A "max-width: 639px" leaves fractional viewports such as 639.09px
+	// outside both ranges: the toggle disappears while the nav keeps its full
+	// width and splits the header into two rows.
+	const hamburgerBlock = upperBoundBlock(css, 640);
+	assert.ok(hamburgerBlock, 'The below-640px media block must exist.');
+	assert.match(hamburgerBlock, new RegExp(upperBound(640)), 'The hamburger block must mirror sm:min-width:640px exactly.');
+	assert.match(hamburgerBlock, /\.menu-toggle:not\(\[hidden\]\)\{[^}]*display:flex/, 'The hamburger toggle belongs below 640px.');
+	assert.match(hamburgerBlock, /nav\.is-open\{display:flex/);
+	assert.match(hamburgerBlock, /nav\.is-open\{[^}]*flex-direction:column/, 'The open menu must stack vertically below 640px.');
+	assert.match(hamburgerBlock, /nav\.is-open\{[^}]*width:100%/, 'The open menu must span the container from CSS, not a utility.');
+	const tabletBlock = upperBoundBlock(css, 960);
+	assert.ok(tabletBlock, 'The below-960px media block must exist (complement of tablet:960px).');
+	assert.doesNotMatch(tabletBlock, /menu-toggle/, 'The hamburger must not appear above 640px.');
+	assert.match(css, new RegExp(upperBound(1101)), 'The 1101px block must mirror wide:1101px the same way.');
+	// The nav's width must not switch at 640px either: w-full forced it onto a
+	// second header row in the gap between the two ranges.
+	const nav = html.match(/<nav\b[^>]*id="main-navigation"[^>]*>/)?.[0];
+	assert.ok(nav, 'The main navigation must exist.');
+	assert.doesNotMatch(nav, /\bw-full\b/, 'The inline nav must not stretch to full width.');
+	assert.match(html, /matchMedia\(`\(min-width: 640px\)`\)/, 'The menu must close itself once the inline nav returns.');
+});
+
 test('Main sections and the ribbon have accessible decorative wave dividers', () => {
 	const waves = html.match(/<svg\b[^>]*class="section-wave"[^>]*>/g) ?? [];
 	assert.equal(waves.length, 10, 'Expected a divider for each of the nine main sections and the ribbon.');
@@ -254,8 +287,20 @@ test('Anchor offsets match the solid header height at each breakpoint', () => {
 		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
 		.join('');
 	assert.match(css, /html\{[^}]*scroll-padding-top:82px/);
-	assert.match(css, /@media\s*\((?:max-width:\s*|width\s*<=\s*)959px\)\s*\{\s*html\s*\{[^}]*scroll-padding-top:\s*72px/);
-	assert.match(css, /@media\s*\((?:max-width:\s*|width\s*<=\s*)639px\)\s*\{\s*html\s*\{[^}]*scroll-padding-top:\s*68px/);
+	assert.match(css, new RegExp(`${upperBound(960)}\\s*\\{\\s*html\\s*\\{[^}]*scroll-padding-top:\\s*72px`));
+	assert.match(css, new RegExp(`${upperBound(640)}\\s*\\{\\s*html\\s*\\{[^}]*scroll-padding-top:\\s*68px`));
+	// The sticky header must be exactly as tall as that offset, otherwise anchor
+	// targets slide under it. The logo image is 56px, so the wordmark margins
+	// are (68 - 56) / 2 and (72 - 56) / 2 at the two lower ranges; from 960px
+	// the container's 82px minimum drives the height on its own.
+	assert.match(html, /class="[^"]*\bmin-h-\[68px\]/, 'The header container defines the 68px mobile height.');
+	const mobileHeader = upperBoundBlock(css, 640);
+	assert.ok(mobileHeader, 'The below-640px block must exist.');
+	assert.match(mobileHeader, /\.site-header \.wordmark\{[^}]*margin-block:6px/, 'Mobile header: 56px logo + 2x6px margins = the 68px scroll offset.');
+	const tabletHeader = upperBoundBlock(css, 960);
+	assert.ok(tabletHeader, 'The below-960px block must exist.');
+	assert.match(tabletHeader, /\.site-header \.wordmark\{[^}]*margin-block:8px/, 'Tablet header: 56px logo + 2x8px margins = the 72px scroll offset.');
+	assert.match(html, /class="[^"]*\btablet:min-h-\[82px\]/, 'Desktop header is driven by the 82px container minimum.');
 });
 
 test('Runtime assets stay lightweight', () => {

@@ -265,17 +265,15 @@
 @media (min-width: 1440px) {
 	.hero h1 { font-size: 267px; }
 }
-@media (max-width: 1100px) {
+@media (width < 1101px) {
 	.free-badge { width: 260px; height: 260px; }
 }
-@media (max-width: 959px) {
+/* These upper bounds mirror Tailwind's min-width breakpoints (tablet 960px,
+   wide 1101px, sm 640px) as strict "<" so a fractional viewport such as
+   639.09px can never fall outside both ranges. */
+@media (width < 960px) {
 	html { scroll-padding-top: 72px; }
-	.site-header .wordmark { margin-block: 19px; }
-	.menu-toggle:not([hidden]) { display: flex; align-items: center; gap: 12px; margin-left: auto; font-size: 10px; font-weight: 700; min-height: 44px; background: transparent; border: 0; }
-	.menu-lines { width: 23px; height: 12px; border-block: 1px solid var(--ink); position: relative; }
-	.menu-lines::after { content: ''; position: absolute; width: 16px; height: 1px; background: var(--ink); top: 5px; right: 0; }
-	.site-header:has(.menu-toggle:not([hidden])) nav { display: none; }
-	.site-header:has(.menu-toggle:not([hidden])) nav.is-open { display: flex; }
+	.site-header .wordmark { margin-block: 8px; }
 	.hero h1 { font-size: 22vw; }
 	.hero-stamp { width: 145px; height: 145px; right: 5px; bottom: 8px; }
 	.hero-stamp strong { font-size: 25px; }
@@ -300,12 +298,22 @@
 	.social-inner h2 { font-size: 46px; }
 	.footer-main .wordmark { font-size: 29px; }
 }
-@media (max-width: 639px) {
+@media (width < 640px) {
 	html { scroll-padding-top: 68px; }
 	h2 { font-size: 50px; }
 	.eyebrow { font-size: 9px; letter-spacing: .11em; margin-bottom: 16px; }
-	.site-header .wordmark { font-size: 25px; margin-block: 16px; }
-	.site-header nav.is-open { flex-direction: column; align-items: stretch; gap: 0; }
+	/* Logo of 56px + 2x6px of margins = 68px, the same figure as min-h and scroll-padding. */
+	.site-header .wordmark { font-size: 25px; margin-block: 6px; }
+	/* Hamburger range (<=639px): the toggle replaces the inline nav. */
+	.menu-toggle:not([hidden]) { display: flex; align-items: center; gap: 12px; margin-left: auto; font-size: 10px; font-weight: 700; min-height: 44px; background: transparent; border: 0; }
+	.menu-lines { width: 23px; height: 12px; border-block: 1px solid var(--ink); position: relative; }
+	.menu-lines::after { content: ''; position: absolute; width: 16px; height: 1px; background: var(--ink); top: 5px; right: 0; }
+	.site-header:has(.menu-toggle:not([hidden])) nav { display: none; }
+	.site-header:has(.menu-toggle:not([hidden])) nav.is-open { display: flex; }
+	/* The open menu stacks the links: a row layout would stay horizontal here.
+	   Full width comes from here instead of a w-full utility, so the header can
+	   never split into two rows when a viewport lands between the breakpoints. */
+	.site-header nav.is-open { flex-direction: column; align-items: stretch; gap: 0; width: 100%; }
 	.site-header nav > a { padding: 15px 0; font-size: 13px; border-top: 1px solid var(--line); }
 	.site-header nav > .header-access { justify-content: space-between; margin-top: 8px; padding: 14px 16px; }
 	.small-star { font-size: 16px; }
