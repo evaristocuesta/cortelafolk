@@ -252,7 +252,20 @@ test('Hamburger menu only takes over below 640px and stacks its links', () => {
 	assert.match(hamburgerBlock, /\.menu-toggle:not\(\[hidden\]\)\{[^}]*display:flex/, 'The hamburger toggle belongs below 640px.');
 	assert.match(hamburgerBlock, /nav\.is-open\{display:flex/);
 	assert.match(hamburgerBlock, /nav\.is-open\{[^}]*flex-direction:column/, 'The open menu must stack vertically below 640px.');
-	assert.match(hamburgerBlock, /nav\.is-open\{[^}]*width:100%/, 'The open menu must span the container from CSS, not a utility.');
+	// The open menu is a full-screen panel pinned under the header row: the
+	// logo and the close button stay visible while the links fill the rest of
+	// the viewport, in large letters and without separator lines.
+	assert.match(hamburgerBlock, /nav\.is-open\{[^}]*position:absolute/, 'The panel is anchored inside the sticky header.');
+	assert.match(hamburgerBlock, /nav\.is-open\{[^}]*top:100%/);
+	assert.match(hamburgerBlock, /nav\.is-open\{[^}]*min-height:calc\(100dvh - 68px\)/, 'The panel fills the viewport minus the 68px header.');
+	assert.match(hamburgerBlock, /nav\.is-open\s*>\s*a\{[^}]*font-size:32px/, 'Menu links use large letters.');
+	// Colour contract: the panel is rust and the links are paper — 4.00:1,
+	// past the 3:1 bar for large text, where the body's inherited ink would
+	// only reach 2.64:1 on this backdrop.
+	assert.match(hamburgerBlock, /nav\.is-open\{[^}]*background:var\(--color-rust\)/, 'The panel uses the rust backdrop.');
+	assert.match(hamburgerBlock, /nav\.is-open\s*>\s*a\{[^}]*color:var\(--paper\)/, 'Menu links are paper-coloured against the rust backdrop.');
+	assert.match(hamburgerBlock, /nav\.is-open\s*>\s*\.header-access\{[^}]*border-color:var\(--paper\)/, 'The access button border matches the links.');
+	assert.doesNotMatch(hamburgerBlock, /nav\s*>\s*a\{[^}]*border-top/, 'The stacked links carry no separator lines.');
 	const tabletBlock = upperBoundBlock(css, 960);
 	assert.ok(tabletBlock, 'The below-960px media block must exist (complement of tablet:960px).');
 	assert.doesNotMatch(tabletBlock, /menu-toggle/, 'The hamburger must not appear above 640px.');

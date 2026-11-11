@@ -310,12 +310,32 @@
 	.menu-lines::after { content: ''; position: absolute; width: 16px; height: 1px; background: var(--ink); top: 5px; right: 0; }
 	.site-header:has(.menu-toggle:not([hidden])) nav { display: none; }
 	.site-header:has(.menu-toggle:not([hidden])) nav.is-open { display: flex; }
-	/* The open menu stacks the links: a row layout would stay horizontal here.
-	   Full width comes from here instead of a w-full utility, so the header can
-	   never split into two rows when a viewport lands between the breakpoints. */
-	.site-header nav.is-open { flex-direction: column; align-items: stretch; gap: 0; width: 100%; }
-	.site-header nav > a { padding: 15px 0; font-size: 13px; border-top: 1px solid var(--line); }
-	.site-header nav > .header-access { justify-content: space-between; margin-top: 8px; padding: 14px 16px; }
+	/* The open menu becomes a full-screen panel pinned under the header row, so
+	   the logo and the close button stay visible. Absolute positioning inside
+	   the sticky header keeps it anchored while scrolling; the 68px in the
+	   min-height mirrors min-h-[68px] on the header container. */
+	.site-header nav.is-open {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		min-height: calc(100vh - 68px);
+		min-height: calc(100dvh - 68px);
+		overflow-y: auto;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0;
+		padding: 0 24px 24px;
+		background: var(--color-rust);
+	}
+	/* Cream links on the rust panel: paper over rust measures 4.00:1, past
+	   the 3:1 bar for large text, while the body's inherited ink would only
+	   reach 2.64:1 here. The access button follows with a paper border so it
+	   reads as part of the menu. */
+	.site-header nav.is-open > a { color: var(--paper); font-size: 32px; font-weight: 700; letter-spacing: -.02em; padding: 10px 0; }
+	.site-header nav.is-open > .header-access { justify-content: space-between; margin-top: 32px; padding: 20px; font-size: 16px; border-color: var(--paper); }
+	.site-header nav.is-open > .header-access:hover { background: var(--paper); color: var(--ink); }
 	.small-star { font-size: 16px; }
 	.hero-title-wrap { margin-top: 35px; }
 	.hero h1 { font-size: 23.2vw; line-height: .85; }
