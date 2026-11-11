@@ -71,11 +71,50 @@ test('Canonical and structured data use only the configured production origin', 
 test('Every internal anchor resolves to a unique section', () => {
 	const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
 	assert.equal(new Set(ids).size, ids.length, 'Duplicate HTML identifiers found.');
-	for (const match of html.matchAll(/href="#([^"]+)"/g)) {
-		assert.ok(ids.includes(match[1]), `Broken anchor: #${match[1]}`);
-	}
-	for (const id of ['home', 'festival', 'artists', 'free-access', 'schedule', 'activities', 'location', 'information']) {
+	for (const id of ['home', 'festival', 'artistas', 'free-access', 'programacion', 'activities', 'como-llegar', 'information']) {
 		assert.ok(ids.includes(id), `Missing festival section: ${id}`);
+	}
+});
+
+test('Every link in the build resolves to an asset, a page or a section', () => {
+	const pages = [
+		{ url: '/', source: landingHtml },
+		{ url: '/2027/', source: html },
+	];
+	const idCache = new Map();
+	const idsOf = (file) => {
+		if (!idCache.has(file)) {
+			idCache.set(file, new Set([...readFileSync(file, 'utf8').matchAll(/\bid="([^"]+)"/g)].map((match) => match[1])));
+		}
+		return idCache.get(file);
+	};
+	for (const { url, source } of pages) {
+		for (const match of source.matchAll(/\bhref="([^"]*)"/g)) {
+			const href = match[1].replaceAll('&amp;', '&');
+			assert.ok(href, `Empty href on ${url}.`);
+			if (/^mailto:|^tel:/i.test(href)) continue;
+			if (/^https:\/\//.test(href)) {
+				assert.doesNotMatch(href, /localhost|127\.0\.0\.1/, `External link must not use a local origin: ${href}`);
+				continue;
+			}
+			if (!/^[a-z][a-z0-9+.-]*:/i.test(href)) {
+				const resolved = new URL(href, `http://local${url}`);
+				const filePath = resolved.pathname.endsWith('/')
+					? join(outputDirectory, resolved.pathname, 'index.html')
+					: null;
+				const candidates = filePath
+					? [filePath]
+					: [join(outputDirectory, resolved.pathname), join(outputDirectory, `${resolved.pathname}.html`), join(outputDirectory, resolved.pathname, 'index.html')];
+				const file = candidates.find((candidate) => existsSync(candidate));
+				assert.ok(file, `Broken link on ${url}: ${href}`);
+				const fragment = resolved.hash.slice(1);
+				if (fragment && file.endsWith('.html')) {
+					assert.ok(idsOf(file).has(fragment), `Broken anchor on ${url}: ${href}`);
+				}
+				continue;
+			}
+			assert.fail(`Unsupported href protocol on ${url}: ${href}`);
+		}
 	}
 });
 
@@ -97,14 +136,14 @@ test('All local images, fonts, styles and scripts exist in the build', () => {
 test('Free access is explicit and there is no ticketing or registration', () => {
 	assert.match(html, /ENTRADA LIBRE/);
 	assert.match(html, /La entrada es libre para todo el mundo/);
-	assert.match(html, /href="#location"[^>]*>CÓMO LLEGAR/);
+	assert.match(html, /href="#como-llegar"[^>]*>CÓMO LLEGAR/);
 	assert.doesNotMatch(html, /<(?:form|input|select|textarea)\b/);
 	assert.doesNotMatch(html, /(?:Consigue tu entrada|Entradas próximamente|Comprar entradas|eventbrite|ticketmaster|entradium|checkout)/i);
 });
 
 const socialProfiles = [
-	{ name: 'Instagram', pattern: /<a\b[^>]*href="https:\/\/www\.instagram\.com\/cortelafolk\/"[^>]*>/ },
-	{ name: 'Facebook', pattern: /<a\b[^>]*href="https:\/\/www\.facebook\.com\/profile\.php\?id=61557574401350"[^>]*>/ },
+	{ name: 'Instagram', pattern: /<a\b[^>]*href="https:\/\/www\.instagram\.com\/cortelafolk\/?"[^>]*>/ },
+	{ name: 'Facebook', pattern: /<a\b[^>]*href="https:\/\/www\.facebook\.com\/cortelafolk\/?"[^>]*>/ },
 ];
 
 const assertSocialProfiles = (source, regionPattern, context) => {
@@ -149,7 +188,7 @@ test('Artists are grouped into one column per day with an accessible modal profi
 	assert.ok(dialog, 'The artist modal must exist.');
 	assert.equal(getAttribute(dialog, 'aria-labelledby'), 'artist-dialog-title');
 	assert.match(html, /id="artist-dialog-title"/);
-	assert.match(html, /<a\b[^>]*href="#schedule"[^>]*aria-label="Ver la programación orientativa de [^"]+"/);
+	assert.match(html, /<a\b[^>]*href="#programacion"[^>]*aria-label="Ver la programación orientativa de [^"]+"/);
 	const css = readdirSync(join(outputDirectory, '_astro'))
 		.filter((file) => file.endsWith('.css'))
 		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))

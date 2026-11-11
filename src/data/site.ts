@@ -10,14 +10,14 @@ export const site = {
 
 export const navigationItems = [
 	{ label: 'El festival', href: '#festival' },
-	{ label: 'Artistas', href: '#artists' },
-	{ label: 'Programación', href: '#schedule' },
-	{ label: 'Cómo llegar', href: '#location' },
+	{ label: 'Artistas', href: '#artistas' },
+	{ label: 'Programación', href: '#programacion' },
+	{ label: 'Cómo llegar', href: '#como-llegar' },
 ];
 
 export const socialLinks = [
-	{ name: 'Instagram', href: 'https://www.instagram.com/cortelafolk/', icon: 'instagram' },
-	{ name: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61557574401350', icon: 'facebook' },
+	{ name: 'Instagram', href: 'https://www.instagram.com/cortelafolk', icon: 'instagram' },
+	{ name: 'Facebook', href: 'https://www.facebook.com/cortelafolk', icon: 'facebook' },
 ] as const;
 
 export const festivalDays = [
