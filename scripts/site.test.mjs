@@ -254,9 +254,9 @@ test('Activities read differently from the artists: colour photos, solid day bar
 		if (match.index > artistsPosition) { boundaryWave = match[0]; break; }
 	}
 	assert.ok(boundaryWave, 'The wave divider after the artists section must exist.');
-	assert.match(boundaryWave, /var\(--color-tangerine\)/, 'The artists/activities boundary wave must be tangerine.');
+	assert.match(boundaryWave, /var\(--color-moss\)/, 'The artists/activities boundary wave must be moss.');
 	assert.match(boundaryWave, /class="section-wave section-wave--thick"/, 'The artists/activities wave must use the thicker style.');
-	assert.match(boundaryWave, /viewBox="0 0 960 54"/, 'The thicker wave needs the expanded viewBox.');
+	assert.match(boundaryWave, /viewBox="0 0 960 174"/, 'The thicker wave needs the expanded viewBox.');
 	const wavePaths = [...boundaryWave.matchAll(/<path\b[^>]*d="([^"]+)"/g)].map((match) => match[1]);
 	assert.ok(wavePaths.some((path) => path.startsWith('M960 37')), 'The divider needs a curved lower edge, not a straight baseline.');
 });
