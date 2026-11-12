@@ -11,7 +11,6 @@ const filterClasses = 'min-h-11 border border-forest/19 bg-transparent px-[13px]
 <section id="programacion" class="py-15 sm:py-[75px] tablet:py-26">
 	<PageContainer>
 		<SectionHeading eyebrow="TRES DÍAS. MUCHAS GANAS." title="TU PRÓXIMO GRAN PLAN." text="De la primera canción al último baile. Encuentra tu momento y déjate llevar." />
-		<p class="schedule-note">Programación orientativa. Los horarios y espacios definitivos se publicarán antes del festival.</p>
 		<div class="schedule-filters mb-8 flex flex-wrap gap-[7px] sm:gap-2" role="group" aria-label="Filtrar programación por día" hidden>
 			<button type="button" class={filterClasses} data-day="all" aria-pressed="true">Los tres días</button>
 			{festivalDays.map((day) => <button type="button" class={filterClasses} data-day={day.id} aria-pressed="false">{day.label} {day.date}</button>)}

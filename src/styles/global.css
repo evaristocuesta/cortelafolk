@@ -152,7 +152,6 @@
 	.artist-dialog-body h3 { font-family: var(--font-display); font-size: clamp(34px, 5.5vw, 54px); text-transform: uppercase; line-height: .95; margin-top: 8px; }
 	.artist-dialog-genre { font-size: 11px; font-weight: 700; letter-spacing: .06em; }
 	.artist-dialog-text { font-size: 14px; line-height: 1.75; margin-top: 18px; }
-	.artist-dialog-note { font-size: 10px; line-height: 1.6; margin-top: 20px; opacity: .75; }
 	@keyframes artist-dialog-in { from { opacity: 0; transform: translateY(16px) scale(.97); } }
 	@media (min-width: 640px) {
 		.artist-dialog-inner { grid-template-columns: .9fr 1.1fr; }
@@ -169,7 +168,6 @@
 	.free-copy h2 { font-size: clamp(57px, 7.1vw, 91px); }
 	.free-copy > p:not(.eyebrow) { font-size: 14px; line-height: 1.8; max-width: 400px; margin-block: 24px; }
 	.free-star { position: absolute; right: -50px; bottom: -95px; font-family: Georgia, serif; font-size: 310px; opacity: .08; line-height: 1; transform: rotate(15deg); }
-	.schedule-note { font-size: 11px; line-height: 1.7; margin-bottom: 25px; }
 	.schedule-day-heading h3, .artist-day-heading h3 { font-family: var(--font-display); font-size: 42px; text-transform: uppercase; }
 	.schedule-day-heading > span, .artist-day-heading > span { display: flex; align-items: center; gap: 7px; font-family: var(--font-display); font-size: 54px; line-height: 1; color: #a6441b; }
 	.schedule-day-heading small, .artist-day-heading small { font-family: var(--font-sans); font-size: 8px; font-weight: 700; writing-mode: vertical-rl; letter-spacing: .09em; }
@@ -202,6 +200,9 @@
 	.information-grid > div:first-child > p:not(.eyebrow) { font-size: 13px; line-height: 1.7; margin-top: 24px; }
 	.information-sun { width: 75px; height: 75px; color: #c55222; margin-top: 25px; }
 	.faq-list summary::-webkit-details-marker { display: none; }
+	/* Answers inject their own markup, so these links are not Astro-scoped. */
+	.faq-list p a { color: #a6441b; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+	.faq-list p a:hover { color: var(--color-rust); }
 	.social-inner .eyebrow { margin-bottom: 12px; }
 	.social-inner h2 { font-size: 54px; }
 	.social-inner > div > p:not(.eyebrow) { font-size: 12px; margin-top: 15px; line-height: 1.7; }
@@ -374,7 +375,6 @@
 	.free-copy h2 { font-size: 67px; }
 	.free-copy > p:not(.eyebrow) { font-size: 13px; }
 	.free-star { right: -55px; bottom: 180px; font-size: 250px; }
-	.schedule-note { font-size: 10px; }
 	.schedule-day h4 { font-size: 15px; }
 	.activities-section h2 { font-size: 50px; }
 	.location-copy h2 { font-size: clamp(49px, 12.3vw, 75px); }

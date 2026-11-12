@@ -126,6 +126,29 @@ test('Every link in the build resolves to an asset, a page or a section', () => 
 	}
 });
 
+test('Practical questions render their links as real anchors', () => {
+	const faq = html.slice(html.indexOf('id="informacion"'), html.indexOf('</footer>'));
+	const links = [...faq.matchAll(/<a\b[^>]*href="(https:\/\/www\.vivecortelazor\.es\/es\/[^"]+)"[^>]*>/g)];
+	assert.equal(links.length, 4, 'Every practical answer that points at vivecortelazor.es must render an anchor.');
+	for (const tag of links) {
+		assert.equal(getAttribute(tag[0], 'target'), '_blank');
+		// `noopener` only, never `noreferrer`: the destination must keep receiving
+		// the referrer, and neither attribute is read by search engines anyway.
+		assert.equal(getAttribute(tag[0], 'rel'), 'noopener');
+	}
+	assert.match(faq, />alojamientos rurales de Cortelazor</);
+	assert.match(faq, />oferta gastronómica de Cortelazor</);
+	assert.match(faq, />historia de Cortelazor</);
+	assert.match(faq, />qué hacer en Cortelazor</);
+	// The markup must be rendered, not escaped into visible text.
+	assert.doesNotMatch(faq, /&lt;a href=/);
+	const css = readdirSync(join(outputDirectory, '_astro'))
+		.filter((file) => file.endsWith('.css'))
+		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
+		.join('');
+	assert.match(css, /\.faq-list p a\{[^}]*text-decoration:underline/, 'FAQ links must be visibly styled as links.');
+});
+
 test('All local images, fonts, styles and scripts exist in the build', () => {
 	for (const match of html.matchAll(/\b(?:src|href)="(\/[^"#]*)"/g)) {
 		assert.ok(existsSync(join(outputDirectory, match[1])), `Missing asset: ${match[1]}`);
@@ -179,10 +202,10 @@ test('Official social profiles are linked from the footer and the landing page',
 });
 
 test('Provisional content is not presented as confirmed', () => {
-	assert.match(html, /Cartel en preparación/);
-	assert.match(html, /Esta selección es orientativa/);
-	assert.match(html, /Programación orientativa/);
+	// The "orientativa" notices were removed on purpose; what must never come
+	// back is language that presents invented details as confirmed.
 	assert.doesNotMatch(html, /artistas confirmados/i);
+	assert.doesNotMatch(html, /programación confirmada/i);
 	assert.equal((html.match(/data-schedule-day=/g) ?? []).length, 3);
 });
 
@@ -232,10 +255,9 @@ test('Activities mirror the artists layout: one column per day with a modal prof
 	assert.equal(getAttribute(dialog, 'aria-labelledby'), 'activity-dialog-title');
 	assert.match(html, /id="activity-dialog-title"/);
 	// The section sits right after the artists so the menu order matches the
-	// scroll order, and it keeps the provisional-content qualification.
+	// scroll order.
 	const sectionOrder = ['id="artistas"', 'id="actividades"', 'id="free-access"'].map((needle) => html.indexOf(needle));
 	assert.ok(sectionOrder.every((position, index) => position >= 0 && (index === 0 || position > sectionOrder[index - 1])), 'The activities section must sit between the artists and the free-access sections.');
-	assert.match(html, /Actividades en preparación/);
 });
 
 test('Activities read differently from the artists: colour photos, solid day bars and a stamp', () => {
@@ -290,9 +312,13 @@ test('Accessible, progressive interactions are included', () => {
 	assert.match(backToTop, /h-9 w-9/, 'The back-to-top icon must match the social icon size.');
 	assert.match(html, /aria-controls="main-navigation"/);
 	assert.match(html, /aria-label="Filtrar programación por día"/);
-	assert.equal((html.match(/<details\b/g) ?? []).length, 5);
+	assert.equal((html.match(/<details\b/g) ?? []).length, 6);
 	for (const tag of html.match(/<a\b[^>]*target="_blank"[^>]*>/g) ?? []) {
-		assert.match(getAttribute(tag, 'rel') ?? '', /noopener/);
+		// Security for the opener page; `nofollow`/`sponsored` would stop search
+		// engines from counting the link, so they must never come back.
+		const rel = getAttribute(tag, 'rel') ?? '';
+		assert.match(rel, /noopener/, `Missing noopener on ${tag}`);
+		assert.doesNotMatch(rel, /nofollow|sponsored/);
 	}
 	const cssFiles = readdirSync(join(outputDirectory, '_astro')).filter((file) => file.endsWith('.css'));
 	const css = cssFiles.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8')).join('');

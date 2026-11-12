@@ -14,7 +14,6 @@ const sampleDay = festivalDays.find((day) => day.id === sampleActivity.day);
 <section id="actividades" class="activities-section py-15 sm:pb-[75px] tablet:pb-26">
 	<PageContainer>
 		<SectionHeading eyebrow="MUCHO MÁS QUE CONCIERTOS" title="VEN POR LA MÚSICA. QUÉDATE POR TODO." titleClass="max-w-[630px]" text="La mejor parte de un festival también sucede entre canciones." />
-		<div class="flex items-start gap-3 pb-5 text-[10px] leading-[1.6] sm:pb-[25px] sm:text-[11px]"><span class="mt-[5px] size-[7px] shrink-0 rounded-full bg-rust" aria-hidden="true"></span><p><strong>Actividades en preparación.</strong> Esta selección es orientativa; las actividades definitivas se anunciarán aquí.</p></div>
 		<div class="grid grid-cols-1 gap-[34px] sm:gap-7 lg:grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))]">
 			{festivalDays.map((day) => (
 				<section class="activity-day" data-activity-day={day.id} aria-labelledby={`activity-day-${day.id}`}>
@@ -37,7 +36,6 @@ const sampleDay = festivalDays.find((day) => day.id === sampleActivity.day);
 					<h3 id="activity-dialog-title" data-dialog-name>{sampleActivity.name}</h3>
 					<p class="artist-dialog-genre" data-dialog-genre>{sampleActivity.category}</p>
 					<p class="artist-dialog-text" data-dialog-text>{sampleActivity.description}</p>
-					<p class="artist-dialog-note"><strong>Actividades en preparación.</strong> Ficha orientativa; el programa definitivo se publicará antes del festival.</p>
 				</div>
 			</div>
 		</dialog>
