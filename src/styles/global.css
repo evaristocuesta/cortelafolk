@@ -264,6 +264,9 @@
 }
 @media (width < 1101px) {
 	.free-badge { width: 260px; height: 260px; }
+	.free-badge > span { max-width: 130px; text-align: center; line-height: 1.3; text-wrap: balance; }
+	.free-badge strong { padding-block: 8px; }
+	.free-badge svg { margin-bottom: 8px; }
 }
 /* These upper bounds mirror Tailwind's min-width breakpoints (tablet 960px,
    wide 1101px, sm 640px) as strict "<" so a fractional viewport such as
@@ -287,6 +290,9 @@
 	.free-badge strong { font-size: 61px; }
 	.free-badge > span { font-size: 8px; }
 	.free-badge > span:last-child { font-size: 6px; }
+	.free-badge > span { max-width: 100px; text-align: center; line-height: 1.3; text-wrap: balance; }
+	.free-badge strong { padding-block: 7px; }
+	.free-badge svg { margin-bottom: 8px; }
 	.free-copy > p:not(.eyebrow) { font-size: 12px; }
 	.location-copy h2 { font-size: 52px; }
 	.location-copy .button { font-size: 9px; padding-inline: 15px; gap: 18px; }
@@ -364,6 +370,7 @@
 	.artist-footnote { font-size: 9px; text-align: left; }
 	.free-badge { width: 215px; height: 215px; justify-self: start; margin-left: 20px; }
 	.free-badge strong { font-size: 59px; }
+	.free-badge > span { max-width: 92px; }
 	.free-copy h2 { font-size: 67px; }
 	.free-copy > p:not(.eyebrow) { font-size: 13px; }
 	.free-star { right: -55px; bottom: 180px; font-size: 250px; }

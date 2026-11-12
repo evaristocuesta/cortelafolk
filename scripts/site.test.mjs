@@ -145,6 +145,13 @@ test('Free access is explicit and there is no ticketing or registration', () => 
 	assert.match(html, /ENTRADA LIBRE/);
 	assert.match(html, /La entrada es libre para todo el mundo/);
 	assert.match(html, /href="#como-llegar"[^>]*>CÓMO LLEGAR/);
+	const css = readdirSync(join(outputDirectory, '_astro'))
+		.filter((file) => file.endsWith('.css'))
+		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
+		.join('');
+	assert.match(css, /\.free-badge>span\{[^}]*text-align:center[^}]*text-wrap:balance[^}]*max-width:100px/, 'Badge labels must wrap within the circle below tablet width.');
+	assert.match(css, /\.free-badge>span\{[^}]*max-width:92px/, 'Badge labels must narrow further on mobile.');
+	assert.match(css, /\.free-badge>span\{[^}]*max-width:130px/, 'Badge labels must also fit at intermediate desktop widths.');
 	assert.doesNotMatch(html, /<(?:form|input|select|textarea)\b/);
 	assert.doesNotMatch(html, /(?:Consigue tu entrada|Entradas próximamente|Comprar entradas|eventbrite|ticketmaster|entradium|checkout)/i);
 });
