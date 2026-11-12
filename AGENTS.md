@@ -31,7 +31,7 @@ Renaming an ID, changing visitor-facing copy, adding a section, or swapping an i
 
 - Visitor-facing text, alt text and interaction states are **Spanish**; technical identifiers, section anchors and documentation are **English**.
 - Artist names, times, stages and activities are **fictional placeholders**; the "orientativa" / "Cartel en preparación" notices were removed on purpose, so don't re-add them, and never phrase invented details as confirmed. Approved facts only: fourth edition, 23–25 April 2027, Cortelazor (Huelva), free access without tickets or registration. Don't invent sponsors, contact details or social profiles.
-- The `#organizacion` section ships **placeholder credits** on purpose (Organizador 1–2 and Colaborador 1–20, all pointing at `*.com` domains and sharing `public/images/partner-logo.svg`); `organizers` / `collaborators` in `src/data/site.ts` are meant to be swapped for the real names, links and logos.
+- The `#organizacion` section ships **placeholder credits** on purpose (Organizador 1–2 and Colaborador 1–20 pointing at `*.com` domains); each entry in `organizers` / `collaborators` in `src/data/site.ts` carries its own `logo` path under `public/images/partners/`, meant to be swapped for the real names, links and logos.
 
 ## Styling
 

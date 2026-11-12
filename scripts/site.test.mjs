@@ -327,10 +327,11 @@ test('Organization and collaborators render as linked placeholder logos', () => 
 		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
 		.join('');
 	assert.match(css, /\.credits-logo\{/, 'The logo cell styling must exist.');
-	assert.match(css, /\.credits-logo\{[^}]*transition:transform/, 'The logo cell must animate its hover.');
-	assert.match(css, /\.credits-logo:hover\{[^}]*box-shadow:5px 5px 0 var\(--color-rust\)/, 'Hovering a logo must cast the poster-style offset shadow.');
-	assert.match(css, /\.credits-logo:hover\{[^}]*transform:translateY\(-4px\)rotate\(-1\.5deg\)scale\(1\.05\)/, 'Hovering a logo must lift, tilt and grow it slightly.');
-	assert.match(css, /\.credits-logo:hover\{transform:none\}/, 'Reduced motion must keep the logo static.');
+	assert.match(css, /\.credits-logo img\{[^}]*transition:transform/, 'The logo image must animate its hover.');
+	assert.match(css, /\.credits-logo:hover img\{[^}]*box-shadow:5px 5px 0 var\(--color-rust\)/, 'Hovering a logo must cast the poster-style offset shadow.');
+	assert.match(css, /\.credits-logo:hover img\{[^}]*transform:translateY\(-4px\)rotate\(-1\.5deg\)scale\(1\.05\)/, 'Hovering a logo must lift, tilt and grow it slightly.');
+	assert.match(css, /\.credits-logo:hover img\{transform:none\}/, 'Reduced motion must keep the logo static.');
+	assert.doesNotMatch(css, /\.credits-logo:hover\{[^}]*box-shadow/, 'The shadow belongs on the image, never on the whole cell.');
 });
 
 test('Location includes an accessible lazy-loaded Google Maps embed', () => {

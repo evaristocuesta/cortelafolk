@@ -208,9 +208,10 @@
 	.credits-inner h2 { font-size: clamp(46px, 7vw, 72px); }
 	.credits-group { margin-top: 34px; }
 	.credits-label { font-size: 10px; font-weight: 800; letter-spacing: .16em; color: #a6441b; margin-bottom: 14px; }
-	.credits-logo { display: flex; align-items: center; justify-content: center; min-height: 74px; padding: 12px 16px; transition: transform 0.3s cubic-bezier(0.22, 0.8, 0.3, 1), box-shadow 0.3s ease; }
-	.credits-logo:hover { transform: translateY(-4px) rotate(-1.5deg) scale(1.05); box-shadow: 5px 5px 0 var(--color-rust); }
-	.credits-logo img { width: auto; height: auto; max-width: 100%; max-height: 100px; }
+	.credits-logo { display: flex; align-items: center; justify-content: center; min-height: 74px; padding: 12px 16px; }
+	/* The shadow sits on the image, not on the cell, so it hugs the logo itself. */
+	.credits-logo img { width: auto; height: auto; max-width: 100%; max-height: 100px; transition: transform 0.3s cubic-bezier(0.22, 0.8, 0.3, 1), box-shadow 0.3s ease; }
+	.credits-logo:hover img { transform: translateY(-4px) rotate(-1.5deg) scale(1.05); box-shadow: 5px 5px 0 var(--color-rust); }
 	.social-inner > div > p:not(.eyebrow) { font-size: 12px; margin-top: 15px; line-height: 1.7; }
 	.share-actions > p { font-size: 11px; margin-top: 12px; line-height: 1.6; }
 	.share-actions > p:empty { margin: 0; }
@@ -406,7 +407,7 @@
 	*, *::before, *::after { animation: none !important; transition: none !important; }
 	/* No positional hover animation without motion. */
 	.artist-card:hover, .artist-card:focus-within { transform: none; }
-	.credits-logo:hover { transform: none; }
+	.credits-logo:hover img { transform: none; }
 	/* Static fallback: a single centered copy that bleeds off both edges. */
 	.ribbon-track { width: 100%; justify-content: center; }
 	.ribbon-group[aria-hidden='true'] { display: none; }
