@@ -76,7 +76,7 @@ test('Canonical and structured data use only the configured production origin', 
 test('Every internal anchor resolves to a unique section', () => {
 	const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
 	assert.equal(new Set(ids).size, ids.length, 'Duplicate HTML identifiers found.');
-	for (const id of ['home', 'festival', 'artistas', 'free-access', 'programacion', 'actividades', 'como-llegar', 'informacion']) {
+	for (const id of ['home', 'festival', 'artistas', 'free-access', 'programacion', 'actividades', 'como-llegar', 'informacion', 'organizacion']) {
 		assert.ok(ids.includes(id), `Missing festival section: ${id}`);
 	}
 	// Anchors are Spanish; the old English ids must not resurface in links.
@@ -290,6 +290,49 @@ test('Activities read differently from the artists: colour photos, solid day bar
 	assert.ok(wavePaths.some((path) => path.startsWith('M960 37')), 'The divider needs a curved lower edge, not a straight baseline.');
 });
 
+test('Organization and collaborators render as linked placeholder logos', () => {
+	const start = html.indexOf('id="organizacion"');
+	assert.ok(start >= 0, 'The credits section must exist just before the footer.');
+	assert.ok(start > html.indexOf('id="informacion"') && start < html.indexOf('<footer'), 'The credits section belongs between the share block and the footer.');
+	const credits = html.slice(start, html.indexOf('</main>'));
+	const splitAt = credits.indexOf('>COLABORA<');
+	assert.ok(splitAt > 0, 'The credits section must separate organisers from collaborators.');
+	const linksOf = (region) => [...region.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>/g)];
+	const organizerLinks = linksOf(credits.slice(0, splitAt));
+	const collaboratorLinks = linksOf(credits.slice(splitAt));
+	assert.equal(organizerLinks.length, 2, 'Two organisers must be listed.');
+	assert.equal(collaboratorLinks.length, 20, 'Twenty collaborators must be listed.');
+	for (const match of [...organizerLinks, ...collaboratorLinks]) {
+		assert.match(match[1], /^https:\/\//, `Credit links must be absolute https URLs: ${match[1]}`);
+		assert.equal(getAttribute(match[0], 'target'), '_blank');
+		assert.equal(getAttribute(match[0], 'rel'), 'noopener', 'Credit links must open safely in a new tab.');
+	}
+	const images = credits.match(/<img\b[^>]*>/g) ?? [];
+	assert.equal(images.length, organizerLinks.length + collaboratorLinks.length, 'Every credit renders exactly one logo.');
+	const logoSources = new Set();
+	for (const image of images) {
+		const source = getAttribute(image, 'src');
+		assert.match(source ?? '', /^\/images\/partners\/.+\.svg$/, 'Each credit points at its own logo file.');
+		assert.ok(!logoSources.has(source), `Repeated logo file: ${source}`);
+		logoSources.add(source);
+		const alt = getAttribute(image, 'alt');
+		assert.ok(alt && !alt.endsWith('.svg'), 'Each logo needs a spoken name, not its file name.');
+		assert.ok(getAttribute(image, 'width') && getAttribute(image, 'height'), 'Logo images need explicit dimensions.');
+	}
+	assert.equal(logoSources.size, 22, 'All 22 logos must be distinct files.');
+	assert.match(credits, />ORGANIZA</);
+	assert.match(credits, />COLABORA</);
+	const css = readdirSync(join(outputDirectory, '_astro'))
+		.filter((file) => file.endsWith('.css'))
+		.map((file) => readFileSync(join(outputDirectory, '_astro', file), 'utf8'))
+		.join('');
+	assert.match(css, /\.credits-logo\{/, 'The logo cell styling must exist.');
+	assert.match(css, /\.credits-logo\{[^}]*transition:transform/, 'The logo cell must animate its hover.');
+	assert.match(css, /\.credits-logo:hover\{[^}]*box-shadow:5px 5px 0 var\(--color-rust\)/, 'Hovering a logo must cast the poster-style offset shadow.');
+	assert.match(css, /\.credits-logo:hover\{[^}]*transform:translateY\(-4px\)rotate\(-1\.5deg\)scale\(1\.05\)/, 'Hovering a logo must lift, tilt and grow it slightly.');
+	assert.match(css, /\.credits-logo:hover\{transform:none\}/, 'Reduced motion must keep the logo static.');
+});
+
 test('Location includes an accessible lazy-loaded Google Maps embed', () => {
 	const map = html.match(/<iframe\b[^>]*>/)?.[0];
 	assert.ok(map, 'The location map must be embedded.');
@@ -373,6 +416,8 @@ test('Hamburger menu only takes over below 640px and stacks its links', () => {
 
 test('Main sections and the ribbon have accessible decorative wave dividers', () => {
 	const waves = html.match(/<svg\b[^>]*class="[^"]*\bsection-wave\b[^"]*"[^>]*>/g) ?? [];
+	// The credits section is deliberately undivided: it sits on paper between
+	// the share block's wave and the footer, so it adds no wave of its own.
 	assert.equal(waves.length, 10, 'Expected a divider for each of the nine main sections and the ribbon.');
 	for (const wave of waves) {
 		assert.equal(getAttribute(wave, 'aria-hidden'), 'true');

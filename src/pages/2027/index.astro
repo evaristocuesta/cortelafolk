@@ -11,6 +11,7 @@ import ActivitiesSection from '../../components/ActivitiesSection.astro';
 import LocationSection from '../../components/LocationSection.astro';
 import PracticalInformation from '../../components/PracticalInformation.astro';
 import SocialSection from '../../components/SocialSection.astro';
+import CreditsSection from '../../components/CreditsSection.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 
 const productionOrigin = import.meta.env.PUBLIC_SITE_URL;
@@ -76,6 +77,7 @@ const eventData = canonicalUrl ? {
 			<LocationSection />
 			<PracticalInformation />
 			<SocialSection />
+			<CreditsSection />
 		</main>
 		<SiteFooter />
 		<script>

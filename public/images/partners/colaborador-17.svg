@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+	<rect x="1" y="1" width="198" height="78" rx="8" fill="#f3f0e5" stroke="#173d2d" stroke-width="2" />
+	<g fill="none" stroke="#f58443" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="38" cy="40" r="13"/><path d="M38 19v6M38 55v6M17 40h6M53 40h6M23 25l4 4M49 51l4 4M53 25l-4 4M27 51l-4 4"/></g>
+	<text x="72" y="48" font-family="'DM Sans', Arial, sans-serif" font-size="21" font-weight="800" letter-spacing="1.5" fill="#173d2d">LOGO 19</text>
+</svg>

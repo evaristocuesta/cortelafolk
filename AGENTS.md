@@ -19,7 +19,7 @@ Verify a change with `pnpm check && pnpm build && pnpm test`.
 `scripts/site.test.mjs` is a contract test against the **built** HTML/CSS, not unit tests. Most assertions target the full festival contract at `/2027/`; a smaller set covers the root landing page. It asserts:
 
 - root landing page (`dist/index.html`): the Cortelafolk logo, the 2027 dates and location, an `ENTRADA LIBRE` mention.
-- festival page (`dist/2027/index.html`): exact Spanish copy, exact section IDs (`home`, `festival`, `artistas`, `free-access`, `programacion`, `actividades`, `como-llegar`, `informacion`), a single `<h1>`, exactly 10 `.section-wave` dividers, 6 `<details>`, 3 `data-schedule-day` blocks.
+- festival page (`dist/2027/index.html`): exact Spanish copy, exact section IDs (`home`, `festival`, `artistas`, `free-access`, `programacion`, `actividades`, `como-llegar`, `informacion`, `organizacion`), a single `<h1>`, exactly 10 `.section-wave` dividers, 6 `<details>`, 3 `data-schedule-day` blocks.
 - every `href` on both built pages resolves: anchors to an existing `id`, local paths to a file in `dist/`, external links to `https://` (no local origins).
 - asset budgets: total client JS (bundled + inline) < 12 KB, each `.webp` photo < 200 KB, `social-preview.png` exactly 1200×630, every `src`/`href` root-absolute path present in `dist/`.
 - generated Tailwind selectors (`.tablet\:grid-cols-4`, `.wide\:px-16`, `.aria-pressed\:bg-forest`, `.group-open\:rotate-45`) and `scroll-padding-top` 82 / 72 / 68 px at the three breakpoints.
@@ -31,6 +31,7 @@ Renaming an ID, changing visitor-facing copy, adding a section, or swapping an i
 
 - Visitor-facing text, alt text and interaction states are **Spanish**; technical identifiers, section anchors and documentation are **English**.
 - Artist names, times, stages and activities are **fictional placeholders**; the "orientativa" / "Cartel en preparación" notices were removed on purpose, so don't re-add them, and never phrase invented details as confirmed. Approved facts only: fourth edition, 23–25 April 2027, Cortelazor (Huelva), free access without tickets or registration. Don't invent sponsors, contact details or social profiles.
+- The `#organizacion` section ships **placeholder credits** on purpose (Organizador 1–2 and Colaborador 1–20, all pointing at `*.com` domains and sharing `public/images/partner-logo.svg`); `organizers` / `collaborators` in `src/data/site.ts` are meant to be swapped for the real names, links and logos.
 
 ## Styling
 

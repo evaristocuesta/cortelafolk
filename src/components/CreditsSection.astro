@@ -1,0 +1,26 @@
+---
+import { collaborators, organizers } from '../data/site';
+import PageContainer from './PageContainer.astro';
+---
+<section id="organizacion" class="py-15 sm:py-[75px] tablet:pb-26" aria-labelledby="credits-title">
+	<PageContainer class="credits-inner">
+		<p class="eyebrow">ORGANIZACIÓN Y COLABORADORES</p>
+		<h2 id="credits-title">QUIÉN LO HACE <span class="serif-word">posible.</span></h2>
+		<div class="credits-group">
+			<h3 class="credits-label">ORGANIZA</h3>
+			<ul class="grid grid-cols-2 gap-4">
+				{organizers.map((entry) => (
+					<li><a class="credits-logo" href={entry.href} target="_blank" rel="noopener"><img src={entry.logo} alt={entry.name} width="200" height="80" loading="lazy" /></a></li>
+				))}
+			</ul>
+		</div>
+		<div class="credits-group">
+			<h3 class="credits-label">COLABORA</h3>
+			<ul class="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-4 tablet:grid-cols-5">
+				{collaborators.map((entry) => (
+					<li><a class="credits-logo" href={entry.href} target="_blank" rel="noopener"><img src={entry.logo} alt={entry.name} width="200" height="80" loading="lazy" /></a></li>
+				))}
+			</ul>
+		</div>
+	</PageContainer>
+</section>
