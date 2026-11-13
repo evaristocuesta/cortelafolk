@@ -2,14 +2,13 @@
 import { artists } from '../data/artists';
 import { festivalDays } from '../data/site';
 import ArtistCard from './ArtistCard.astro';
+import ProfileDialog from './ProfileDialog.astro';
 import SectionHeading from './SectionHeading.astro';
 import PageContainer from './PageContainer.astro';
 import WaveDivider from './WaveDivider.astro';
-import Icon from './Icon.astro';
 
-// Seed values keep the dialog markup complete before JavaScript enhances it.
+// Seed record keeps the dialog markup complete before JavaScript enhances it.
 const sampleArtist = artists[0];
-const sampleDay = festivalDays.find((day) => day.id === sampleArtist.day);
 ---
 <section id="artistas" class="artists-section py-15 sm:pb-[75px] tablet:pb-26">
 	<PageContainer>
@@ -27,18 +26,7 @@ const sampleDay = festivalDays.find((day) => day.id === sampleArtist.day);
 			))}
 		</div>
 		<p class="artist-footnote">Diferentes sonidos. Un mismo lugar de encuentro.</p>
-		<dialog class="artist-dialog" data-artist-dialog aria-labelledby="artist-dialog-title">
-			<button type="button" class="artist-dialog-close group" data-dialog-close aria-label="Cerrar la ficha del artista"><Icon name="plus" class="h-5 w-5 rotate-45 transition-transform duration-300 group-hover:rotate-90" /></button>
-			<div class="artist-dialog-inner">
-				<div class="artist-dialog-media"><img data-dialog-image src={sampleArtist.image} alt={sampleArtist.imageAlt} width="640" height="720" /></div>
-				<div class="artist-dialog-body">
-					<p class="artist-dialog-day" data-dialog-day>{sampleDay ? `${sampleDay.label} ${sampleDay.date} de abril` : ''}</p>
-					<h3 id="artist-dialog-title" data-dialog-name>{sampleArtist.name}</h3>
-					<p class="artist-dialog-genre" data-dialog-genre>{sampleArtist.genre}</p>
-					<p class="artist-dialog-text" data-dialog-text>{sampleArtist.description}</p>
-				</div>
-			</div>
-		</dialog>
+		<ProfileDialog variant="artist" sample={sampleArtist} />
 	</PageContainer>
 	{/* Tangerine tape marks the boundary with the activities section below. */}
 	<WaveDivider nextColor="moss" variant="thick" />

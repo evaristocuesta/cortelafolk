@@ -7,16 +7,19 @@ export function bindProfileDialog(dialogSelector: string, triggerSelector: strin
 	const day = dialog.querySelector<HTMLElement>('[data-dialog-day]');
 	const name = dialog.querySelector<HTMLElement>('[data-dialog-name]');
 	const genre = dialog.querySelector<HTMLElement>('[data-dialog-genre]');
+	const slot = dialog.querySelector<HTMLElement>('[data-dialog-slot]');
 	const text = dialog.querySelector<HTMLElement>('[data-dialog-text]');
 	dialog.querySelector<HTMLButtonElement>('[data-dialog-close]')?.addEventListener('click', () => dialog.close());
 	dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
 	document.querySelectorAll<HTMLButtonElement>(triggerSelector).forEach((trigger) => {
 		trigger.addEventListener('click', () => {
-			const { image: src, imageAlt, name: title, genre: category, description, day: label, tone } = trigger.dataset;
+			const { image: src, imageAlt, name: title, genre: category, description, day: label, tone, slot: when } = trigger.dataset;
 			if (image && src && imageAlt) { image.src = src; image.alt = imageAlt; }
 			if (day && label) day.textContent = label;
 			if (name && title) name.textContent = title;
 			if (genre && category) genre.textContent = category;
+			// Cleared when a trigger has no slot, so nothing stale survives.
+			if (slot) slot.textContent = when ?? '';
 			if (text && description) text.textContent = description;
 			for (const value of ['orange', 'green', 'yellow']) dialog.classList.toggle(`tone-${value}`, value === tone);
 			dialog.showModal();

@@ -1,16 +1,19 @@
 ---
 import type { Activity } from '../types/festival';
 import { festivalDays } from '../data/site';
+import { activitySlot, slotLabel } from '../data/schedule';
 interface Props { activity: Activity; }
 const { activity } = Astro.props;
 const day = festivalDays.find((item) => item.id === activity.day);
+// Time and stage come from the timetable so card, modal and row agree.
+const slot = slotLabel(activitySlot(activity.id));
 // Same path as WaveDivider so each card repeats the section wave language.
 const wave = 'M0 17C46.67 13 76.67 1.83 130 4C183.33 6.17 241.67 29.83 320 30C398.33 30.17 518.33 5.33 600 5C681.67 4.67 750 26 810 28C870 30 913.33 21 960 17';
 ---
 {/* The poster-card classes are shared with ArtistCard so both sections render
    identically; the data-activity-* hooks keep the behaviour separate. */}
 <article class:list={['artist-card group relative min-w-0', `tone-${activity.tone}`]}>
-	<button type="button" class="artist-open" data-activity-open data-name={activity.name} data-genre={activity.category} data-description={activity.description} data-image={activity.image} data-image-alt={activity.imageAlt} data-day={day ? `${day.label} ${day.date} de abril` : ''} data-tone={activity.tone} aria-haspopup="dialog" aria-label={`Ver la ficha de ${activity.name}`}></button>
+	<button type="button" class="artist-open" data-activity-open data-name={activity.name} data-genre={activity.category} data-description={activity.description} data-image={activity.image} data-image-alt={activity.imageAlt} data-day={day ? `${day.label} ${day.date} de abril` : ''} data-slot={slot} data-tone={activity.tone} aria-haspopup="dialog" aria-label={`Ver la ficha de ${activity.name}`}></button>
 	<div class="artist-image relative aspect-[.8] w-full max-h-[560px] overflow-hidden bg-[var(--card-color)] sm:aspect-[1.05] tablet:aspect-[.85]">
 		<img class="h-full w-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.07]" src={activity.image} alt={activity.imageAlt} width="640" height="720" loading="lazy" decoding="async" />
 		<svg class="artist-wave" viewBox="0 0 960 34" preserveAspectRatio="none" aria-hidden="true" focusable="false">
@@ -23,5 +26,6 @@ const wave = 'M0 17C46.67 13 76.67 1.83 130 4C183.33 6.17 241.67 29.83 320 30C39
 		<p class="activity-stamp">{activity.category}</p>
 		<h4>{activity.name}</h4>
 		<svg class="artist-title-wave" viewBox="0 0 960 34" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d={wave} pathLength="100" /></svg>
+		{slot && <p class="artist-slot">{slot}</p>}
 	</div>
 </article>

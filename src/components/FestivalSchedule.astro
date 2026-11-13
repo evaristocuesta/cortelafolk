@@ -1,10 +1,54 @@
 ---
+import type { FestivalDay } from '../types/festival';
 import { festivalDays } from '../data/site';
-import { scheduleItems } from '../data/schedule';
+import { scheduleItems, slotLabel } from '../data/schedule';
 import { stages } from '../data/stages';
+import { artists } from '../data/artists';
+import { activities } from '../data/activities';
 import SectionHeading from './SectionHeading.astro';
 import PageContainer from './PageContainer.astro';
 import WaveDivider from './WaveDivider.astro';
+
+const dayLabel = (id: FestivalDay) => {
+	const day = festivalDays.find((item) => item.id === id);
+	return day ? `${day.label} ${day.date} de abril` : '';
+};
+
+// Every row resolves its stage name and, when the slot belongs to the lineup or
+// the activities catalogue, the payload that opens the shared profile modal
+// straight from the timetable. The title still comes from that same record.
+const dayColumns = festivalDays.map((day) => ({
+	day,
+	items: scheduleItems.filter((item) => item.day === day.id).map((item) => {
+		const stage = stages.find((entry) => entry.id === item.stageId);
+		const artist = item.artistId ? artists.find((entry) => entry.id === item.artistId) : undefined;
+		const activity = item.activityId ? activities.find((entry) => entry.id === item.activityId) : undefined;
+		const record = artist ?? activity;
+		const title = record?.name ?? item.title ?? '';
+		const hook = artist ? 'data-artist-open' : 'data-activity-open';
+		return {
+			item,
+			title,
+			stageName: stage?.name,
+			trigger: record
+				? {
+						name: title,
+						attrs: {
+							[hook]: '',
+							'data-name': record.name,
+							'data-genre': artist ? artist.genre : (activity?.category ?? ''),
+							'data-description': record.description,
+							'data-image': record.image,
+							'data-image-alt': record.imageAlt,
+							'data-day': dayLabel(record.day),
+							'data-slot': slotLabel(item) ?? '',
+							'data-tone': record.tone,
+						},
+					}
+				: undefined,
+		};
+	}),
+}));
 
 const filterClasses = 'min-h-11 border border-forest/19 bg-transparent px-[13px] py-2.5 text-[10px] font-bold hover:border-forest aria-pressed:border-forest aria-pressed:bg-forest aria-pressed:text-paper sm:px-[18px] sm:py-[11px] sm:text-[11px]';
 ---
@@ -17,16 +61,16 @@ const filterClasses = 'min-h-11 border border-forest/19 bg-transparent px-[13px]
 		</div>
 		<p class="sr-only" data-schedule-status aria-live="polite" aria-atomic="true"></p>
 		<div class="schedule-grid grid grid-cols-1 gap-[34px] lg:grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] sm:gap-7">
-			{festivalDays.map((day) => (
+			{dayColumns.map(({ day, items }) => (
 				<section class="schedule-day" data-schedule-day={day.id} aria-labelledby={`day-${day.id}`}>
 					<div class="schedule-day-heading flex items-center justify-between border-y border-forest py-[15px] sm:py-5">
 						<h3 id={`day-${day.id}`}>{day.label}</h3><span>{day.date}<small>ABRIL</small></span>
 					</div>
 					<ol class="m-0 list-none p-0">
-						{scheduleItems.filter((item) => item.day === day.id).map((item) => (
+						{items.map(({ item, title, stageName, trigger }) => (
 							<li class="flex gap-[30px] border-b border-forest/19 py-5 sm:gap-[18px] sm:py-[23px]">
 								<time datetime={`${day.fullDate}T${item.startTime}:00+02:00`}>{item.startTime}</time>
-								<div><span class="schedule-category">{item.category}</span><h4>{item.title}</h4><p>{stages.find((stage) => stage.id === item.stage)?.name}</p></div>
+								<div><span class="schedule-category">{item.category}</span><h4>{trigger ? <button type="button" class="schedule-open" {...trigger.attrs} aria-haspopup="dialog" aria-label={`Ver la ficha de ${trigger.name}`}>{title}</button> : title}</h4><p>{stageName}</p></div>
 							</li>
 						))}
 					</ol>

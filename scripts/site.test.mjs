@@ -16,6 +16,29 @@ const getAttribute = (tag, name) => tag.match(new RegExp(`\\b${name}="([^"]*)"`)
 // CSS emits that as its negated form, so both spellings are accepted.
 const upperBound = (px) => `@media\\s*(?:\\(\\s*width\\s*<\\s*${px}px\\s*\\)|not all and \\(width>=${px}px\\))`;
 const upperBoundBlock = (css, px) => css.match(new RegExp(`${upperBound(px)}[^{]*\\{(?:[^{}]|\\{[^{}]*\\})*\\}`))?.[0];
+// Section slices shared by the profile and timetable tests.
+const sliceBetween = (from, to) => html.slice(html.indexOf(from), html.indexOf(to));
+const artistSection = () => sliceBetween('id="artistas"', 'id="actividades"');
+const activitySection = () => sliceBetween('id="actividades"', 'id="free-access"');
+// The timetable sits between `#programacion` and the stage strip that closes it.
+const scheduleSlots = () => {
+	const listStart = html.indexOf('id="programacion"');
+	const stripStart = html.indexOf('<div class="stage-strip');
+	assert.ok(listStart >= 0 && stripStart > listStart, 'The schedule and its stage strip must both exist.');
+	return [...html.slice(listStart, stripStart).matchAll(/<li\b[\s\S]*?<\/li>/g)]
+		.map((match) => match[0])
+		.map((row) => {
+			// Linked rows wrap their title in the modal trigger, so strip the markup.
+			const heading = row.match(/<\/span><h4>([\s\S]*?)<\/h4>/)?.[1] ?? '';
+			return {
+				title: heading.replace(/<[^>]+>/g, '').trim(),
+				category: row.match(/<span class="schedule-category">([^<]*)<\/span>/)?.[1] ?? '',
+				stage: row.match(/<\/h4><p>([^<]*)<\/p>/)?.[1] ?? '',
+				time: row.match(/<time\b[^>]*>([^<]*)<\/time>/)?.[1] ?? '',
+				trigger: row.match(/<button\b[^>]*data-(?:artist|activity)-open[^>]*>/)?.[0],
+			};
+		});
+};
 
 test('Root landing page shows the logo and 2027 dates', () => {
 	assert.match(landingHtml, /<html lang="es">/);
@@ -209,12 +232,56 @@ test('Provisional content is not presented as confirmed', () => {
 	assert.equal((html.match(/data-schedule-day=/g) ?? []).length, 3);
 });
 
+test('Every schedule slot names the stage it happens on', () => {
+	const stageNames = ['Plaza del Olmo', 'Museo José Pérez-Guerra', 'Iglesia Nuestra Señora de los Remedios', 'Salón Blanca Candón'];
+	const openAirStages = ['Plaza del Olmo', 'Iglesia Nuestra Señora de los Remedios'];
+	const indoorStages = ['Museo José Pérez-Guerra', 'Salón Blanca Candón'];
+	const slots = scheduleSlots();
+	assert.equal(slots.length, 16, 'Expected sixteen schedule slots across the three days.');
+	for (const slot of slots) {
+		assert.ok(stageNames.includes(slot.stage), `Slot "${slot.category}" must name one of the four stages, got "${slot.stage}".`);
+	}
+	for (const slot of slots.filter((item) => item.category === 'Concierto')) {
+		assert.ok(openAirStages.includes(slot.stage), `Concerts belong in the plaza or the church, not "${slot.stage}".`);
+	}
+	for (const slot of slots.filter((item) => /Taller|Charla/.test(item.category))) {
+		assert.ok(indoorStages.includes(slot.stage), `Hands-on sessions belong in the museum or the hall, not "${slot.stage}".`);
+	}
+	for (const name of stageNames) {
+		assert.ok(slots.some((slot) => slot.stage === name), `No slot is scheduled at ${name}.`);
+	}
+	const stripStart = html.indexOf('<div class="stage-strip');
+	const strip = html.slice(stripStart, html.indexOf('</main>'));
+	assert.equal((strip.match(/<article>/g) ?? []).length, 4, 'The stage strip must describe all four stages.');
+	for (const name of stageNames) {
+		assert.ok(strip.includes(`<h3>${name}</h3>`), `The stage strip is missing ${name}.`);
+	}
+});
+
+test('Schedule slots borrow their titles from the lineup and activities catalogues', () => {
+	const ownTitles = ['¡Nos encontramos en Cortelazor!', 'Música que recorre el pueblo', 'La noche de las raíces', 'El pueblo suena', 'Un paseo entre canciones', 'Hasta la próxima, Cortelazor'];
+	const artistNames = ['Raíces del Sur', 'Tomillo Salvaje', 'Eco de la Sierra', 'Río Nómada'];
+	const activityNames = ['Manos a la música', 'Ensayo abierto', 'Baile en la plaza', 'Noche de fuego', 'Taller de sonido', 'Cierre con todos'];
+	const titles = scheduleSlots().map((slot) => slot.title);
+	assert.equal(titles.length, 16, 'Expected sixteen schedule slots across the three days.');
+	assert.equal(new Set(titles).size, titles.length, 'No two slots may repeat a title.');
+	assert.deepEqual(new Set(titles), new Set([...ownTitles, ...artistNames, ...activityNames]), 'The timetable must show every catalogue name and nothing invented.');
+	const lineup = html.slice(html.indexOf('id="artistas"'), html.indexOf('id="actividades"'));
+	const activitySection = html.slice(html.indexOf('id="actividades"'), html.indexOf('id="free-access"'));
+	for (const name of artistNames) {
+		assert.ok(lineup.includes(`<h4>${name}</h4>`), `The timetable names an artist the lineup does not show: ${name}.`);
+	}
+	for (const name of activityNames) {
+		assert.ok(activitySection.includes(`<h4>${name}</h4>`), `The timetable names an activity that section does not show: ${name}.`);
+	}
+});
+
 test('Artists are grouped into one column per day with an accessible modal profile', () => {
 	assert.equal((html.match(/data-artist-day=/g) ?? []).length, 3, 'Expected one artist column per festival day.');
 	for (const id of ['artist-day-friday', 'artist-day-saturday', 'artist-day-sunday']) {
 		assert.match(html, new RegExp(`id="${id}"`), `Missing artist column heading: ${id}.`);
 	}
-	const triggers = html.match(/<button\b[^>]*data-artist-open[^>]*>/g) ?? [];
+	const triggers = artistSection().match(/<button\b[^>]*data-artist-open[^>]*>/g) ?? [];
 	assert.equal(triggers.length, 4, 'Every artist card needs a profile trigger.');
 	for (const tag of triggers) {
 		assert.equal(getAttribute(tag, 'aria-haspopup'), 'dialog');
@@ -242,7 +309,7 @@ test('Activities mirror the artists layout: one column per day with a modal prof
 	for (const id of ['activity-day-friday', 'activity-day-saturday', 'activity-day-sunday']) {
 		assert.match(html, new RegExp(`id="${id}"`), `Missing activity column heading: ${id}.`);
 	}
-	const triggers = html.match(/<button\b[^>]*data-activity-open[^>]*>/g) ?? [];
+	const triggers = activitySection().match(/<button\b[^>]*data-activity-open[^>]*>/g) ?? [];
 	assert.equal(triggers.length, 6, 'Every activity card needs a modal trigger.');
 	for (const tag of triggers) {
 		assert.equal(getAttribute(tag, 'aria-haspopup'), 'dialog');
@@ -258,6 +325,61 @@ test('Activities mirror the artists layout: one column per day with a modal prof
 	// scroll order.
 	const sectionOrder = ['id="artistas"', 'id="actividades"', 'id="free-access"'].map((needle) => html.indexOf(needle));
 	assert.ok(sectionOrder.every((position, index) => position >= 0 && (index === 0 || position > sectionOrder[index - 1])), 'The activities section must sit between the artists and the free-access sections.');
+});
+
+test('Timetable rows open the same profile modal as the cards', () => {
+	const slots = scheduleSlots();
+	const linked = slots.filter((slot) => slot.trigger);
+	const free = slots.filter((slot) => !slot.trigger);
+	assert.equal(linked.length, 10, 'The four concerts and the six catalogue activities must open their profile.');
+	assert.equal(free.length, 6, 'The six free-standing slots have no profile to open.');
+	const payloadNames = ['data-name', 'data-genre', 'data-description', 'data-image', 'data-image-alt', 'data-day', 'data-slot', 'data-tone'];
+	const payload = (tag) => payloadNames.map((name) => `${name}=${getAttribute(tag, name)}`);
+	const cardTriggers = [
+		...(artistSection().match(/<button\b[^>]*data-artist-open[^>]*>/g) ?? []),
+		...(activitySection().match(/<button\b[^>]*data-activity-open[^>]*>/g) ?? []),
+	];
+	const byName = new Map(cardTriggers.map((tag) => [getAttribute(tag, 'data-name'), payload(tag)]));
+	assert.equal(byName.size, 10, 'Ten cards carry ten distinct modal payloads.');
+	for (const slot of linked) {
+		assert.equal(getAttribute(slot.trigger, 'aria-haspopup'), 'dialog', `Row "${slot.title}" must announce a dialog.`);
+		assert.ok(getAttribute(slot.trigger, 'aria-label'), `Row "${slot.title}" needs an accessible name.`);
+		assert.ok(getAttribute(slot.trigger, 'data-slot'), `Row "${slot.title}" must carry its time and stage.`);
+		const name = getAttribute(slot.trigger, 'data-name');
+		assert.ok(byName.has(name), `Row "${slot.title}" names a profile no card renders: ${name}.`);
+		// A row opening the modal with a different payload than the card would
+		// show two disagreeing profiles for the same record.
+		assert.deepEqual(payload(slot.trigger), byName.get(name), `Row "${slot.title}" must open ${name} with the card's payload.`);
+	}
+});
+
+test('Cards and the profile modal show the time and stage from the timetable', () => {
+	const expected = new Set(scheduleSlots().filter((slot) => slot.trigger).map((slot) => `${slot.time} · ${slot.stage}`));
+	assert.equal(expected.size, 10, 'Ten linked slots, each with its own time and stage.');
+	const cardLines = [...html.matchAll(/class="artist-slot">([^<]*)</g)].map((match) => match[1]);
+	assert.equal(cardLines.length, 10, 'Every card with a timetable slot shows one time-and-stage line.');
+	assert.deepEqual(new Set(cardLines), expected, 'Card lines must repeat the timetable exactly.');
+	// Both modals are seeded with a real slot so the markup is complete before JS.
+	const seeds = [...html.matchAll(/data-dialog-slot>([^<]*)</g)].map((match) => match[1]);
+	assert.equal(seeds.length, 2, 'One seeded slot line per modal.');
+	for (const seed of seeds) {
+		assert.ok(expected.has(seed), `The modal seeds a slot the timetable does not show: ${seed}.`);
+	}
+});
+
+test('Both profile modals are rendered from one shared component', () => {
+	const dialogs = [...html.matchAll(/<dialog\b[\s\S]*?<\/dialog>/g)].map((match) => match[0]);
+	assert.equal(dialogs.length, 2, 'Exactly one modal per section.');
+	// Only the data hooks, the title id, the close label, the seed image and the
+	// seed copy may differ; anything else means one section grew its own markup.
+	const skeleton = (block) => block
+		.replace(/data-(?:artist|activity)-dialog/g, 'data-profile-dialog')
+		.replace(/(?:artist|activity)-dialog-title/g, 'profile-dialog-title')
+		.replace(/Cerrar la ficha (?:del artista|de la actividad)/g, 'Cerrar la ficha')
+		.replace(/\ssrc="[^"]*"/g, ' src="#"')
+		.replace(/\salt="[^"]*"/g, ' alt="#"')
+		.replace(/>([^<]*)</g, '>·<');
+	assert.equal(skeleton(dialogs[0]), skeleton(dialogs[1]), 'The artists and activities modals must come from the same ProfileDialog component.');
 });
 
 test('Activities read differently from the artists: colour photos, solid day bars and a stamp', () => {

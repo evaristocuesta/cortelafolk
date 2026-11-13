@@ -27,6 +27,9 @@ export const festivalDays = [
 	{ id: 'sunday', label: 'Domingo', date: '25', fullDate: '2027-04-25', subtitle: 'Nos despedimos bailando' },
 ] as const;
 
+// The day union comes from the records above: it can never drift from them.
+export type FestivalDay = (typeof festivalDays)[number]['id'];
+
 // Placeholder entries until the real organisations are confirmed: replace the
 // names, hrefs and logos together with the genuine ones. Every entry carries
 // its own logo file under public/images/partners/.

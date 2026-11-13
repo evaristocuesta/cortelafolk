@@ -2,14 +2,13 @@
 import { activities } from '../data/activities';
 import { festivalDays } from '../data/site';
 import ActivityCard from './ActivityCard.astro';
+import ProfileDialog from './ProfileDialog.astro';
 import SectionHeading from './SectionHeading.astro';
 import PageContainer from './PageContainer.astro';
 import WaveDivider from './WaveDivider.astro';
-import Icon from './Icon.astro';
 
-// Seed values keep the dialog markup complete before JavaScript enhances it.
+// Seed record keeps the dialog markup complete before JavaScript enhances it.
 const sampleActivity = activities[0];
-const sampleDay = festivalDays.find((day) => day.id === sampleActivity.day);
 ---
 <section id="actividades" class="activities-section py-15 sm:pb-[75px] tablet:pb-26">
 	<PageContainer>
@@ -27,18 +26,7 @@ const sampleDay = festivalDays.find((day) => day.id === sampleActivity.day);
 			))}
 		</div>
 		<p class="artist-footnote">Distintas formas de vivir el mismo festival.</p>
-		<dialog class="artist-dialog" data-activity-dialog aria-labelledby="activity-dialog-title">
-			<button type="button" class="artist-dialog-close group" data-dialog-close aria-label="Cerrar la ficha de la actividad"><Icon name="plus" class="h-5 w-5 rotate-45 transition-transform duration-300 group-hover:rotate-90" /></button>
-			<div class="artist-dialog-inner">
-				<div class="artist-dialog-media"><img data-dialog-image src={sampleActivity.image} alt={sampleActivity.imageAlt} width="640" height="720" /></div>
-				<div class="artist-dialog-body">
-					<p class="artist-dialog-day" data-dialog-day>{sampleDay ? `${sampleDay.label} ${sampleDay.date} de abril` : ''}</p>
-					<h3 id="activity-dialog-title" data-dialog-name>{sampleActivity.name}</h3>
-					<p class="artist-dialog-genre" data-dialog-genre>{sampleActivity.category}</p>
-					<p class="artist-dialog-text" data-dialog-text>{sampleActivity.description}</p>
-				</div>
-			</div>
-		</dialog>
+		<ProfileDialog variant="activity" sample={sampleActivity} />
 	</PageContainer>
 	<WaveDivider nextColor="tangerine" />
 </section>

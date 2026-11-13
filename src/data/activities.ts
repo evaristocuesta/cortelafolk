@@ -1,11 +1,18 @@
 import type { Activity } from '../types/festival';
 
 // Fictional development programme. Replace with approved activities before publishing.
-export const activities: Activity[] = [
+// Order matters: array first, derived union second, shape check last.
+// Collapsing them into one `as const satisfies Activity[]` makes Activity.id
+// and ActivityId circularly reference each other (TS2456).
+const records = [
 	{ id: 'handmade-music', name: 'Manos a la música', category: 'Taller familiar', description: 'Caja, pandero y guitarra para todas las edades: una hora de taller para salir del festival tocando la primera copla.', image: '/images/live-guitar.webp', imageAlt: 'Manos tocando una guitarra acústica', day: 'friday', tone: 'orange' },
 	{ id: 'open-soundcheck', name: 'Ensayo abierto', category: 'Detrás del escenario', description: 'Entra en el escenario cuando todavía no hay público y descubre cómo se prepara el sonido antes del primer concierto.', image: '/images/live-crowd.webp', imageAlt: 'Mesa de mezclas iluminada durante una sesión musical', day: 'friday', tone: 'green' },
 	{ id: 'plaza-dancing', name: 'Baile en la plaza', category: 'Rueda de baile', description: 'Los músicos abren la rueda en la plaza del pueblo. Sin pareja y sin nivel: solo hay que seguir el compás.', image: '/images/live-stage.webp', imageAlt: 'Público disfrutando de la música en un concierto', day: 'saturday', tone: 'yellow' },
 	{ id: 'night-session', name: 'Noche de fuego', category: 'Sesión nocturna', description: 'Cuando termina el último concierto el pueblo no se duerme: cantos y baile para quien quiera quedarse hasta el final.', image: '/images/live-night.webp', imageAlt: 'Una actuación musical entre luces y humo de escenario', day: 'saturday', tone: 'orange' },
 	{ id: 'sound-workshop', name: 'Taller de sonido', category: 'Charla técnica', description: 'Microfonía, mezcla y amplificadores explicados por el equipo técnico para quien quiera saber cómo suena un concierto por dentro.', image: '/images/live-crowd.webp', imageAlt: 'Mesa de mezclas iluminada durante una sesión musical', day: 'sunday', tone: 'green' },
 	{ id: 'closing-circle', name: 'Cierre con todos', category: 'Encuentro final', description: 'Todos los músicos del fin de semana comparten un único escenario para despedir el festival cantando entre todos.', image: '/images/live-stage.webp', imageAlt: 'Público disfrutando de la música en un concierto', day: 'sunday', tone: 'yellow' },
-];
+] as const;
+
+// The id union comes from the records themselves: it can never drift from them.
+export type ActivityId = (typeof records)[number]['id'];
+export const activities: readonly Activity[] = records;

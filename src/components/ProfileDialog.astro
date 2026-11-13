@@ -1,0 +1,31 @@
+---
+import type { Activity, Artist } from '../types/festival';
+import { festivalDays } from '../data/site';
+import { activitySlot, artistSlot, slotLabel } from '../data/schedule';
+import Icon from './Icon.astro';
+
+// One modal per section, rendered from this single component: the artists and
+// the activities profiles stay identical apart from their data hooks, their
+// title id, their close label and the seed record painted before JS runs.
+// The `artist-dialog` class names are the shared style hook, not a variant.
+type Props = { variant: 'artist'; sample: Artist } | { variant: 'activity'; sample: Activity };
+const { variant, sample } = Astro.props;
+const isArtist = variant === 'artist';
+const day = festivalDays.find((item) => item.id === sample.day);
+const slot = slotLabel(isArtist ? artistSlot(sample.id) : activitySlot(sample.id));
+const titleId = isArtist ? 'artist-dialog-title' : 'activity-dialog-title';
+const closeLabel = isArtist ? 'Cerrar la ficha del artista' : 'Cerrar la ficha de la actividad';
+---
+<dialog class="artist-dialog" data-artist-dialog={isArtist ? '' : undefined} data-activity-dialog={isArtist ? undefined : ''} aria-labelledby={titleId}>
+	<button type="button" class="artist-dialog-close group" data-dialog-close aria-label={closeLabel}><Icon name="plus" class="h-5 w-5 rotate-45 transition-transform duration-300 group-hover:rotate-90" /></button>
+	<div class="artist-dialog-inner">
+		<div class="artist-dialog-media"><img data-dialog-image src={sample.image} alt={sample.imageAlt} width="640" height="720" /></div>
+		<div class="artist-dialog-body">
+			<p class="artist-dialog-day" data-dialog-day>{day ? `${day.label} ${day.date} de abril` : ''}</p>
+			<h3 id={titleId} data-dialog-name>{sample.name}</h3>
+			<p class="artist-dialog-genre" data-dialog-genre>{isArtist ? (sample as Artist).genre : (sample as Activity).category}</p>
+			<p class="artist-dialog-slot" data-dialog-slot>{slot}</p>
+			<p class="artist-dialog-text" data-dialog-text>{sample.description}</p>
+		</div>
+	</div>
+</dialog>
