@@ -1,0 +1,29 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+
+const pageTitle = `Página no encontrada · ${site.name} 2027`;
+---
+
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="theme-color" content="#173d2d" />
+		<meta name="robots" content="noindex" />
+		<meta name="description" content="Esta página no existe. Vuelve al inicio de Cortelafolk 2027." />
+		<title>{pageTitle}</title>
+	</head>
+	<body class="landing-page relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-forest-light px-6 py-12 text-center text-paper antialiased">
+		<div class="relative z-[2] flex flex-col items-center">
+			<h1 class="font-display text-[64px] leading-none font-extrabold tracking-tight sm:text-[96px]">404</h1>
+			<p class="mt-6 max-w-sm text-[14px] leading-relaxed font-semibold tracking-[.1em]">
+				Esta página no existe. El festival, en cambio, sí: 23, 24 y 25 de abril de 2027 en Cortelazor.
+			</p>
+			<a class="button button-cream mt-10 inline-flex items-center justify-between gap-8" href="/">VOLVER AL INICIO</a>
+		</div>
+		<img class="landing-landscape" src="/images/hero-landscape.svg" alt="" width="1600" height="430" />
+	</body>
+</html>

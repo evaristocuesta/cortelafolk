@@ -2,7 +2,7 @@
 
 Static Astro 7 + Tailwind CSS 4 site (Spanish) for the Cortelafolk 2027 festival. No client framework, no backend, no API. pnpm, Node >= 22.12.
 
-Two pages: `src/pages/index.astro` is a minimal root teaser (logo, dates) and `src/pages/2027/index.astro` is the full single-page festival site, served at `/2027/` while it's being built out.
+Two pages plus an error page: `src/pages/index.astro` is a minimal root teaser (logo, dates) and `src/pages/2027/index.astro` is the full single-page festival site, served at `/2027/` while it's being built out; `src/pages/404.astro` is the Spanish not-found page served as `dist/404.html`.
 
 ## Commands
 
@@ -18,7 +18,9 @@ Verify a change with `pnpm check && pnpm build && pnpm test`.
 
 `scripts/site.test.mjs` is a contract test against the **built** HTML/CSS, not unit tests. Most assertions target the full festival contract at `/2027/`; a smaller set covers the root landing page. It asserts:
 
-- root landing page (`dist/index.html`): the Cortelafolk logo, the 2027 dates and location, an `ENTRADA LIBRE` mention.
+- root landing page (`dist/index.html`): the Cortelafolk logo, the 2027 dates and location, an `ENTRADA LIBRE` mention, exactly one `<h1>`, and a title mirrored by `og:title` / `twitter:title` (`Cortelafolk 2027 · Festival de folk en Cortelazor · 23–25 abril`).
+- landing structured data (only when `PUBLIC_SITE_URL` is set): a `MusicEvent` JSON-LD with the approved facts (dates, Cortelazor, free access, `inLanguage: es-ES`), `offers` only ever as `price: 0` with no purchase URL, no `performer`, and the two `organizer` names identical to the visible `#organizacion` credits. When the env is unset, the landing must emit no `ld+json` at all.
+- crawl surface: `dist/robots.txt` (`Allow: /`, `Disallow: /2027/` — drop both the rule and the assertion together when the festival page goes public — and a `Sitemap:` line), `dist/sitemap.xml` listing exactly `https://cortelafolk.es/`, and `dist/404.html` (Spanish, `noindex`, one `<h1>`, link back to `/`).
 - festival page (`dist/2027/index.html`): exact Spanish copy, exact section IDs (`home`, `festival`, `artistas`, `free-access`, `programacion`, `actividades`, `como-llegar`, `informacion`, `organizacion`), a single `<h1>`, exactly 10 `.section-wave` dividers, 6 `<details>`, 3 `data-schedule-day` blocks.
 - schedule: 16 slots, each naming one of the four stages (concerts in the plaza or the church, hands-on sessions in the museum or the hall, all four stages used, stage strip describes all four); every slot title is either written by the schedule or borrowed from `artists.ts` / `activities.ts`, and the timetable lists each artist and each activity exactly once. The 10 catalogue-linked rows are buttons opening the same profile modal as their card with an identical payload; cards and modals show the `HH:MM · Stage` line from `artistSlot` / `activitySlot` / `slotLabel`; both modals are rendered from the shared `ProfileDialog.astro` (a test asserts the two dialog blocks are structurally identical).
 - every `href` on both built pages resolves: anchors to an existing `id`, local paths to a file in `dist/`, external links to `https://` (no local origins).
@@ -32,7 +34,7 @@ Renaming an ID, changing visitor-facing copy, adding a section, or swapping an i
 
 - Visitor-facing text, alt text and interaction states are **Spanish**; technical identifiers, section anchors and documentation are **English**.
 - Artist names, times, stages and activities are **fictional placeholders**; the "orientativa" / "Cartel en preparación" notices were removed on purpose, so don't re-add them, and never phrase invented details as confirmed. Approved facts only: fourth edition, 23–25 April 2027, Cortelazor (Huelva), free access without tickets or registration. Don't invent sponsors, contact details or social profiles.
-- The `#organizacion` section ships **placeholder credits** on purpose (Organizador 1–2 and Colaborador 1–20 pointing at `*.com` domains); each entry in `organizers` / `collaborators` in `src/data/site.ts` carries its own `logo` path under `public/images/partners/`, meant to be swapped for the real names, links and logos.
+- The `#organizacion` section ships **real organisers** (La mano verde, Ayuntamiento de Cortelazor) and **placeholder collaborators** (Colaborador 1–20 pointing at `*.com` domains) on purpose; each entry in `organizers` / `collaborators` in `src/data/site.ts` carries its own `logo` path under `public/images/partners/`, meant to be swapped for the real links and logos. The `organizers` array also feeds the landing `MusicEvent` JSON-LD, so keep both in sync by editing only that array.
 
 ## Styling
 
@@ -43,7 +45,7 @@ Renaming an ID, changing visitor-facing copy, adding a section, or swapping an i
 
 ## Config and deployment
 
-- Canonical URL, absolute social image URLs and `MusicEvent` JSON-LD are emitted only when `PUBLIC_SITE_URL` is set at build time (`src/pages/index.astro` and `src/pages/2027/index.astro`; see `.env.example`). Never build with a localhost origin.
+- Canonical URL, absolute social image URLs and `MusicEvent` JSON-LD are emitted only when `PUBLIC_SITE_URL` is set at build time (`src/pages/index.astro` and `src/pages/2027/index.astro`; see `.env.example`). Never build with a localhost origin. `public/robots.txt` and `public/sitemap.xml` hardcode the production origin (they are static files); the sitemap lists only the pages that are public, and `robots.txt` currently disallows `/2027/` until the festival page is published.
 - `dist/` is gitignored build output — that's what gets uploaded to a static host.
 
 ## References

@@ -26,6 +26,7 @@ Run `pnpm build` before `pnpm test`; tests deliberately inspect production outpu
 
 - `src/pages/index.astro`: minimal root teaser with the logo and the festival dates.
 - `src/pages/2027/index.astro`: the festival single-page entry point and its SEO metadata, served at `/2027/`.
+- `src/pages/404.astro`: Spanish not-found page, served as `dist/404.html`.
 - `src/components/`: reusable Astro sections and presentation components.
 - `src/data/site.ts`: approved festival facts, navigation, dates, practical information and the official social profiles.
 - `src/data/artists.ts`: artist records, images, day assignments and colour treatments.
@@ -35,6 +36,7 @@ Run `pnpm build` before `pnpm test`; tests deliberately inspect production outpu
 - `src/types/festival.ts`: shared content interfaces and English technical identifiers.
 - `src/styles/global.css`: Tailwind import, design tokens, shared editorial typography and original graphic treatments.
 - `public/images/` and `public/fonts/`: local, optimised assets.
+- `public/robots.txt` and `public/sitemap.xml`: crawl surface with the hardcoded production origin; the sitemap lists only the public pages.
 
 All visitor-facing text, alternative text and interaction states must remain in Spanish. All technical identifiers and technical documentation must remain in English. Section anchors intentionally use English identifiers.
 

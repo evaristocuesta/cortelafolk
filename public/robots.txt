@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /2027/
+
+Sitemap: https://cortelafolk.es/sitemap.xml

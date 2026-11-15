@@ -93,7 +93,99 @@ test('Canonical and structured data use only the configured production origin', 
 	assert.equal(event.location.address.addressLocality, 'Cortelazor');
 	assert.equal(event.url, canonicalUrl.href);
 	assert.equal(new URL(event.image).origin, canonicalUrl.origin);
-	assert.doesNotMatch(script, /performer|offers/);
+	// The lineup is not public, so no performer on either page. An offer, if
+	// one ever appears here, may only be the free-admission price 0.
+	assert.ok(!('performer' in event), 'No performer before the definitive lineup.');
+	if ('offers' in event) {
+		assert.equal(event.offers.price, 0, 'The only offer allowed is free admission.');
+	}
+});
+
+test('Landing page has one h1 and a festival-focused title', () => {
+	assert.equal((landingHtml.match(/<h1\b/g) ?? []).length, 1, 'The landing page needs exactly one h1.');
+	const heading = landingHtml.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/)?.[1].replace(/\s+/g, ' ').trim();
+	assert.equal(heading, 'Cortelafolk 2027 · Festival de folk en Cortelazor');
+	const title = landingHtml.match(/<title>([^<]*)<\/title>/)?.[1];
+	assert.equal(title, 'Cortelafolk 2027 · Festival de folk en Cortelazor · 23–25 abril');
+	assert.equal(landingHtml.match(/property="og:title" content="([^"]*)"/)?.[1], title, 'og:title must mirror the title.');
+	assert.equal(landingHtml.match(/name="twitter:title" content="([^"]*)"/)?.[1], title, 'twitter:title must mirror the title.');
+});
+
+test('Landing structured data describes the free festival event', () => {
+	const canonicalTag = landingHtml.match(/<link\b[^>]*rel="canonical"[^>]*>/)?.[0];
+	const script = landingHtml.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/s)?.[1];
+	if (!canonicalTag) {
+		// Without a production origin nothing absolute may be emitted.
+		assert.equal(script, undefined, 'Structured data must stay gated on PUBLIC_SITE_URL.');
+		return;
+	}
+	const canonicalUrl = new URL(getAttribute(canonicalTag, 'href'));
+	const event = JSON.parse(script);
+	assert.equal(event['@context'], 'https://schema.org');
+	assert.equal(event['@type'], 'MusicEvent');
+	assert.equal(event.startDate, '2027-04-23');
+	assert.equal(event.endDate, '2027-04-25');
+	assert.equal(event.eventStatus, 'https://schema.org/EventScheduled');
+	assert.equal(event.eventAttendanceMode, 'https://schema.org/OfflineEventAttendanceMode');
+	assert.equal(event.isAccessibleForFree, true);
+	assert.equal(event.inLanguage, 'es-ES');
+	assert.equal(event.location.address.addressLocality, 'Cortelazor');
+	assert.equal(event.url, canonicalUrl.href);
+	assert.equal(new URL(event.image).origin, canonicalUrl.origin);
+	// Free admission is an approved fact: the offer may only ever say price 0,
+	// with no purchase URL, because there is no ticketing.
+	assert.equal(event.offers['@type'], 'Offer');
+	assert.equal(event.offers.price, 0);
+	assert.equal(event.offers.priceCurrency, 'EUR');
+	assert.equal(event.offers.url, undefined, 'No purchase URL: the festival has no ticketing.');
+	assert.ok(!('performer' in event), 'No performer before the definitive lineup.');
+	assert.doesNotMatch(script, /localhost|127\.0\.0\.1/);
+	// The JSON-LD organisers must be the names the credits section renders,
+	// so the markup can never describe organisers the visitor cannot see.
+	const credits = html.slice(html.indexOf('id="organizacion"'), html.indexOf('</main>'));
+	const splitAt = credits.indexOf('>COLABORA<');
+	const visibleOrganizers = [...credits.slice(0, splitAt).matchAll(/<img\b[^>]*alt="([^"]*)"/g)].map((match) => match[1]);
+	assert.equal(event.organizer.length, 2, 'Both organisers must be declared.');
+	assert.deepEqual(event.organizer.map((entry) => entry.name), visibleOrganizers, 'JSON-LD organisers must match the visible credits.');
+	for (const entry of event.organizer) {
+		assert.equal(entry['@type'], 'Organization');
+		assert.match(entry.url, /^https:\/\//);
+		assert.doesNotMatch(entry.url, /localhost|127\.0\.0\.1/);
+	}
+});
+
+test('robots.txt and sitemap.xml expose only the public landing page', () => {
+	const robots = readFileSync(join(outputDirectory, 'robots.txt'), 'utf8');
+	assert.match(robots, /User-agent: \*/);
+	assert.match(robots, /Allow: \//);
+	// Contract: the festival page stays unindexed until it is published. When
+	// /2027/ goes public, drop this Disallow and this assertion together.
+	assert.match(robots, /Disallow: \/2027\//, 'The unpublished festival page must stay out of the index.');
+	assert.match(robots, /Sitemap: https:\/\/cortelafolk\.es\/sitemap\.xml/);
+	const sitemap = readFileSync(join(outputDirectory, 'sitemap.xml'), 'utf8');
+	const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+	assert.deepEqual(locations, ['https://cortelafolk.es/'], 'Only the landing page is public for now.');
+});
+
+test('The 404 page is Spanish, unindexed and links back home', () => {
+	const notFoundPath = join(outputDirectory, '404.html');
+	assert.ok(existsSync(notFoundPath), 'The static host serves dist/404.html for missing routes.');
+	const notFound = readFileSync(notFoundPath, 'utf8');
+	assert.match(notFound, /<html lang="es">/);
+	assert.match(notFound, /name="robots" content="noindex"/);
+	assert.equal((notFound.match(/<h1\b/g) ?? []).length, 1, 'The 404 page needs exactly one h1.');
+	assert.match(notFound, /<title>[^<]*Página no encontrada[^<]*Cortelafolk[^<]*<\/title>/);
+	assert.match(notFound, /Esta página no existe/);
+	assert.match(notFound, /<a\b[^>]*href="\/"[^>]*>[^<]*VOLVER AL INICIO/, 'The 404 page must offer the way back to the landing page.');
+	// .landing-landscape is absolutely positioned at z-index 1: without a
+	// stacking context above it the button sinks behind the background SVG.
+	const wrapper = notFound.match(/class="relative z-\[2\][^"]*"/)?.index;
+	assert.ok(wrapper !== undefined, 'The 404 content must sit above the landscape SVG.');
+	const landscape = notFound.indexOf('class="landing-landscape"');
+	assert.ok(landscape > wrapper, 'The content wrapper must precede the landscape it covers.');
+	for (const match of notFound.matchAll(/\b(?:src|href)="(\/[^"#]*)"/g)) {
+		assert.ok(existsSync(join(outputDirectory, match[1])), `Missing asset on the 404 page: ${match[1]}`);
+	}
 });
 
 test('Every internal anchor resolves to a unique section', () => {

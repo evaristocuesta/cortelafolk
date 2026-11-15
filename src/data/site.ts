@@ -30,12 +30,13 @@ export const festivalDays = [
 // The day union comes from the records above: it can never drift from them.
 export type FestivalDay = (typeof festivalDays)[number]['id'];
 
-// Placeholder entries until the real organisations are confirmed: replace the
-// names, hrefs and logos together with the genuine ones. Every entry carries
-// its own logo file under public/images/partners/.
+// The two organisers are confirmed. Their names and hrefs also feed the
+// landing page's MusicEvent JSON-LD, so markup and visible credits cannot
+// drift apart. Every entry carries its own logo file under
+// public/images/partners/.
 export const organizers = [
 	{ name: 'La mano verde', href: 'https://lamanoverde.info', logo: '/images/partners/la-mano-verde.svg' },
-	{ name: 'Organizador 2', href: 'https://organizador2.com', logo: '/images/partners/organizador-2.svg' },
+	{ name: 'Ayuntamiento de Cortelazor', href: 'https://www.cortelazor.es/', logo: '/images/partners/organizador-2.svg' },
 ] as const;
 
 export const collaborators = [
