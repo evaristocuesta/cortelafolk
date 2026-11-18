@@ -1,0 +1,32 @@
+<aside class="cookie-consent" data-cookie-banner hidden aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-copy">
+	<div class="cookie-consent__content">
+		<div>
+			<p class="cookie-consent__eyebrow">TU PRIVACIDAD, A TU RITMO</p>
+			<h2 id="cookie-consent-title">Cookies en Cortelafolk</h2>
+			<p id="cookie-consent-copy">Usamos cookies necesarias para recordar tu elección. Si lo autorizas, también usamos Google Analytics para conocer de forma agregada cómo se utiliza la web. Puedes aceptar las estadísticas, rechazarlas o cambiar tu elección cuando quieras. Consulta la <a href="/cookies/">Política de cookies</a> y la <a href="/privacidad/">Política de privacidad</a>.</p>
+		</div>
+		<fieldset class="cookie-consent__choice">
+			<legend>Elige tus preferencias</legend>
+			<label class="cookie-consent__option">
+				<input type="checkbox" checked disabled aria-describedby="necessary-cookie-note" />
+				<span><strong>Necesarias</strong><small id="necessary-cookie-note">Siempre activas; recuerdan tu elección.</small></span>
+			</label>
+			<label class="cookie-consent__option">
+				<input type="checkbox" data-statistics-consent />
+				<span><strong>Estadísticas</strong><small>Google Analytics, solo si las aceptas.</small></span>
+			</label>
+		</fieldset>
+		<div class="cookie-consent__actions">
+			<button class="cookie-consent__button cookie-consent__button--quiet" type="button" data-consent-action="reject">Rechazar estadísticas</button>
+			<button class="cookie-consent__button cookie-consent__button--quiet" type="button" data-consent-action="save">Guardar selección</button>
+			<button class="cookie-consent__button" type="button" data-consent-action="accept">Aceptar estadísticas</button>
+		</div>
+	</div>
+</aside>
+<button class="cookie-consent__reopen" type="button" data-consent-reopen hidden aria-label="Cambiar preferencias de cookies">
+	<img src="/images/cookie-color.svg" alt="" width="30" height="30" />
+</button>
+
+<script>
+	import '../scripts/cookie-consent';
+</script>

@@ -13,6 +13,8 @@ import PracticalInformation from '../../components/PracticalInformation.astro';
 import SocialSection from '../../components/SocialSection.astro';
 import CreditsSection from '../../components/CreditsSection.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
+import CookieConsent from '../../components/CookieConsent.astro';
+import GoogleTagHead from '../../components/GoogleTagHead.astro';
 
 const productionOrigin = import.meta.env.PUBLIC_SITE_URL;
 const canonicalUrl = productionOrigin ? new URL('/2027/', productionOrigin).href : undefined;
@@ -44,12 +46,7 @@ const eventData = canonicalUrl ? {
 
 <html lang="es">
 	<head>
-		<script is:inline async src="https://www.googletagmanager.com/gtm.js?id=GTM-MV4S9JMK"></script>
-		<script is:inline>
-			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
-			gtag('js', new Date());
-		</script>
+		<GoogleTagHead />
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
@@ -86,6 +83,7 @@ const eventData = canonicalUrl ? {
 			<CreditsSection />
 		</main>
 		<SiteFooter />
+		<CookieConsent />
 		<script>
 			import '../../scripts/scroll-reveal';
 		</script>

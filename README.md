@@ -1,8 +1,8 @@
 # Cortelafolk 2027
 
-Static, Spanish-language festival website built on the existing Astro 7, Tailwind CSS 4 and strict TypeScript configuration. No client framework, ticketing, registration, analytics or third-party embeds are used.
+Static, Spanish-language festival website built on the existing Astro 7, Tailwind CSS 4 and strict TypeScript configuration. No client framework, ticketing or registration is used. Google Analytics is consent-gated, and the optional Google Maps embed loads only after an explicit click.
 
-The site has two pages: a minimal root teaser at `/` (logo, dates) and the full single-page festival site under construction at `/2027/`.
+The site has a minimal root teaser at `/`, the full single-page festival site under construction at `/2027/`, and public `/cookies/` and `/privacidad/` policy pages.
 
 ## Development
 
@@ -27,7 +27,10 @@ Run `pnpm build` before `pnpm test`; tests deliberately inspect production outpu
 - `src/pages/index.astro`: minimal root teaser with the logo and the festival dates.
 - `src/pages/2027/index.astro`: the festival single-page entry point and its SEO metadata, served at `/2027/`.
 - `src/pages/404.astro`: Spanish not-found page, served as `dist/404.html`.
+- `src/pages/cookies.astro` and `src/pages/privacidad.astro`: cookie and privacy policies for the site.
 - `src/components/`: reusable Astro sections and presentation components.
+- `src/components/CookieConsent.astro` and `src/scripts/cookie-consent.ts`: the consent banner, stored choice, Consent Mode updates and user-triggered map loading.
+- `src/components/GoogleTagHead.astro`: Google Tag Manager loader with consent defaults set before the container loads.
 - `src/data/site.ts`: approved festival facts, navigation, dates, practical information and the official social profiles.
 - `src/data/artists.ts`: artist records, images, day assignments and colour treatments.
 - `src/data/schedule.ts`: performances, times, categories and stage references.
@@ -66,13 +69,13 @@ FAQ answers expand and collapse with a 350ms height transition and a soft opacit
 
 Content is visually transparent while waiting, but only after JavaScript confirms animation support. Pending content cannot receive pointer clicks; keyboard focus reveals it immediately. It is never removed from the HTML, layout or accessibility tree. Without JavaScript, with reduced motion, or when printing, all content remains visible. Keyboard focus bypasses the entrance; internal links restart the target section's animation once enough of it is visible, including repeated clicks on the current anchor. No animation library or scroll event handler is required.
 
-The location illustration is explicitly not a navigation map. Directions open a real Google Maps route only after clicking; no external requests are made during page rendering.
+The interactive Google Maps embed is requested only after the visitor clicks its load button. The directions link also opens only after a click. Analytics remains denied until statistics consent is recorded; test the GTM destination against the `cookie_consent_update` data-layer event before publishing it.
 
 ## Deployment
 
 Upload `dist/` to a static host. Set `PUBLIC_SITE_URL` to the verified production origin during the build to emit the canonical URL, absolute social image URLs and event structured data. The site deliberately does not guess the official domain. Never publish a localhost canonical URL.
 
-Recheck organiser-approved accessibility, services, accommodation guidance, privacy/legal requirements and any future sponsor or social links before going live.
+Recheck organiser-approved accessibility, services, accommodation guidance, privacy/legal requirements and any future sponsor or social links before going live. The published policies use the supplied controller name and email; confirm any additional legally required controller details before publication.
 
 ## Assets
 

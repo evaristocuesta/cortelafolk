@@ -6,10 +6,14 @@ import { resolve, join } from 'node:path';
 const outputDirectory = resolve('dist');
 const landingPath = join(outputDirectory, 'index.html');
 const festivalPath = join(outputDirectory, '2027', 'index.html');
-assert.ok(existsSync(landingPath) && existsSync(festivalPath), 'Run pnpm build before pnpm test.');
+const cookiesPath = join(outputDirectory, 'cookies', 'index.html');
+const privacyPath = join(outputDirectory, 'privacidad', 'index.html');
+assert.ok(existsSync(landingPath) && existsSync(festivalPath) && existsSync(cookiesPath) && existsSync(privacyPath), 'Run pnpm build before pnpm test.');
 // `html` is the full 2027 festival page; `landingHtml` is the simple root teaser.
 const html = readFileSync(festivalPath, 'utf8');
 const landingHtml = readFileSync(landingPath, 'utf8');
+const cookiesHtml = readFileSync(cookiesPath, 'utf8');
+const privacyHtml = readFileSync(privacyPath, 'utf8');
 const getAttribute = (tag, name) => tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
 // global.css mirrors Tailwind's min-width breakpoints with a strict "<" so a
 // fractional viewport (639.09px) can never fall outside both ranges. Lightning
@@ -51,7 +55,8 @@ test('Root landing page shows the logo and 2027 dates', () => {
 	assert.match(landingHtml, /ABRIL 2027/);
 	assert.match(landingHtml, /Cortelazor, Huelva/);
 	assert.match(landingHtml, /ENTRADA LIBRE/);
-	assert.doesNotMatch(landingHtml, /<(?:form|input|select|textarea)\b/);
+	assert.doesNotMatch(landingHtml, /<(?:form|select|textarea)\b/);
+	assert.doesNotMatch(landingHtml, /<input\b(?![^>]*type="checkbox")/);
 	for (const match of landingHtml.matchAll(/\b(?:src|href)="(\/[^"#]*)"/g)) {
 		assert.ok(existsSync(join(outputDirectory, match[1])), `Missing asset: ${match[1]}`);
 	}
@@ -154,7 +159,7 @@ test('Landing structured data describes the free festival event', () => {
 	}
 });
 
-test('robots.txt and sitemap.xml expose only the public landing page', () => {
+test('robots.txt and sitemap.xml expose public landing and policy pages only', () => {
 	const robots = readFileSync(join(outputDirectory, 'robots.txt'), 'utf8');
 	assert.match(robots, /User-agent: \*/);
 	assert.match(robots, /Allow: \//);
@@ -164,7 +169,33 @@ test('robots.txt and sitemap.xml expose only the public landing page', () => {
 	assert.match(robots, /Sitemap: https:\/\/cortelafolk\.es\/sitemap\.xml/);
 	const sitemap = readFileSync(join(outputDirectory, 'sitemap.xml'), 'utf8');
 	const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-	assert.deepEqual(locations, ['https://cortelafolk.es/'], 'Only the landing page is public for now.');
+	assert.deepEqual(locations, ['https://cortelafolk.es/', 'https://cortelafolk.es/cookies/', 'https://cortelafolk.es/privacidad/']);
+});
+
+test('Consent banner and Google defaults are present on every tracked page', () => {
+	for (const [source, route] of [[landingHtml, '/'], [html, '/2027/'], [cookiesHtml, '/cookies/'], [privacyHtml, '/privacidad/']]) {
+		assert.match(source, /data-cookie-banner/ , `Missing cookie banner on ${route}.`);
+		assert.match(source, /data-consent-reopen/, `Missing consent settings control on ${route}.`);
+		const defaultConsent = source.indexOf("analytics_storage: 'denied'");
+		const gtmLoader = source.indexOf('googletagmanager.com/gtm.js?id=GTM-MV4S9JMK');
+		assert.ok(defaultConsent >= 0 && gtmLoader > defaultConsent, `Consent must default to denied before GTM loads on ${route}.`);
+	}
+	assert.match(landingHtml, /data-statistics-consent/);
+	assert.match(landingHtml, /Aceptar estadísticas/);
+	assert.match(landingHtml, /Rechazar estadísticas/);
+	assert.match(landingHtml, /cookie_consent_update/);
+	assert.doesNotMatch(landingHtml, /Marketing|Preferencias/);
+});
+
+test('Privacy and cookie policies use Cortelafolk details, not the source-site policy', () => {
+	for (const source of [cookiesHtml, privacyHtml]) {
+		assert.match(source, /La Mano Verde/);
+		assert.match(source, /arte@lamanoverde\.info/);
+		assert.doesNotMatch(source, /evaristocuesta|fotos@/i);
+	}
+	assert.match(cookiesHtml, /_ga_LR1Y2XBDS6/);
+	assert.match(cookiesHtml, /solo si aceptas/i);
+	assert.match(privacyHtml, /retirar o modificar/);
 });
 
 test('The 404 page is Spanish, unindexed and links back home', () => {
@@ -203,6 +234,8 @@ test('Every link in the build resolves to an asset, a page or a section', () => 
 	const pages = [
 		{ url: '/', source: landingHtml },
 		{ url: '/2027/', source: html },
+		{ url: '/cookies/', source: cookiesHtml },
+		{ url: '/privacidad/', source: privacyHtml },
 	];
 	const idCache = new Map();
 	const idsOf = (file) => {
@@ -290,7 +323,8 @@ test('Free access is explicit and there is no ticketing or registration', () => 
 	assert.match(css, /\.free-badge>span\{[^}]*text-align:center[^}]*text-wrap:balance[^}]*max-width:100px/, 'Badge labels must wrap within the circle below tablet width.');
 	assert.match(css, /\.free-badge>span\{[^}]*max-width:92px/, 'Badge labels must narrow further on mobile.');
 	assert.match(css, /\.free-badge>span\{[^}]*max-width:130px/, 'Badge labels must also fit at intermediate desktop widths.');
-	assert.doesNotMatch(html, /<(?:form|input|select|textarea)\b/);
+	assert.doesNotMatch(html, /<(?:form|select|textarea)\b/);
+	assert.doesNotMatch(html, /<input\b(?![^>]*type="checkbox")/);
 	assert.doesNotMatch(html, /(?:Consigue tu entrada|Entradas próximamente|Comprar entradas|eventbrite|ticketmaster|entradium|checkout)/i);
 });
 
@@ -548,17 +582,18 @@ test('Organization and collaborators render as linked placeholder logos', () => 
 	assert.doesNotMatch(css, /\.credits-logo:hover\{[^}]*box-shadow/, 'The shadow belongs on the image, never on the whole cell.');
 });
 
-test('Location includes an accessible lazy-loaded Google Maps embed', () => {
-	const map = html.match(/<iframe\b[^>]*>/)?.[0];
-	assert.ok(map, 'The location map must be embedded.');
-	const url = new URL(getAttribute(map, 'src'));
+test('Google Maps only loads after the visitor explicitly asks to see it', () => {
+	assert.doesNotMatch(html, /<iframe\b[^>]*src="https:\/\/www\.google\.com\/maps/);
+	const location = html.slice(html.indexOf('id="como-llegar"'), html.indexOf('id="informacion"'));
+	const mapSource = getAttribute(location.match(/<div\b[^>]*data-map-container[^>]*>/)?.[0] ?? '', 'data-map-src');
+	assert.ok(mapSource, 'A map URL should be available for explicit user-triggered loading.');
+	const url = new URL(mapSource);
 	assert.equal(url.origin, 'https://www.google.com');
 	assert.equal(url.pathname, '/maps');
 	assert.equal(url.searchParams.get('q'), 'Cortelazor, Huelva, España');
 	assert.equal(url.searchParams.get('output'), 'embed');
-	assert.equal(getAttribute(map, 'title'), 'Mapa de Cortelazor, Huelva');
-	assert.equal(getAttribute(map, 'loading'), 'lazy');
-	assert.ok(getAttribute(map, 'width') && getAttribute(map, 'height'));
+	assert.match(location, /<button[^>]*data-load-map[^>]*aria-describedby="map-consent-note"[^>]*>Cargar mapa de Google/);
+	assert.match(readFileSync(resolve('src/scripts/cookie-consent.ts'), 'utf8'), /iframe\.loading = 'lazy'/);
 	assert.doesNotMatch(html, /src="\/images\/location-map\.svg"/);
 });
 
