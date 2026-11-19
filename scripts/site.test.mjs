@@ -176,8 +176,9 @@ test('Consent banner and Google defaults are present on every tracked page', () 
 		assert.ok(defaultConsent >= 0 && gtmLoader > defaultConsent, `Consent must default to denied before GTM loads on ${route}.`);
 	}
 	assert.match(landingHtml, /data-statistics-consent/);
-	assert.match(landingHtml, /Aceptar estadísticas/);
-	assert.match(landingHtml, /Rechazar estadísticas/);
+	assert.match(landingHtml, /data-external-content-consent/);
+	assert.match(landingHtml, /Aceptar todas/);
+	assert.match(landingHtml, /Rechazar opcionales/);
 	assert.match(landingHtml, /cookie_consent_update/);
 	assert.doesNotMatch(landingHtml, /Marketing|Preferencias/);
 });
@@ -190,7 +191,10 @@ test('Privacy and cookie policies use Cortelafolk details, not the source-site p
 	}
 	assert.match(cookiesHtml, /_ga_LR1Y2XBDS6/);
 	assert.match(cookiesHtml, /solo si aceptas/i);
+	assert.match(cookiesHtml, /Contenido externo: Google Maps/);
+	assert.match(cookiesHtml, /ExternalContent/);
 	assert.match(privacyHtml, /retirar o modificar/);
+	assert.match(privacyHtml, /categoría «Contenido externo»/);
 });
 
 test('The 404 page is Spanish, unindexed and links back home', () => {
@@ -588,7 +592,10 @@ test('Google Maps only loads after the visitor explicitly asks to see it', () =>
 	assert.equal(url.searchParams.get('q'), 'Cortelazor, Huelva, España');
 	assert.equal(url.searchParams.get('output'), 'embed');
 	assert.match(location, /<button[^>]*data-load-map[^>]*aria-describedby="map-consent-note"[^>]*>Cargar mapa de Google/);
-	assert.match(readFileSync(resolve('src/scripts/cookie-consent.ts'), 'utf8'), /iframe\.loading = 'lazy'/);
+	const consentScript = readFileSync(resolve('src/scripts/cookie-consent.ts'), 'utf8');
+	assert.match(consentScript, /iframe\.loading = 'lazy'/);
+	assert.match(consentScript, /choice\.externalContent/);
+	assert.match(consentScript, /setExternalContent\(choice\)/);
 	assert.doesNotMatch(html, /src="\/images\/location-map\.svg"/);
 });
 

@@ -69,7 +69,7 @@ FAQ answers expand and collapse with a 350ms height transition and a soft opacit
 
 Content is visually transparent while waiting, but only after JavaScript confirms animation support. Pending content cannot receive pointer clicks; keyboard focus reveals it immediately. It is never removed from the HTML, layout or accessibility tree. Without JavaScript, with reduced motion, or when printing, all content remains visible. Keyboard focus bypasses the entrance; internal links restart the target section's animation once enough of it is visible, including repeated clicks on the current anchor. No animation library or scroll event handler is required.
 
-The interactive Google Maps embed is requested only after the visitor clicks its load button. The directions link also opens only after a click. Analytics remains denied until statistics consent is recorded; test the GTM destination against the `cookie_consent_update` data-layer event before publishing it.
+The interactive Google Maps embed is requested only after the visitor accepts the external-content category or explicitly clicks its load button. The directions link also opens only after a click. Analytics remains denied until statistics consent is recorded; test the GTM destination against the `cookie_consent_update` data-layer event before publishing it.
 
 ## Deployment
 

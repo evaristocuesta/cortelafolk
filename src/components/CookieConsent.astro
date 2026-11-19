@@ -3,7 +3,7 @@
 		<div>
 			<p class="cookie-consent__eyebrow">TU PRIVACIDAD, A TU RITMO</p>
 			<h2 id="cookie-consent-title">Cookies en Cortelafolk</h2>
-			<p id="cookie-consent-copy">Usamos cookies necesarias para recordar tu elección. Si lo autorizas, también usamos Google Analytics para conocer de forma agregada cómo se utiliza la web. Puedes aceptar las estadísticas, rechazarlas o cambiar tu elección cuando quieras. Consulta la <a href="/cookies/">Política de cookies</a> y la <a href="/privacidad/">Política de privacidad</a>.</p>
+			<p id="cookie-consent-copy">Usamos cookies necesarias para recordar tu elección. Puedes aceptar o rechazar por separado las estadísticas de Google Analytics y la carga del mapa de Google. Consulta la <a href="/cookies/">Política de cookies</a> y la <a href="/privacidad/">Política de privacidad</a>.</p>
 		</div>
 		<fieldset class="cookie-consent__choice">
 			<legend>Elige tus preferencias</legend>
@@ -15,11 +15,15 @@
 				<input type="checkbox" data-statistics-consent />
 				<span><strong>Estadísticas</strong><small>Google Analytics, solo si las aceptas.</small></span>
 			</label>
+			<label class="cookie-consent__option">
+				<input type="checkbox" data-external-content-consent />
+				<span><strong>Contenido externo</strong><small>Google Maps; si lo aceptas, el mapa se cargará automáticamente.</small></span>
+			</label>
 		</fieldset>
 		<div class="cookie-consent__actions">
-			<button class="cookie-consent__button cookie-consent__button--quiet" type="button" data-consent-action="reject">Rechazar estadísticas</button>
+			<button class="cookie-consent__button" type="button" data-consent-action="reject">Rechazar opcionales</button>
+			<button class="cookie-consent__button" type="button" data-consent-action="accept">Aceptar todas</button>
 			<button class="cookie-consent__button cookie-consent__button--quiet" type="button" data-consent-action="save">Guardar selección</button>
-			<button class="cookie-consent__button" type="button" data-consent-action="accept">Aceptar estadísticas</button>
 		</div>
 	</div>
 </aside>
