@@ -35,9 +35,6 @@ const eventData = canonicalUrl ? {
 			addressCountry: 'ES',
 		},
 	},
-	// Free admission is an approved fact: an offer of 0 lets Google show the
-	// event as "Gratis" without ever implying ticketing.
-	offers: { '@type': 'Offer', price: 0, priceCurrency: 'EUR' },
 	organizer: organizers.map((entry) => ({ '@type': 'Organization', name: entry.name, url: entry.href })),
 } : undefined;
 ---

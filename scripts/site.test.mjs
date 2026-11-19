@@ -98,12 +98,10 @@ test('Canonical and structured data use only the configured production origin', 
 	assert.equal(event.location.address.addressLocality, 'Cortelazor');
 	assert.equal(event.url, canonicalUrl.href);
 	assert.equal(new URL(event.image).origin, canonicalUrl.origin);
-	// The lineup is not public, so no performer on either page. An offer, if
-	// one ever appears here, may only be the free-admission price 0.
+	// The event has free access but no ticket or registration offer. Do not
+	// invent ticket sale details, and do not add performers before the lineup.
 	assert.ok(!('performer' in event), 'No performer before the definitive lineup.');
-	if ('offers' in event) {
-		assert.equal(event.offers.price, 0, 'The only offer allowed is free admission.');
-	}
+	assert.ok(!('offers' in event), 'No Offer without ticketing or registration.');
 });
 
 test('Landing page has one h1 and a festival-focused title', () => {
@@ -137,12 +135,9 @@ test('Landing structured data describes the free festival event', () => {
 	assert.equal(event.location.address.addressLocality, 'Cortelazor');
 	assert.equal(event.url, canonicalUrl.href);
 	assert.equal(new URL(event.image).origin, canonicalUrl.origin);
-	// Free admission is an approved fact: the offer may only ever say price 0,
-	// with no purchase URL, because there is no ticketing.
-	assert.equal(event.offers['@type'], 'Offer');
-	assert.equal(event.offers.price, 0);
-	assert.equal(event.offers.priceCurrency, 'EUR');
-	assert.equal(event.offers.url, undefined, 'No purchase URL: the festival has no ticketing.');
+	// Free access is represented directly; do not model tickets as an Offer
+	// because visitors need neither payment, tickets nor registration.
+	assert.ok(!('offers' in event));
 	assert.ok(!('performer' in event), 'No performer before the definitive lineup.');
 	assert.doesNotMatch(script, /localhost|127\.0\.0\.1/);
 	// The JSON-LD organisers must be the names the credits section renders,
