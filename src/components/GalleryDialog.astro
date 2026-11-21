@@ -1,0 +1,35 @@
+---
+import Icon from './Icon.astro';
+---
+<!-- One viewer for the posters and for the three galleries: items are grouped
+     by `data-group` on their triggers, so each collection navigates on its own.
+     The media cell holds a strip of three photographs (previous, current,
+     next) so the neighbours are already on screen while the visitor drags. -->
+<dialog class="editions-lightbox" data-lightbox aria-label="Visor de imágenes de las ediciones">
+	<div class="editions-lightbox-media">
+		<div class="editions-lightbox-viewport">
+			<div class="editions-lightbox-track" data-lightbox-track>
+				<img data-lightbox-neighbor="prev" alt="" />
+				<img data-lightbox-image alt="" />
+				<img data-lightbox-neighbor="next" alt="" />
+			</div>
+		</div>
+	</div>
+	<div class="editions-lightbox-bar">
+		<button class="editions-lightbox-button" type="button" data-lightbox-prev aria-label="Imagen anterior">
+			<Icon name="arrow" class="h-5 w-5 rotate-180" />
+		</button>
+		<p class="editions-lightbox-caption"><span data-lightbox-caption></span></p>
+		<p class="editions-lightbox-counter" data-lightbox-counter></p>
+		<button class="editions-lightbox-button" type="button" data-lightbox-next aria-label="Imagen siguiente">
+			<Icon name="arrow" class="h-5 w-5" />
+		</button>
+		<button class="editions-lightbox-button editions-lightbox-button--close" type="button" data-lightbox-close aria-label="Cerrar el visor">
+			<Icon name="plus" class="h-5 w-5 rotate-45" />
+		</button>
+	</div>
+</dialog>
+<script>
+	import { bindLightbox } from '../scripts/lightbox';
+	bindLightbox();
+</script>

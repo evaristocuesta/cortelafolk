@@ -234,6 +234,9 @@
 	.landing-dates { font-family: var(--font-display); font-weight: 800; font-size: clamp(72px, 15vw, 170px); line-height: .88; letter-spacing: -.02em; }
 	.landing-dates > span { display: block; font-family: var(--font-sans); font-size: clamp(14px, 2.4vw, 24px); font-weight: 700; letter-spacing: .14em; margin-top: 12px; }
 	.landing-free { display: inline-block; padding: .35em .6em; color: var(--color-forest); background-color: var(--orange); }
+	/* The only public link into the archive: cream chip on the green landscape. */
+	.landing-editions { display: inline-block; padding: .55em .9em; background: var(--paper); color: var(--color-forest); font-size: 11px; font-weight: 800; letter-spacing: .18em; transition: background .2s; }
+	.landing-editions:hover { background: var(--orange); }
 	.landing-landscape {
 		position: absolute;
 		z-index: 1;
@@ -297,6 +300,56 @@
 	.location-map-placeholder > p:not(.eyebrow) { max-width: 350px; font-size: 13px; line-height: 1.7; }
 	.location-map-frame { display: block; width: 100%; height: 420px; border: 0; }
 	.legal-footer-links { display: flex; flex-wrap: wrap; gap: 12px; font-size: 8px; }
+
+	/* Previous-editions archive: the three posters first, one gallery per year. */
+	.editions-page { display: flex; min-height: 100dvh; flex-direction: column; }
+	/* The header's boundary is drawn by its WaveDivider, not by a rule. */
+	.editions-header { background: var(--paper); }
+	.editions-intro h1 { font-size: clamp(54px, 9vw, 118px); line-height: .92; letter-spacing: -.03em; }
+	.editions-heading { font-size: clamp(40px, 5.2vw, 66px); }
+	.editions-item { display: block; transition: transform .3s cubic-bezier(.22, .8, .3, 1), box-shadow .3s ease; }
+	/* Poster-style lift: the offset shadow follows the print, never the cell. */
+	.editions-item:hover, .editions-item:focus-visible { transform: translateY(-5px) rotate(-.6deg); box-shadow: 8px 8px 0 var(--color-rust); }
+	.editions-frame { display: block; overflow: hidden; background: #e4e0d3; }
+	.editions-frame img { width: 100%; height: 100%; }
+	/* Every cartel is printed on the same A-series ratio, so nothing is cropped. */
+	.editions-frame--poster { aspect-ratio: 1131 / 1600; }
+	.editions-frame--poster img { object-fit: contain; }
+	.editions-frame--photo { aspect-ratio: 3 / 2; }
+	.editions-frame--photo img { object-fit: cover; transition: transform .45s ease; }
+	.editions-thumb:hover img { transform: scale(1.05); }
+	.editions-caption { display: block; margin-top: 13px; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #a6441b; }
+	.editions-footer a:hover { text-decoration: underline; text-underline-offset: 4px; }
+	/* One viewer for every collection: posters navigate posters, photos photos. */
+	.editions-lightbox { width: min(1180px, calc(100% - 32px)); max-width: none; height: calc(100dvh - 40px); max-height: calc(100dvh - 40px); margin: auto; padding: 0; overflow: hidden; border: 2px solid var(--ink); background: var(--paper); color: var(--ink); box-shadow: 12px 12px 0 rgb(23 61 45 / .3); }
+	.editions-lightbox[open] { display: grid; grid-template-rows: minmax(0, 1fr) auto; animation: editions-lightbox-in .25s ease; }
+	.editions-lightbox::backdrop { background: rgb(23 61 45 / .84); }
+	/* Flex, not grid: a grid item's auto row leaves the image's percentage
+	   height unresolved (a tall poster would then paint at natural size and
+	   get clipped). The flex line inherits the dialog's definite 1fr row, so
+	   the max-height caps the image and `contain` letterboxes it whole —
+	   landscape photographs and vertical posters alike. */
+	.editions-lightbox-media { display: flex; align-items: center; justify-content: center; min-height: 0; overflow: hidden; padding: clamp(12px, 3vw, 26px); background: var(--ink); touch-action: pan-y; }
+	/* The window clips exactly one cell, so at rest only the current
+	   photograph is visible: the neighbours live outside it and slide in as
+	   the strip moves. The strip is a flex item, so its height resolves
+	   against the dialog's definite 1fr row; each photograph fills its cell
+	   and is letterboxed inside it, never cropped. */
+	.editions-lightbox-viewport { position: relative; width: 100%; height: 100%; overflow: hidden; }
+	.editions-lightbox-track { --editions-gap: clamp(16px, 3vw, 34px); position: relative; width: 100%; height: 100%; }
+	.editions-lightbox-track img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+	/* One cell plus a breathing gap, so neighbouring photographs read as
+	   separate prints while dragging instead of touching edge to edge. */
+	.editions-lightbox-track img[data-lightbox-neighbor="prev"] { transform: translateX(calc(-100% - var(--editions-gap))); }
+	.editions-lightbox-track img[data-lightbox-neighbor="next"] { transform: translateX(calc(100% + var(--editions-gap))); }
+	.editions-lightbox-bar { display: flex; align-items: center; gap: clamp(10px, 2vw, 16px); padding: 12px clamp(12px, 3vw, 22px); border-top: 1px solid var(--line); }
+	.editions-lightbox-caption { flex: 1 1 auto; min-width: 0; font-size: 12px; line-height: 1.5; }
+	.editions-lightbox-counter { flex-shrink: 0; font-size: 10px; font-weight: 800; letter-spacing: .08em; white-space: nowrap; }
+	.editions-lightbox-button { display: grid; place-items: center; width: 42px; height: 42px; flex-shrink: 0; padding: 0; border: 1px solid var(--ink); background: var(--paper); color: var(--ink); transition: background .2s; }
+	.editions-lightbox-button:hover { background: var(--orange); }
+	.editions-lightbox-button--close { background: var(--ink); color: var(--paper); }
+	.editions-lightbox-button--close:hover { background: var(--color-rust); }
+	@keyframes editions-lightbox-in { from { opacity: 0; transform: translateY(16px) scale(.97); } }
 }
 
 @keyframes landing-fade-in {
@@ -367,6 +420,10 @@
 }
 @media (width < 640px) {
 	html { scroll-padding-top: 68px; }
+	.editions-lightbox { width: calc(100% - 20px); height: calc(100dvh - 20px); max-height: calc(100dvh - 20px); }
+	.editions-lightbox-button { width: 38px; height: 38px; }
+	.editions-lightbox-caption { font-size: 11px; }
+	.editions-lightbox-counter { font-size: 9px; }
 	h2 { font-size: 50px; }
 	.eyebrow { font-size: 9px; letter-spacing: .11em; margin-bottom: 16px; }
 	/* Logo of 56px + 2x6px of margins = 68px, the same figure as min-h and scroll-padding. */
@@ -476,6 +533,8 @@
 	*, *::before, *::after { animation: none !important; transition: none !important; }
 	/* No positional hover animation without motion. */
 	.artist-card:hover, .artist-card:focus-within { transform: none; }
+	.editions-item:hover, .editions-item:focus-visible { transform: none; }
+	.editions-thumb:hover img { transform: none; }
 	.credits-logo:hover img { transform: none; }
 	/* Static fallback: a single centered copy that bleeds off both edges. */
 	.ribbon-track { width: 100%; justify-content: center; }

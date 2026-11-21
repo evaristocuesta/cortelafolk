@@ -4,10 +4,12 @@ interface Props {
 	title: string;
 	text?: string;
 	titleClass?: string;
+	/** Lets a section point its aria-labelledby at the visible heading. */
+	titleId?: string;
 }
-const { eyebrow, title, text, titleClass = 'max-w-[760px]' } = Astro.props;
+const { eyebrow, title, text, titleClass = 'max-w-[760px]', titleId } = Astro.props;
 ---
 <div class="section-heading mb-[25px] flex flex-col items-start justify-between gap-5 sm:mb-9 sm:flex-row sm:gap-[35px] tablet:items-end tablet:gap-12">
-	<div><p class="eyebrow">{eyebrow}</p><h2 class={titleClass}>{title}</h2></div>
+	<div><p class="eyebrow">{eyebrow}</p><h2 id={titleId} class={titleClass}>{title}</h2></div>
 	{text && <p class="max-w-[340px] shrink-0 text-[13px] leading-[1.8] sm:max-w-[220px] sm:pt-8 sm:text-xs tablet:max-w-60 tablet:pt-0 tablet:text-sm wide:max-w-[290px]">{text}</p>}
 </div>

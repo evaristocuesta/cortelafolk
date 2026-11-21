@@ -14,6 +14,7 @@ export const navigationItems = [
 	{ label: 'Actividades', href: '#actividades' },
 	{ label: 'Programación', href: '#programacion' },
 	{ label: 'Cómo llegar', href: '#como-llegar' },
+	{ label: 'Ediciones', href: '/ediciones/' },
 ];
 
 export const socialLinks = [

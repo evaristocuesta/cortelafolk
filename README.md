@@ -2,7 +2,7 @@
 
 Static, Spanish-language festival website built on the existing Astro 7, Tailwind CSS 4 and strict TypeScript configuration. No client framework, ticketing or registration is used. Google Analytics is consent-gated, and the optional Google Maps embed loads only after an explicit click.
 
-The site has a minimal root teaser at `/`, the full single-page festival site under construction at `/2027/`, and public `/cookies/` and `/privacidad/` policy pages.
+The site has a minimal root teaser at `/`, the archive of previous editions at `/ediciones/` (posters and galleries for 2024–2026), the full single-page festival site under construction at `/2027/`, and public `/cookies/` and `/privacidad/` policy pages. Nothing links to `/2027/` from the public pages until the 2027 poster is announced.
 
 ## Development
 
@@ -16,6 +16,7 @@ Requires Node.js >=22.12 and pnpm.
 | `pnpm astro dev logs` | Read background server logs |
 | `pnpm astro dev stop` | Stop the background server |
 | `pnpm check` | Run Astro and TypeScript diagnostics |
+| `pnpm images` | Regenerate the archive WebP photographs, thumbnails and dimensions from `originals/ediciones/` |
 | `pnpm build` | Generate the static site in `dist/` |
 | `pnpm test` | Validate the built page, anchors, accessibility markup and asset budgets |
 | `pnpm preview` | Preview the production build |
@@ -24,22 +25,25 @@ Run `pnpm build` before `pnpm test`; tests deliberately inspect production outpu
 
 ## Structure and content editing
 
-- `src/pages/index.astro`: minimal root teaser with the logo and the festival dates.
+- `src/pages/index.astro`: minimal root teaser with the logo, the festival dates and the link into the archive.
+- `src/pages/ediciones/index.astro`: previous-editions archive at `/ediciones/`, with its own minimal header/footer (no `SiteHeader`, so it cannot expose `/2027/`). Its sections are full-width children of `<main>`, each with its own `PageContainer`, and share the festival's `WaveDivider` tapes: paper on paper, every boundary (menu, posters, 2024, 2025, 2026) uses the thicker moss variant.
 - `src/pages/2027/index.astro`: the festival single-page entry point and its SEO metadata, served at `/2027/`.
 - `src/pages/404.astro`: Spanish not-found page, served as `dist/404.html`.
 - `src/pages/cookies.astro` and `src/pages/privacidad.astro`: cookie and privacy policies for the site.
 - `src/components/`: reusable Astro sections and presentation components.
+- `src/components/GalleryDialog.astro` and `src/scripts/lightbox.ts`: the single archive viewer shared by the poster collection and the three galleries.
 - `src/components/CookieConsent.astro` and `src/scripts/cookie-consent.ts`: the consent banner, stored choice, Consent Mode updates and user-triggered map loading.
 - `src/components/GoogleTagHead.astro`: Google Tag Manager loader with consent defaults set before the container loads.
 - `src/data/site.ts`: approved festival facts, navigation, dates, practical information and the official social profiles.
+- `src/data/editions.ts`: the previous-editions records — year, edition label, poster and the selected photographs per gallery. It reads the generated file names, thumbnails and dimensions from `edition-images.json` and the Spanish descriptions from `edition-alts.json`.
 - `src/data/artists.ts`: artist records, images, day assignments and colour treatments.
 - `src/data/schedule.ts`: performances, times, categories and stage references.
 - `src/data/stages.ts`: proposed spaces and descriptions.
 - `src/data/activities.ts`: editorial activity proposals.
 - `src/types/festival.ts`: shared content interfaces and English technical identifiers.
 - `src/styles/global.css`: Tailwind import, design tokens, shared editorial typography and original graphic treatments.
-- `public/images/` and `public/fonts/`: local, optimised assets.
-- `public/robots.txt` and `public/sitemap.xml`: crawl surface with the hardcoded production origin; the sitemap lists only the public pages.
+- `public/images/` and `public/fonts/`: local, optimised assets. Each archive year holds one 1600 px WebP per photograph, its 600×400 `-thumb.webp` crop and the poster plus poster thumbnail. The full-resolution originals live outside the public tree in `originals/ediciones/<year>/` (gitignored) and are the input to `pnpm images`.
+- `public/robots.txt` and `public/sitemap.xml`: crawl surface with the hardcoded production origin; the sitemap lists only the public pages (root, `/ediciones/`, `/cookies/`, `/privacidad/`).
 
 All visitor-facing text, alternative text and interaction states must remain in Spanish. All technical identifiers and technical documentation must remain in English. Section anchors intentionally use English identifiers.
 
@@ -49,6 +53,8 @@ Use Tailwind utilities directly in Astro templates for layout, spacing, section 
 
 Keep original poster composition, illustrations, decorative pseudo-elements and shared editorial typography in `src/styles/global.css`. This is intentionally a hybrid approach, not a requirement to express every graphic detail as an arbitrary utility. Colours and fonts are defined in `@theme`; CSS aliases reference the same colour tokens. Avoid duplicating a layout rule in both component utilities and global CSS.
 
+Section boundaries use `WaveDivider.astro`, which hangs off the bottom edge of a positioned section (`main > section` supplies the positioning context). The plain variant fills the next section's colour; when both sides are paper — as on the whole archive — the `variant="thick"` moss tape draws the boundary instead. Give the section enough bottom padding to keep the tape clear of its content.
+
 Schedule buttons use Tailwind's `aria-pressed:` variants, with the accessible attribute as the only active-state source. FAQs use `group-open:` on native `details` elements. Preserve the global `[hidden]` rule and reduced-motion overrides when adding new utility-based interactions.
 
 ## Provisional content — important
@@ -57,11 +63,15 @@ Schedule buttons use Tailwind's `aria-pressed:` variants, with the accessible at
 
 Before final publication, replace these records with organiser-approved content. Keep the public qualification until the programme is approved. The approved festival facts are: fourth edition, 23–25 April 2027, Cortelazor (Huelva), free access for everyone, without tickets or registration.
 
+The photographs on `/ediciones/` are the organiser's numbered selection from each edition (25 in 2024, 54 in 2025, 32 in 2026). The originals live in `originals/ediciones/<year>/`; `pnpm images` reads them in natural filename order, converts each to a 1600 px WebP, generates a 600×400 thumbnail for the grid and writes the dimensions to `src/data/edition-images.json`. The Spanish descriptions are edited by hand in `src/data/edition-alts.json`, keyed by `year/file`, so re-running the image build never loses them. They are deliberately coarse: one category per photograph (`Puestos de artesanía`, `Concierto`, `Talleres y actividades`, `Juegos de mesa`, `Asistentes del festival`) closed by `Cortelafolk <year>.`, which is also what the viewer shows as its caption. Do not edit `edition-images.json` directly.
+
 No sponsor logos, organiser endorsements or contact addresses are invented. The only social profiles linked from the footer and the provisional landing page are the official Instagram and Facebook accounts declared in `src/data/site.ts`; the in-page social section keeps using native sharing or clipboard copying instead of further profiles. The community footer can later be extended with verified partner assets.
 
 ## Interaction and accessibility
 
 The menu, schedule filters and sharing use small, bundled scripts. FAQs use native `details` elements. Without JavaScript, navigation and all three schedule days remain visible. Sharing cancellation is handled quietly and failures have Spanish feedback. Reduced-motion preferences disable smooth scrolling and transitions.
+
+The archive viewer on `/ediciones/` is one native `<dialog>` shared by two collections: the three posters (`data-group="carteles"`) and each year's gallery (`data-group="galeria-<year>"`). Its triggers are plain `<a href>` images, so without JavaScript every poster and photo still opens directly; with JavaScript they open the dialog instead, navigated with the on-screen arrows, `ArrowLeft` / `ArrowRight`, a horizontal swipe on touch screens, Escape or a backdrop click, and a Spanish "N de M" counter. The media cell holds a strip of three photographs — previous, current, next — inside a window that clips exactly one cell, so at rest only the current photograph is visible. It behaves like a native carousel: while dragging, the strip follows the finger and the neighbouring photograph slides in beside the current one, separated by a clear gap so the two read as separate prints; releasing a deliberate swipe slides the strip one cell plus that gap and re-centres it on the neighbour, while a short drag settles back. Swiping left advances and swiping right goes back. The gesture needs a deliberate horizontal drag (over 40px and clearly more horizontal than vertical), so taps, vertical scrolling and mouse drags never change the image. With `prefers-reduced-motion: reduce` the navigation still works but every animation is dropped. Re-centring rotates the roles of the three `<img>` elements rather than rewriting their sources: the cell that already shows the incoming photograph becomes the centre and keeps its decoded bitmap, so no frame can flash the previous photograph while a new source settles. Only the cell that ends up off-screen loads a new photograph. Neighbours load when the viewer opens, so they are ready before the visitor drags; all three are released on close. Captions show the photograph's alternative text; gallery rótulos carry only the year and edition number.
 
 FAQ answers expand and collapse with a 350ms height transition and a soft opacity fade using `::details-content` and `interpolate-size`. The styles are scoped to `PracticalInformation.astro` and only apply without a reduced-motion preference. Browsers without these CSS features retain instant native opening and closing; no additional JavaScript is needed.
 

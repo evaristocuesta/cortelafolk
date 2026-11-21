@@ -1,0 +1,121 @@
+---
+import '../../styles/global.css';
+import { site, socialLinks } from '../../data/site';
+import { editions, photoPath } from '../../data/editions';
+import GoogleTagHead from '../../components/GoogleTagHead.astro';
+import CookieConsent from '../../components/CookieConsent.astro';
+import GalleryDialog from '../../components/GalleryDialog.astro';
+import Icon from '../../components/Icon.astro';
+import PageContainer from '../../components/PageContainer.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import WaveDivider from '../../components/WaveDivider.astro';
+
+// The archive is public on its own; it must never expose the unpublished
+// festival page, so no link here points at /2027/.
+const productionOrigin = import.meta.env.PUBLIC_SITE_URL;
+const canonicalUrl = productionOrigin ? new URL('/ediciones/', productionOrigin).href : undefined;
+const pageTitle = 'Ediciones anteriores · Carteles y fotos de Cortelafolk';
+const pageDescription = 'Carteles y fotos de las ediciones de 2024, 2025 y 2026 de Cortelafolk, el festival de música folk de Cortelazor, Huelva.';
+---
+
+<html lang="es">
+	<head>
+		<GoogleTagHead />
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="theme-color" content="#173d2d" />
+		<meta name="description" content={pageDescription} />
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="es_ES" />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={pageDescription} />
+		<meta property="og:site_name" content={site.name} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={pageDescription} />
+		{canonicalUrl && <><link rel="canonical" href={canonicalUrl} /><meta property="og:url" content={canonicalUrl} /></>}
+		<link rel="preload" href="/fonts/barlow-condensed-latin-800.woff2" as="font" type="font/woff2" crossorigin />
+		<title>{pageTitle}</title>
+	</head>
+	<body class="editions-page bg-paper text-forest font-sans antialiased">
+		<a class="skip-link" href="#main-content">Saltar al contenido</a>
+		<header class="editions-header relative">
+			<PageContainer class="flex items-center justify-between gap-4 pt-4 pb-20">
+				<a href="/" class="wordmark inline-flex items-center" aria-label="Cortelafolk, volver al inicio"><img src="/images/logo.webp" alt="Cortelafolk" width="100" height="56" /></a>
+				<ul class="flex items-center gap-3" aria-label="Redes sociales de Cortelafolk">
+					{socialLinks.map((link) => <li><a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`Cortelafolk en ${link.name}`} class="grid h-9 w-9 place-items-center rounded-full border border-forest/30 transition-colors hover:bg-forest hover:text-paper"><Icon name={link.icon} class="h-4 w-4" /></a></li>)}
+				</ul>
+			</PageContainer>
+			<WaveDivider nextColor="moss" variant="thick" />
+		</header>
+
+		{/* Full-width sections, each with its own container: the wave dividers
+		    hang off the section edge exactly as they do on /2027/. Paper on
+		    paper, so every boundary uses the thicker moss tape. */}
+		<main id="main-content" class="flex-1">
+			<section class="editions-intro pt-10 pb-9 sm:pt-16 sm:pb-12">
+				<PageContainer>
+					<p class="eyebrow">CORTELAFOLK · CORTELAZOR</p>
+					<h1>Ediciones anteriores</h1>
+					<p class="lead mt-5 max-w-[640px]">Los carteles y las fotos de las tres primeras ediciones de Cortelafolk.</p>
+				</PageContainer>
+			</section>
+
+			<section class="editions-posters pb-20 sm:pb-24" aria-labelledby="posters-title">
+				<PageContainer>
+					<SectionHeading eyebrow="CARTELES" title="Los carteles" titleId="posters-title" titleClass="editions-heading max-w-[760px]" />
+					<ul class="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6">
+						{editions.map((edition) => (
+							<li id={`edicion-${edition.year}`}>
+								<a class="editions-item" href={photoPath(edition.year, edition.poster.file)} data-lightbox-open data-group="carteles">
+									<span class="editions-frame editions-frame--poster">
+										<img src={photoPath(edition.year, edition.poster.thumb)} alt={edition.poster.alt} width={edition.poster.thumbWidth} height={edition.poster.thumbHeight} decoding="async" />
+									</span>
+									<span class="editions-caption">{edition.year} · {edition.edition}</span>
+								</a>
+							</li>
+						))}
+					</ul>
+				</PageContainer>
+				<WaveDivider nextColor="moss" variant="thick" />
+			</section>
+
+			{editions.map((edition, index) => (
+				<section class="editions-gallery pt-10 pb-20 sm:pt-14 sm:pb-24" aria-labelledby={`galeria-${edition.year}`}>
+					<PageContainer>
+						<h2 id={`galeria-${edition.year}`} class="editions-heading mb-7">{edition.year} · {edition.edition}</h2>
+						<ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 tablet:grid-cols-4 wide:grid-cols-5">
+							{edition.photos.map((photo) => (
+								<li>
+									<a class="editions-item editions-thumb" href={photoPath(edition.year, photo.file)} data-lightbox-open data-group={`galeria-${edition.year}`}>
+										<span class="editions-frame editions-frame--photo">
+											<img src={photoPath(edition.year, photo.thumb)} alt={photo.alt} width={photo.thumbWidth} height={photo.thumbHeight} loading="lazy" decoding="async" />
+										</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</PageContainer>
+					{/* The last gallery meets the footer's rule, so it adds no tape. */}
+					{index < editions.length - 1 && <WaveDivider nextColor="moss" variant="thick" />}
+				</section>
+			))}
+		</main>
+
+		<footer class="editions-footer border-t border-forest/19">
+			<PageContainer class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-6 text-[11px]">
+				<p>© {site.year} Cortelafolk · {site.edition}</p>
+				<nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Navegación del pie de página">
+					<a href="/">Volver al inicio</a>
+					<a href="/cookies/">Política de cookies</a>
+					<a href="/privacidad/">Privacidad</a>
+				</nav>
+			</PageContainer>
+		</footer>
+
+		<GalleryDialog />
+		<CookieConsent />
+	</body>
+</html>

@@ -11,6 +11,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "images": "node scripts/build-edition-images.mjs",
     "astro": "astro"
   },
   "dependencies": {
@@ -20,6 +21,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "heic-convert": "^2.1.0",
+    "sharp": "^0.35.5",
     "typescript": "^5.9.3"
   }
 }
