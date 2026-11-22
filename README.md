@@ -26,7 +26,7 @@ Run `pnpm build` before `pnpm test`; tests deliberately inspect production outpu
 ## Structure and content editing
 
 - `src/pages/index.astro`: minimal root teaser with the logo, the festival dates and the link into the archive.
-- `src/pages/ediciones/index.astro`: previous-editions archive at `/ediciones/`, with its own minimal header/footer (no `SiteHeader`, so it cannot expose `/2027/`). Its sections are full-width children of `<main>`, each with its own `PageContainer`, and share the festival's `WaveDivider` tapes: paper on paper, every boundary (menu, posters, 2024, 2025, 2026) uses the thicker moss variant.
+- `src/pages/ediciones/index.astro`: previous-editions archive at `/ediciones/`, with its own minimal header/footer (no `SiteHeader`, so it cannot expose `/2027/`). Its sections are full-width children of `<main>`, each with its own `PageContainer`, and share the festival's `WaveDivider` tapes: paper on paper, every boundary (menu, posters, 2024, 2025, 2026) uses the thicker moss variant. Its head mirrors the other pages: shared social card, canonical URL and a `CollectionPage` JSON-LD, all gated on `PUBLIC_SITE_URL`.
 - `src/pages/2027/index.astro`: the festival single-page entry point and its SEO metadata, served at `/2027/`.
 - `src/pages/404.astro`: Spanish not-found page, served as `dist/404.html`.
 - `src/pages/cookies.astro` and `src/pages/privacidad.astro`: cookie and privacy policies for the site.
@@ -83,7 +83,7 @@ The interactive Google Maps embed is requested only after the visitor accepts th
 
 ## Deployment
 
-Upload `dist/` to a static host. Set `PUBLIC_SITE_URL` to the verified production origin during the build to emit the canonical URL, absolute social image URLs and event structured data. The site deliberately does not guess the official domain. Never publish a localhost canonical URL.
+Upload `dist/` to a static host. Set `PUBLIC_SITE_URL` to the verified production origin during the build to emit the canonical URL, absolute social image URLs and JSON-LD. The landing page and `/2027/` declare the 2027 `MusicEvent`; `/ediciones/` shares the same 1200×630 social card and declares a `CollectionPage` (the festival plus one `ImageGallery` per edition, no dates — past dates live only on the posters) instead of pretending the editions are still scheduled. The site deliberately does not guess the official domain. Never publish a localhost canonical URL.
 
 Recheck organiser-approved accessibility, services, accommodation guidance, privacy/legal requirements and any future sponsor or social links before going live. The published policies use the supplied controller name and email; confirm any additional legally required controller details before publication.
 

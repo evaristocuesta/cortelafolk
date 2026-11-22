@@ -161,6 +161,53 @@ test('Landing structured data describes the free festival event', () => {
 	}
 });
 
+test('The archive shares the social card and describes itself as a collection', () => {
+	const metaByProperty = (name) => edicionesHtml.match(new RegExp(`<meta\\b[^>]*property="${name}"[^>]*>`))?.[0];
+	const metaByName = (name) => edicionesHtml.match(new RegExp(`<meta\\b[^>]*name="${name}"[^>]*>`))?.[0];
+	const canonicalTag = edicionesHtml.match(/<link\b[^>]*rel="canonical"[^>]*>/)?.[0];
+	const ogImage = metaByProperty('og:image');
+	const twitterImage = metaByName('twitter:image');
+	const script = edicionesHtml.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/s)?.[1];
+	if (!canonicalTag) {
+		// Same rule as the other pages: absolute URLs only with a real origin.
+		assert.equal(ogImage, undefined, 'The social card needs the production origin.');
+		assert.equal(twitterImage, undefined, 'Twitter needs the production origin too.');
+		assert.equal(script, undefined, 'Structured data must stay gated on PUBLIC_SITE_URL.');
+		return;
+	}
+	const canonicalUrl = new URL(getAttribute(canonicalTag, 'href'));
+	assert.notEqual(canonicalUrl.hostname, 'localhost');
+	assert.notEqual(canonicalUrl.hostname, '127.0.0.1');
+	const expectedImage = new URL('/images/social-preview.png', canonicalUrl).href;
+	assert.equal(getAttribute(ogImage, 'content'), expectedImage, 'The archive must share the site social card.');
+	assert.equal(getAttribute(metaByProperty('og:image:type'), 'content'), 'image/png');
+	assert.equal(getAttribute(metaByProperty('og:image:width'), 'content'), '1200');
+	assert.equal(getAttribute(metaByProperty('og:image:height'), 'content'), '630');
+	assert.ok(getAttribute(metaByProperty('og:image:alt'), 'content'), 'The social card needs Spanish alt text.');
+	assert.equal(getAttribute(twitterImage, 'content'), expectedImage);
+	assert.ok(getAttribute(metaByName('twitter:image:alt'), 'content'));
+	const page = JSON.parse(script);
+	assert.equal(page['@context'], 'https://schema.org');
+	// A collection of past editions, not an event: Google only grants event
+	// rich results to upcoming dates, so nothing here claims a schedule.
+	assert.equal(page['@type'], 'CollectionPage');
+	assert.equal(page.url, canonicalUrl.href);
+	assert.equal(page.image, expectedImage);
+	assert.equal(page.inLanguage, 'es-ES');
+	assert.equal(page.isPartOf.url, new URL('/', canonicalUrl).href);
+	assert.equal(page.about.location.address.addressLocality, 'Cortelazor');
+	assert.deepEqual(page.hasPart.map((part) => part.name), ['Cortelafolk 2024 · 1.ª edición', 'Cortelafolk 2025 · 2.ª edición', 'Cortelafolk 2026 · 3.ª edición']);
+	for (const part of page.hasPart) {
+		assert.equal(part['@type'], 'ImageGallery');
+		assert.ok(part.url.startsWith(`${canonicalUrl.href}#edicion-`), 'Each gallery points at its visible edition anchor.');
+		assert.match(part.url, /#edicion-\d{4}$/);
+		assert.equal(new URL(part.image).origin, canonicalUrl.origin);
+	}
+	assert.doesNotMatch(script, /startDate|endDate/, 'Do not invent dates the posters do not state.');
+	assert.doesNotMatch(script, /\/2027\//, 'The archive must not advertise the unpublished festival page.');
+	assert.doesNotMatch(script, /localhost|127\.0\.0\.1/);
+});
+
 test('robots.txt and sitemap.xml expose public landing and policy pages only', () => {
 	const robots = readFileSync(join(outputDirectory, 'robots.txt'), 'utf8');
 	assert.match(robots, /User-agent: \*/);

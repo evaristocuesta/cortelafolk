@@ -14,8 +14,49 @@ import WaveDivider from '../../components/WaveDivider.astro';
 // festival page, so no link here points at /2027/.
 const productionOrigin = import.meta.env.PUBLIC_SITE_URL;
 const canonicalUrl = productionOrigin ? new URL('/ediciones/', productionOrigin).href : undefined;
+const socialImageUrl = canonicalUrl ? new URL('/images/social-preview.png', canonicalUrl).href : undefined;
 const pageTitle = 'Ediciones anteriores · Carteles y fotos de Cortelafolk';
 const pageDescription = 'Carteles y fotos de las ediciones de 2024, 2025 y 2026 de Cortelafolk, el festival de música folk de Cortelazor, Huelva.';
+// The archive is a collection of past editions, not an event: search engines
+// only grant event rich results to upcoming dates, so this declares the page
+// and its three galleries instead of presenting the editions as still
+// scheduled. Every value is visible on the page — no dates the posters do not
+// state — and nothing here points at the unpublished /2027/ page.
+const archiveData = canonicalUrl ? {
+	'@context': 'https://schema.org',
+	'@type': 'CollectionPage',
+	name: pageTitle,
+	description: pageDescription,
+	url: canonicalUrl,
+	image: socialImageUrl,
+	inLanguage: 'es-ES',
+	isPartOf: {
+		'@type': 'WebSite',
+		name: site.name,
+		url: new URL('/', canonicalUrl).href,
+	},
+	about: {
+		'@type': 'MusicFestival',
+		name: 'Cortelafolk',
+		location: {
+			'@type': 'Place',
+			name: 'Cortelazor',
+			address: {
+				'@type': 'PostalAddress',
+				addressLocality: 'Cortelazor',
+				addressRegion: 'Huelva, Andalucía',
+				addressCountry: 'ES',
+			},
+		},
+	},
+	hasPart: editions.map((edition) => ({
+		'@type': 'ImageGallery',
+		name: `Cortelafolk ${edition.year} · ${edition.edition}`,
+		url: `${canonicalUrl}#edicion-${edition.year}`,
+		image: new URL(photoPath(edition.year, edition.poster.file), canonicalUrl).href,
+		inLanguage: 'es-ES',
+	})),
+} : undefined;
 ---
 
 <html lang="es">
@@ -36,6 +77,8 @@ const pageDescription = 'Carteles y fotos de las ediciones de 2024, 2025 y 2026 
 		<meta name="twitter:title" content={pageTitle} />
 		<meta name="twitter:description" content={pageDescription} />
 		{canonicalUrl && <><link rel="canonical" href={canonicalUrl} /><meta property="og:url" content={canonicalUrl} /></>}
+		{socialImageUrl && <><meta property="og:image" content={socialImageUrl} /><meta property="og:image:type" content="image/png" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta property="og:image:alt" content="Carteles y fotos de las ediciones de 2024, 2025 y 2026 de Cortelafolk." /><meta name="twitter:image" content={socialImageUrl} /><meta name="twitter:image:alt" content="Ediciones anteriores de Cortelafolk: 2024, 2025 y 2026." /></>}
+		{archiveData && <script type="application/ld+json" is:inline set:html={JSON.stringify(archiveData).replace(/</g, '\\u003c')} />}
 		<link rel="preload" href="/fonts/barlow-condensed-latin-800.woff2" as="font" type="font/woff2" crossorigin />
 		<title>{pageTitle}</title>
 	</head>
